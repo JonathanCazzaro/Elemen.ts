@@ -1,0 +1,9 @@
+{
+  "name": "elements",
+  "version": "1.0.0",
+  "description": "Easy to use library to make basic SPA",
+  "main": "lib/index.ts",
+  "author": "Jonathan Cazzaro",
+  "license": "MIT",
+  "devDependencies": {}
+}
