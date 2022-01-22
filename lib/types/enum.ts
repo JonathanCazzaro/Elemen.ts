@@ -1,4 +1,5 @@
 export enum FileEnum {
-  CSS = "css",
-  JS = "js",
+  CSS,
+  JS
 }
+

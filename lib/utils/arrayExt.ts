@@ -15,4 +15,28 @@ export default class ArrayExt {
     if (refCount.length > 1) return false;
     else return true;
   }
+
+  /**
+   * Removes an element from a given array.
+   * @param {Array.any} array - The given array.
+   * @param {string} element - The element that should be removed.
+   * @returns {Array.any} The outputted array.
+   */
+  static remove(array: any[], element: any): any[] {
+    const index = array.indexOf(element);
+    if (index < 0) return array;
+    else return array.splice(index, index + 1);
+  }
+
+  /**
+   * Toggles an element from a given array.
+   * @param {Array.any} array - The given array.
+   * @param {string} element - The element that should be toggled.
+   * @returns {Array.any} The outputted array.
+   */
+  static toggle(array: any[], element: any): any[] {
+    const removeElement = this.remove(array, element);
+    if (removeElement.length === array.length) return [...array, element];
+    else return removeElement;
+  }
 }
