@@ -2,20 +2,25 @@ import { GenericStructureConstructor } from "../../types/constructors";
 import Common from "../Common";
 
 /**
- * Initiate a new Footer element.
+ * Initiates a new Footer.
  */
 export default class Footer extends Common {
   textContent?: string;
   readonly render: HTMLElement;
 
   /**
-   * Initiates a new Footer element.
+   * Initiates a new Footer.
    * @param {string} [id] - (optional)
    * @param {string} [classes] - (optional) A space is needed between each class.
    * @param {string} [textContent] - (optional) Text to be displayed inside the element.
    * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any.
    */
-  constructor({ id, classes, textContent, children }: GenericStructureConstructor) {
+  constructor({
+    id,
+    classes,
+    textContent,
+    children,
+  }: GenericStructureConstructor) {
     super({ id, classes, children });
     if (textContent) this.textContent = textContent;
     this.render = this.build();
@@ -25,13 +30,9 @@ export default class Footer extends Common {
    * Renders the HTML Element.
    */
   build(): HTMLElement {
-    let { id, classes, serial, textContent } = this;
-    const element = document.createElement("footer");
-    if (id) element.id = id;
-    if (classes)
-      classes.forEach((className) => element.classList.add(className));
+    const { textContent } = this;
+    const element = super.build("footer") as HTMLElement;
     if (textContent) element.textContent = textContent;
-    element.dataset.serial = serial;
-    return element;    
+    return element;
   }
 }

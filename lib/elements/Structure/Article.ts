@@ -1,21 +1,21 @@
-import { InsertConstructor } from "../../types/constructors";
+import { GenericStructureConstructor } from "../../types/constructors";
 import Common from "../Common";
 
 /**
- * Initiates a new Insert (span).
+ * Initiates a new Article.
  */
-export default class Insert extends Common {
+export default class Article extends Common {
   textContent?: string;
-  readonly render: HTMLSpanElement;
+  readonly render: HTMLElement;
 
   /**
-   * Initiates a new Insert (span).
+   * Initiates a new Article.
    * @param {string} [id] - (optional)
    * @param {string} [classes] - (optional) A space is needed between each class.
    * @param {string} [textContent] - (optional) Text to be displayed inside the element.
    * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any.
    */
-  constructor({ id, classes, textContent, children }: InsertConstructor) {
+  constructor({ id, classes, textContent, children }: GenericStructureConstructor) {
     super({ id, classes, children });
     if (textContent) this.textContent = textContent;
     this.render = this.build();
@@ -24,9 +24,9 @@ export default class Insert extends Common {
   /**
    * Renders the HTML Element.
    */
-  build(): HTMLSpanElement {
+   build(): HTMLElement {
     const { textContent } = this;
-    const element = super.build("span") as HTMLSpanElement;
+    const element = super.build("article") as HTMLElement;
     if (textContent) element.textContent = textContent;
     return element;
   }

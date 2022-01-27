@@ -2,7 +2,7 @@ import { TitleConstructor } from "../../types/constructors";
 import Common from "../Common";
 
 /**
- * Initiate a new Title element (h*).
+ * Initiates a new Title (h*).
  */
 export default class Title extends Common {
   private level: number;
@@ -10,7 +10,7 @@ export default class Title extends Common {
   readonly render: HTMLHeadingElement;
 
   /**
-   * Initiates a new Title element (h*).
+   * Initiates a new Title (h*).
    * @param {number} level - Level of the title.
    * @param {string} [id] - (optional)
    * @param {string} [classes] - (optional) A space is needed between each class.
@@ -20,7 +20,7 @@ export default class Title extends Common {
   constructor({ id, classes, textContent, children, level }: TitleConstructor) {
     super({ id, classes, children });
     if (textContent) this.textContent = textContent;
-    if (level > 6 || level < 1) throw new Error("Wrong title's level. It should only be set between 1 and 6.");
+    if (level > 6 || level < 1) throw new Error("Title's level should be set between 1 and 6.");
     else this.level = level;
     
     this.level = level;
@@ -30,14 +30,10 @@ export default class Title extends Common {
   /**
    * Renders the HTML Element.
    */
-  build(): HTMLHeadingElement {
-    let { id, classes, serial, textContent } = this;
-    const element = document.createElement(`h${this.level}`) as HTMLHeadingElement;
-    if (id) element.id = id;
-    if (classes)
-      classes.forEach((className) => element.classList.add(className));
+   build(): HTMLHeadingElement {
+    const { textContent, level } = this;
+    const element = super.build(`h${level}`) as HTMLHeadingElement;
     if (textContent) element.textContent = textContent;
-    element.dataset.serial = serial;
-    return element;    
+    return element;
   }
 }

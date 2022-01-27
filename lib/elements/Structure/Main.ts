@@ -2,14 +2,14 @@ import { GenericStructureConstructor } from "../../types/constructors";
 import Common from "../Common";
 
 /**
- * Initiate a new Main element.
+ * Initiates a new Main.
  */
 export default class Main extends Common {
   textContent?: string;
   readonly render: HTMLElement;
 
   /**
-   * Initiates a new Main element.
+   * Initiates a new Main.
    * @param {string} [id] - (optional)
    * @param {string} [classes] - (optional) A space is needed between each class.
    * @param {string} [textContent] - (optional) Text to be displayed inside the element.
@@ -24,14 +24,10 @@ export default class Main extends Common {
   /**
    * Renders the HTML Element.
    */
-  build(): HTMLElement {
-    let { id, classes, serial, textContent } = this;
-    const element = document.createElement("main");
-    if (id) element.id = id;
-    if (classes)
-      classes.forEach((className) => element.classList.add(className));
+   build(): HTMLElement {
+    const { textContent } = this;
+    const element = super.build("main") as HTMLElement;
     if (textContent) element.textContent = textContent;
-    element.dataset.serial = serial;
-    return element;    
+    return element;
   }
 }

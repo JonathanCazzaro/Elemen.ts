@@ -3,7 +3,7 @@ import { LinkType } from "../../types/types";
 import Common from "../Common";
 
 /**
- * Initiate a new Link element (a).
+ * Initiates a new Link/NavLink (a).
  */
 export default class Link extends Common {
   textContent?: string;
@@ -11,7 +11,7 @@ export default class Link extends Common {
   readonly render: HTMLAnchorElement;
 
   /**
-   * Initiates a new Link element (a).
+   * Initiates a new Link/NavLink (a).
    * @param {string} [id] - (optional)
    * @param {string} [classes] - (optional) A space is needed between each class.
    * @param {string} [textContent] - (optional) Text to be displayed inside the element.
@@ -25,22 +25,14 @@ export default class Link extends Common {
     this.render = this.build();
   }
 
-  new(config: LinkConstructor): LinkType {
-    return new Link(config);
-  }
-
   /**
    * Renders the HTML Element.
    */
   build(): HTMLAnchorElement {
-    let { id, classes, serial, textContent, target } = this;
-    const element = document.createElement("a");
-    if (id) element.id = id;
-    if (classes)
-      classes.forEach((className) => element.classList.add(className));
+    const { textContent, target } = this;
+    const element = super.build("a") as HTMLAnchorElement;
     if (textContent) element.textContent = textContent;
     if (target) element.href = target;
-    element.dataset.serial = serial;
     return element;
   }
 }

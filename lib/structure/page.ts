@@ -4,7 +4,7 @@ import { FileEnum } from "../types/enum";
 import File from "../utils/file";
 
 /**
- * Initiate a new Page.
+ * Initiates a new Page.
  */
 export default class Page {
   title?: string;
@@ -30,7 +30,7 @@ export default class Page {
     cssFiles,
     jsFiles,
   }: PageConstructor) {
-    if (!/^\//.test(path))
+    if (!path.startsWith('/'))
       throw new Error(
         `The path -- ${path} -- should start with a / character.`
       );

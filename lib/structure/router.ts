@@ -3,7 +3,7 @@ import { RouterConstructor } from "../types/constructors";
 import ArrayExt from "../utils/arrayExt";
 
 /**
- * Initiate a new Router for your application.
+ * Initiates a new Router for your application.
  */
 export default class Router {
   private currentPath: string;
@@ -19,7 +19,7 @@ export default class Router {
   constructor({ pages, notFound }: RouterConstructor) {
     pages.forEach((page) => {
       const { path } = page;
-      if (!ArrayExt.isElementUnique(pages, path))
+      if (!ArrayExt.isObjectUnique(pages, 'path', path))
         throw new Error(
           `The pages of your application must have unique paths.`
         );
@@ -34,7 +34,7 @@ export default class Router {
    * @param {string} newPath - Enter the new path, starting with / character.
    */
   static goTo(newPath: string) {
-    if (!/^\//g.test(newPath)) throw new Error(`URL path must start with a / character.`);
+    if (!newPath.startsWith('/')) throw new Error(`URL path must start with a / character.`);
     else {
       history.pushState({}, "set new path", newPath);
       window.dispatchEvent(new Event("pathchange"));

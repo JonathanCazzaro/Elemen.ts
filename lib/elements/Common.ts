@@ -75,6 +75,20 @@ export default class Common {
   }
 
   /**
+   * Renders the element as HTML code.
+   * @returns {any} Type depends on each element.
+   */
+  build(tag: string): any {
+    const { id, classes, serial } = this;
+    const element = document.createElement(tag);
+    if (id) element.id = id;
+    if (classes)
+      classes.forEach((className) => element.classList.add(className));
+    element.dataset.serial = serial;
+    return element;
+  }
+
+  /**
    * Mounts the element into the DOM.
    */
   mount(): void {
@@ -92,5 +106,12 @@ export default class Common {
    */
   unmount(): void {
     this.render.remove();
+  }
+
+  /** Specifies a behaviour when the element is clicked.
+   * @param callback - Callback function to describe what happens when the element is clicked.
+   */
+  onClick(callback: () => void): void {
+    this.render.addEventListener("click", callback);
   }
 }

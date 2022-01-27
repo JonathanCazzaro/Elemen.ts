@@ -8,9 +8,9 @@ export default class ArrayExt {
    * @param {string} elementKey - The reference key of the objects.
    * @returns {boolean}
    */
-  static isElementUnique(arrayToBeTested: any[], elementKey: string): boolean {
+  static isObjectUnique(arrayToBeTested: any[], referenceKey: string, value: string): boolean {
     const refCount: any[] = arrayToBeTested.filter(
-      (entry) => entry[elementKey] === elementKey
+      (entry) => entry[referenceKey] === value
     );
     if (refCount.length > 1) return false;
     else return true;
