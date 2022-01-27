@@ -3,7 +3,7 @@ import { LinkType } from "../../types/types";
 import Common from "../Common";
 
 /**
- * Initiates a new Link/NavLink (a).
+ * Initiates a new Link (a).
  */
 export default class Link extends Common {
   textContent?: string;

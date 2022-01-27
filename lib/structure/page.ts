@@ -17,7 +17,7 @@ export default class Page {
 
   /**
    * Initiates a new Page.
-   * @param {string} path - The path used to get to the page (starting with a / character).
+   * @param {string} path - The path used to get to the page (example : /contact or just contact).
    * @param {string} [title] - (optional) The title of the page (should be 60-65 characters max). Leave it blank if you want to keep the title that has been defined in the HTML template.
    * @param {string} [description] - (optional) Description of the page for SEO (should be 155 characters max).
    * @param {Array.string} [cssFiles] - (optional) An array of relative paths to CSS files to be loaded dynamically.
@@ -30,11 +30,7 @@ export default class Page {
     cssFiles,
     jsFiles,
   }: PageConstructor) {
-    if (!path.startsWith('/'))
-      throw new Error(
-        `The path -- ${path} -- should start with a / character.`
-      );
-    else this.path = path;
+    this.path = path.startsWith("/") ? path : `/${path}`;
 
     if (title) {
       if (title.length > 65)

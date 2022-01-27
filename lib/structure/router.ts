@@ -19,7 +19,7 @@ export default class Router {
   constructor({ pages, notFound }: RouterConstructor) {
     pages.forEach((page) => {
       const { path } = page;
-      if (!ArrayExt.isObjectUnique(pages, 'path', path))
+      if (!ArrayExt.isObjectUnique(pages, "path", path))
         throw new Error(
           `The pages of your application must have unique paths.`
         );
@@ -31,19 +31,20 @@ export default class Router {
 
   /**
    * Redirects to a new path.
-   * @param {string} newPath - Enter the new path, starting with / character.
+   * @param {string} newPath - Enter the new path (example : /contact or just contact).
    */
   static goTo(newPath: string) {
-    if (!newPath.startsWith('/')) throw new Error(`URL path must start with a / character.`);
-    else {
-      history.pushState({}, "set new path", newPath);
-      window.dispatchEvent(new Event("pathchange"));
-    }
+    history.pushState(
+      {},
+      "set new path",
+      newPath.startsWith("/") ? newPath : `/${newPath}`
+    );
+    window.dispatchEvent(new Event("pathchange"));
   }
 
   /**
- * Makes the router listen to path requests and serve the corresponding pages.
- */
+   * Makes the router listen to path requests and serve the corresponding pages.
+   */
   start(): void {
     const events = ["DOMContentLoaded", "popstate", "pathchange"];
     events.forEach((event) =>

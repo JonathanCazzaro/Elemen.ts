@@ -1,4 +1,7 @@
-import { InputOptionsConfig } from "../../types/configObjects";
+import {
+  FailMessagesConfig,
+  InputOptionsConfig,
+} from "../../types/configObjects";
 import { InputConstructor } from "../../types/constructors";
 import { InputTypeEnum, LabelPositionEnum } from "../../types/enum";
 import { LabelType } from "../../types/types";
@@ -19,6 +22,7 @@ export default class Input extends Common {
   required?: boolean = false;
   readonly?: boolean = false;
   options?: InputOptionsConfig;
+  failMessages?: FailMessagesConfig;
   readonly render: HTMLInputElement;
 
   /**
@@ -34,6 +38,7 @@ export default class Input extends Common {
    * @param {boolean} [required] - (optional) Boolean to specify whether the input should be set on required or not.
    * @param {boolean} [readonly] - (optional) Boolean to specify whether the input should be set on readonly or not.
    * @param {Object} [options] - (optional) Specific options for the related input type.
+   * @param {Object} [failMessages] - (optional) Customizable messages to display when the data validation did not pass.
    */
   constructor({
     id,
@@ -47,6 +52,7 @@ export default class Input extends Common {
     readonly,
     label,
     options,
+    failMessages,
   }: InputConstructor) {
     super({ classes, children });
     this.id = id;
@@ -65,6 +71,7 @@ export default class Input extends Common {
         );
       this.options = parsedOptions[0][1];
     }
+    if (failMessages) this.failMessages = failMessages;
     this.render = this.build();
   }
 
@@ -75,13 +82,13 @@ export default class Input extends Common {
     const {
       name,
       value,
-      label,
       autofocus,
       disabled,
       required,
       readonly,
       type,
       options,
+      failMessages,
     } = this;
     const element = super.build("input") as HTMLInputElement;
     element.type = type;
@@ -137,27 +144,59 @@ export default class Input extends Common {
           if (options.minLength) element.minLength = minLength;
           if (options.maxLength) element.maxLength = maxLength;
           if (pattern) {
-            const { template, help, customFailMessage } = pattern;
+            const { template, help } = pattern;
             element.pattern = template;
             if (help) element.title = help;
-            if (customFailMessage) {
-
-              element.addEventListener("invalid", (e) => {
-                // console.log(element.value);
-                e.preventDefault();
-                // console.log(element.willValidate, element.checkValidity());
-                
-                // if (!element.checkValidity()) element.setCustomValidity(customFailMessage);
-                // else element.setCustomValidity("");
-                console.log("invalide !");                
-                console.log(element.willValidate);
-                
-              });
-            };
-
           }
           break;
       }
+    }
+    if (failMessages) {
+      element.addEventListener("invalid", () => {
+        const {
+          patternMismatch,
+          tooHigh,
+          tooLow,
+          tooLong,
+          tooShort,
+          incrementStepMismatch,
+          typeMismatch,
+          valueMissing,
+        } = failMessages;
+        let message = "";
+
+        for (const state in this.render.validity) {
+          if (this.render.validity[state]) {
+            switch (state) {
+              case "valueMissing":
+                message = valueMissing ? valueMissing : "";
+                break;
+              case "typeMismatch":
+                message = typeMismatch ? typeMismatch : "";
+                break;
+              case "patternMismatch":
+                message = patternMismatch ? patternMismatch : "";
+                break;
+              case "tooLong":
+                message = tooLong ? tooLong : "";
+                break;
+              case "tooShort":
+                message = tooShort ? tooShort : "";
+                break;
+              case "rangeUnderflow":
+                message = tooLow ? tooLow : "";
+                break;
+              case "rangeOverflow":
+                message = tooHigh ? tooHigh : "";
+                break;
+              case "stepMismatch":
+                message = incrementStepMismatch ? incrementStepMismatch : "";
+                break;
+            }
+          }
+        }
+        if (message) element.setCustomValidity(message);
+      });
     }
     return element;
   }

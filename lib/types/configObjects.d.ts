@@ -30,3 +30,38 @@ export type PatternConfig = {
    */
   customFailMessage?: string;
 };
+
+export type FailMessagesConfig = {
+  /**
+   * @param {string} [patternMismatch] - If the input value doesn't match the regex pattern. Require to have a pattern template set up.
+   */
+  patternMismatch?: string;
+  /**
+   * @param {string} [tooHigh] - If the input value is above the maximum value. Require to have the max argument set up.
+   */
+  tooHigh?: string;
+  /**
+   * @param {string} [tooLow] - If the input value is below the minimum value. Require to have the min argument set up.
+   */
+  tooLow?: string;
+  /**
+   * @param {string} [incrementStepMismatch] - If the input value doesn't match the increment step. Require to have the incrementStep argument set up.
+   */
+  incrementStepMismatch?: string;
+  /**
+   * @param {string} [tooLong] - If the input value is longer than the maximum authorized length. Require to have the maxLength argument set up.
+   */
+  tooLong?: string;
+  /**
+   * @param {string} [tooShort] - If the input value is shorter than the minimum authorized length. Require to have the minLength argument set up.
+   */
+  tooShort?: string;
+  /**
+   * @param {string} [typeMismatch] - If the input value doesn't match the input type.
+   */
+  typeMismatch?: string;
+  /**
+   * @param {string} [valueMissing] - If the input is empty. Require to have the required argument set to true.
+   */
+  valueMissing?: string;
+};

@@ -35,6 +35,20 @@ export default class Form extends Common {
     this.render = this.build();
   }
 
+  onSubmit(callback: (event: Event) => void): void {
+    this.render.addEventListener("trysubmit", (event) => {
+      const inputs = this.render.getElementsByTagName("input");
+      for (const input of inputs) {
+        input.setCustomValidity("");
+        const isValid = input.reportValidity();
+        if (!isValid) {
+          return;
+        };
+      }
+      callback(event);
+    });
+  }
+
   /**
    * Renders the HTML Element.
    */
@@ -44,6 +58,13 @@ export default class Form extends Common {
     if (action) element.action = action;
     if (method) element.method = method;
     if (name) element.name = name;
+    element.addEventListener("submit", (e) => e.preventDefault());
+    element.addEventListener("keypress", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        element.dispatchEvent(new Event("trysubmit"));
+      }
+    });
     return element;
   }
 }

@@ -1,4 +1,4 @@
-import { PatternConfig } from "./configObjects";
+import { FailMessagesConfig, PatternConfig } from "./configObjects";
 import {
   FormMethodEnum,
   InputPatternsEnum,
@@ -114,7 +114,8 @@ export interface InputConstructor extends CommonConstructor {
   required?: boolean;
   readonly?: boolean;
   type: InputTypeEnum;
-  options: InputOptionsConstructor;
+  options?: InputOptionsConstructor;
+  failMessages?: FailMessagesConfig;
 }
 
 export interface LabelConstructor extends TextConstructor {
