@@ -32,4 +32,30 @@ export default class Str {
       /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T(0[0-9]|1[0-9]|2[0-3]):(0[0-9]|[1-5][0-9])$/;
     return regex.test(dateToBeChecked);
   }
+
+  /**
+   * Checks if a string matches hh:mm time format.
+   * @param {string} timeToBeChecked - The string that should be checked.
+   * @returns {boolean}
+   */
+  static checkTime(timeToBeChecked: string): boolean {
+    const regex = /^(0[0-9]|1[0-9]|2[0-3]):(0[0-9]|[1-5][0-9])$/;
+    return regex.test(timeToBeChecked);
+  }
+
+  /**
+   * Check if an input is a valid regex or not.
+   * @param {string} input - The input to test.
+   * @returns {boolean}
+   */
+  static isValidRegex(input: string): boolean {
+    let isValid: boolean = true;
+    try {
+      new RegExp(input);
+    } catch (error) {
+      isValid = false;
+      console.trace(error);
+    }
+    return isValid;
+  }
 }

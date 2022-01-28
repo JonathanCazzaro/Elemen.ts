@@ -115,7 +115,7 @@ export interface InputConstructor extends CommonConstructor {
   readonly?: boolean;
   type: InputTypeEnum;
   options?: InputOptionsConstructor;
-  failMessages?: FailMessagesConfig;
+  validationFailMessages?: FailMessagesConfig;
 }
 
 export interface LabelConstructor extends TextConstructor {
@@ -123,12 +123,16 @@ export interface LabelConstructor extends TextConstructor {
 }
 
 export type InputOptionsConstructor = {
-  CHECKBOX?: CHECKBOX;
+  CHECKBOX_RADIO?: CHECKBOX_RADIO;
   DATE?: DATE;
-  EMAIL?: EMAIL;
+  EMAIL_PASSWORD_SEARCH_TEL_URL_TEXT?: EMAIL_PASSWORD_SEARCH_TEL_URL_TEXT;
+  FILE?: FILE;
+  NUMBER?: NUMBER;
+  RANGE?: RANGE;
+  TIME?: TIME;
 };
 
-export type CHECKBOX = {
+export type CHECKBOX_RADIO = {
   /**
    * @param {boolean} [checked] - (optional) Boolean to specify whether the input should be set on checked or not.
    */
@@ -150,7 +154,7 @@ export type DATE = {
   incrementStep?: number;
 };
 
-export type EMAIL = {
+export type EMAIL_PASSWORD_SEARCH_TEL_URL_TEXT = {
   /**
    * @param {number} [minLength] - (optional) Minimum number of characters that should be entered to validate the input.
    */
@@ -167,4 +171,64 @@ export type EMAIL = {
    * @param {string} [placeholder] - (optional) Specify a placeholder if needed.
    */
   placeholder?: string;
+};
+
+export type FILE = {
+  /**
+   * @param {Array.string} [fileType] - (optional) An array of accepted file types (MIME types or file extensions).
+   */
+  fileType?: string[];
+  /**
+   * @param {number} [multiple] - (optional) If true, allows the user to select multiple files at once.
+   */
+  multiple?: boolean;
+};
+
+export type NUMBER = {
+  /**
+   * @param {number} [min] - (optional) Specify a minimum numeral value.
+   */
+  min?: number;
+  /**
+   * @param {number} [max] - (optional) Specify a maximum numeral value.
+   */
+  max?: number;
+  /**
+   * @param {number} [incrementStep] - (optional) Specify an increment basis.
+   */
+  incrementStep?: number;
+  /**
+   * @param {number} [placeholder] - (optional) Specify a placeholder if needed.
+   */
+  placeHolder?: number;
+};
+
+export type RANGE = {
+  /**
+   * @param {number} [min] - (optional) Specify a minimum numeral value.
+   */
+  min?: number;
+  /**
+   * @param {number} [max] - (optional) Specify a maximum numeral value.
+   */
+  max?: number;
+  /**
+   * @param {number} [incrementStep] - (optional) Specify an increment basis.
+   */
+  incrementStep?: number;
+};
+
+export type TIME = {
+  /**
+   * @param {string} [min] - (optional) Specify a minimum time date (hh:mm).
+   */
+  min?: string;
+  /**
+   * @param {string} [max] - (optional) Specify a maximum time (hh:mm).
+   */
+  max?: string;
+  /**
+   * @param {number} [incrementStep] - (optional) Specify an increment basis. Each unity equals to one second. Default is 60.
+   */
+  incrementStep?: number;
 };

@@ -5,8 +5,8 @@ import {
 import { InputConstructor } from "../../types/constructors";
 import { InputTypeEnum, LabelPositionEnum } from "../../types/enum";
 import { LabelType } from "../../types/types";
-import Str from "../../utils/str";
 import Common from "../Common";
+import { setInputOptions, setValidationMessages } from "./inputConfigurator";
 
 /**
  * Initiates a new Input.
@@ -22,7 +22,7 @@ export default class Input extends Common {
   required?: boolean = false;
   readonly?: boolean = false;
   options?: InputOptionsConfig;
-  failMessages?: FailMessagesConfig;
+  validationFailMessages?: FailMessagesConfig;
   readonly render: HTMLInputElement;
 
   /**
@@ -38,7 +38,7 @@ export default class Input extends Common {
    * @param {boolean} [required] - (optional) Boolean to specify whether the input should be set on required or not.
    * @param {boolean} [readonly] - (optional) Boolean to specify whether the input should be set on readonly or not.
    * @param {Object} [options] - (optional) Specific options for the related input type.
-   * @param {Object} [failMessages] - (optional) Customizable messages to display when the data validation did not pass.
+   * @param {Object} [validationFailMessages] - (optional) Customizable messages to display when the data validation did not pass.
    */
   constructor({
     id,
@@ -52,7 +52,7 @@ export default class Input extends Common {
     readonly,
     label,
     options,
-    failMessages,
+    validationFailMessages,
   }: InputConstructor) {
     super({ classes, children });
     this.id = id;
@@ -60,7 +60,17 @@ export default class Input extends Common {
     if (name) this.name = name;
     if (autofocus) this.autofocus = true;
     if (disabled) this.disabled = true;
-    if (required) this.required = true;
+    if (required) {
+      if (
+        ["color", "hidden", "range", "submit", "reset", "button"].includes(
+          this.type
+        )
+      ) {
+        console.error(
+          `Input type ${this.type} has no required argument implementation.`
+        );
+      } else this.required = true;
+    }
     if (readonly) this.readonly = true;
     if (label) this.label = label;
     if (options) {
@@ -71,7 +81,8 @@ export default class Input extends Common {
         );
       this.options = parsedOptions[0][1];
     }
-    if (failMessages) this.failMessages = failMessages;
+    if (validationFailMessages)
+      this.validationFailMessages = validationFailMessages;
     this.render = this.build();
   }
 
@@ -88,9 +99,9 @@ export default class Input extends Common {
       readonly,
       type,
       options,
-      failMessages,
+      validationFailMessages,
     } = this;
-    const element = super.build("input") as HTMLInputElement;
+    let element = super.build("input") as HTMLInputElement;
     element.type = type;
     if (name) element.name = name;
     if (value) element.value = value;
@@ -99,105 +110,9 @@ export default class Input extends Common {
     if (required) element.required = true;
     if (readonly) element.readOnly = true;
 
-    if (options) {
-      switch (this.type) {
-        case "checkbox":
-          if (options.checked) element.checked = true;
-          break;
-        case "date":
-          const { min, max, incrementStep } = options;
-          if (min) {
-            if (Str.checkDate(min)) element.min = min;
-            else
-              throw new Error(
-                "The minimum date is not matching the yyyy-MM-dd format."
-              );
-          }
-          if (max) {
-            if (Str.checkDate(max)) element.min = max;
-            else
-              throw new Error(
-                "The maximum date is not matching the yyyy-MM-dd format."
-              );
-          }
-          if (incrementStep) element.step = incrementStep.toString();
-          break;
-        case "datetime-local":
-          if (min) {
-            if (Str.checkDateTime(min)) element.min = min;
-            else
-              throw new Error(
-                "The minimum date is not matching the yyyy-MM-ddThh:mm format."
-              );
-          }
-          if (max) {
-            if (Str.checkDateTime(max)) element.min = max;
-            else
-              throw new Error(
-                "The maximum date is not matching the yyyy-MM-ddThh:mm format."
-              );
-          }
-          if (incrementStep) element.step = incrementStep.toString();
-          break;
-        case "email":
-          const { minLength, maxLength, pattern } = options;
-          if (options.minLength) element.minLength = minLength;
-          if (options.maxLength) element.maxLength = maxLength;
-          if (pattern) {
-            const { template, help } = pattern;
-            element.pattern = template;
-            if (help) element.title = help;
-          }
-          break;
-      }
-    }
-    if (failMessages) {
-      element.addEventListener("invalid", () => {
-        const {
-          patternMismatch,
-          tooHigh,
-          tooLow,
-          tooLong,
-          tooShort,
-          incrementStepMismatch,
-          typeMismatch,
-          valueMissing,
-        } = failMessages;
-        let message = "";
-
-        for (const state in this.render.validity) {
-          if (this.render.validity[state]) {
-            switch (state) {
-              case "valueMissing":
-                message = valueMissing ? valueMissing : "";
-                break;
-              case "typeMismatch":
-                message = typeMismatch ? typeMismatch : "";
-                break;
-              case "patternMismatch":
-                message = patternMismatch ? patternMismatch : "";
-                break;
-              case "tooLong":
-                message = tooLong ? tooLong : "";
-                break;
-              case "tooShort":
-                message = tooShort ? tooShort : "";
-                break;
-              case "rangeUnderflow":
-                message = tooLow ? tooLow : "";
-                break;
-              case "rangeOverflow":
-                message = tooHigh ? tooHigh : "";
-                break;
-              case "stepMismatch":
-                message = incrementStepMismatch ? incrementStepMismatch : "";
-                break;
-            }
-          }
-        }
-        if (message) element.setCustomValidity(message);
-      });
-    }
+    if (options) element = setInputOptions(element, options);
+    if (validationFailMessages) element = setValidationMessages(element, validationFailMessages);
+      
     return element;
   }
 
