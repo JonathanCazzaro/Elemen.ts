@@ -1,4 +1,5 @@
-import { CommonConstructor } from "../../types/constructors";
+import { TableRowConstructor } from "../../types/constructors";
+import { TableCellHeaderType, TableCellType } from "../../types/types";
 import Str from "../../utils/str";
 import Common from "../Common";
 
@@ -6,6 +7,7 @@ import Common from "../Common";
  * Initiates a new Row (tr).
  */
 export default class Row extends Common {
+  children?: TableCellType[] | TableCellHeaderType[];
   readonly render: HTMLTableRowElement;
 
   /**
@@ -14,7 +16,7 @@ export default class Row extends Common {
    * @param {string} [classes] - (optional) A space is needed between each class.
    * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any.
    */
-  constructor({ id, classes, children }: CommonConstructor) {
+  constructor({ id, classes, children }: TableRowConstructor) {
     super({ id, classes });
     if (children) {
       this.children = [];

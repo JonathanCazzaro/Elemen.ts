@@ -1,11 +1,12 @@
-import { CommonConstructor } from "../../types/constructors";
-import Str from "../../utils/str";
+import { CommonConstructor, UnorderedListConstructor } from "../../types/constructors";
+import { ListItemType } from "../../types/types";
 import Common from "../Common";
 
 /**
  * Initiates a new Unordered List (ul).
  */
 export default class Unordered_List extends Common {
+  children?: ListItemType[];
   readonly render: HTMLUListElement;
 
   /**
@@ -14,7 +15,7 @@ export default class Unordered_List extends Common {
    * @param {string} [classes] - (optional) A space is needed between each class.
    * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any.
    */
-  constructor({ id, classes, children }: CommonConstructor) {
+  constructor({ id, classes, children }: UnorderedListConstructor) {
     super({ id, classes });
     if (children) {
       this.children = [];

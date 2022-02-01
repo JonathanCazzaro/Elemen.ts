@@ -1,10 +1,12 @@
-import { CommonConstructor } from "../../types/constructors";
+import { TableSectionConstructor } from "../../types/constructors";
+import { TableRowType } from "../../types/types";
 import Common from "../Common";
 
 /**
  * Initiates a new Table Header (thead).
  */
 export default class Table_Header extends Common {
+  children?: TableRowType[];
   readonly render: HTMLTableSectionElement;
 
   /**
@@ -13,7 +15,7 @@ export default class Table_Header extends Common {
    * @param {string} [classes] - (optional) A space is needed between each class.
    * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any (Row elements only).
    */
-  constructor({ id, classes, children }: CommonConstructor) {
+  constructor({ id, classes, children }: TableSectionConstructor) {
     super({ id, classes });
     if (children) {
       this.children = [];

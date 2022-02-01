@@ -1,11 +1,12 @@
 import { OrderedListConstructor } from "../../types/constructors";
-import Str from "../../utils/str";
+import { GenericElement, ListItemType } from "../../types/types";
 import Common from "../Common";
 
 /**
  * Initiates a new Ordered List (ol).
  */
 export default class Ordered_List extends Common {
+  children?: ListItemType[];
   reversed: boolean = false;
   startFrom?: number;
   readonly render: HTMLOListElement;

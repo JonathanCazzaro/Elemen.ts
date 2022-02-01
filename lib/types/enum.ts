@@ -16,7 +16,7 @@ export enum FormMethodEnum {
   POST = "post",
 }
 
-export enum LabelPositionEnum {
+export enum ElementPositionEnum {
   TOP,
   BOTTOM,
 }
@@ -67,4 +67,16 @@ export enum InputPatternsEnum {
    * @param {string} FRENCH_TEL - Value should be 5 groups of 2 digits, separated from each other by a point (.), a hyphen (-), a space ( ), or just nothing. First group must start with a 0.
    */
   FRENCH_TEL = "^0[1-9](( |-|\\.)?[0-9]{2}){4}$",
+}
+
+export enum ButtonTypeEnum {
+  SUBMIT = "submit",
+  BUTTON = "button",
+  RESET = "reset",
+}
+
+export enum MediaTypeEnum {
+  AUDIO,
+  VIDEO,
+  PICTURE,
 }

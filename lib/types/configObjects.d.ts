@@ -63,3 +63,10 @@ export type FailMessagesConfig = {
    */
   valueMissing?: string;
 };
+
+export type SourceOptionsConfig = {
+  src?: string;
+  type?: string;
+  mediaQuery?: string;
+  sourceSet?: string;
+}

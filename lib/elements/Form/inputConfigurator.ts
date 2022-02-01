@@ -2,7 +2,11 @@ import {
   FailMessagesConfig,
   InputOptionsConfig,
 } from "../../types/configObjects";
-import { InputPatternsEnum, InputTypeEnum } from "../../types/enum";
+import {
+  HTMLTagEnum,
+  InputPatternsEnum,
+  InputTypeEnum,
+} from "../../types/enum";
 import Str from "../../utils/str";
 
 const setInputOptions = (
@@ -139,10 +143,18 @@ const setInputOptions = (
   return element;
 };
 
-const setValidationMessages = (
+function setValidationMessages(
   element: HTMLInputElement,
   customMessages: FailMessagesConfig
-): HTMLInputElement => {
+): HTMLInputElement;
+function setValidationMessages(
+  element: HTMLTextAreaElement,
+  customMessages: FailMessagesConfig
+): HTMLTextAreaElement;
+function setValidationMessages(
+  element: HTMLInputElement | HTMLTextAreaElement,
+  customMessages: FailMessagesConfig
+): HTMLInputElement | HTMLTextAreaElement {
   element.addEventListener("invalid", () => {
     const {
       patternMismatch,
@@ -186,9 +198,9 @@ const setValidationMessages = (
         }
       }
     }
-    if (message) element.setCustomValidity(message);
+    if (message) element.setCustomValidity(message);    
   });
   return element;
-};
+}
 
 export { setInputOptions, setValidationMessages };

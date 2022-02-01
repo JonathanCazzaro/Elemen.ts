@@ -4,7 +4,7 @@ import {
 } from "../../types/configObjects";
 import { InputConstructor } from "../../types/constructors";
 import { InputTypeEnum, LabelPositionEnum } from "../../types/enum";
-import { LabelType } from "../../types/types";
+import { FormType, LabelType } from "../../types/types";
 import Common from "../Common";
 import { setInputOptions, setValidationMessages } from "./inputConfigurator";
 
@@ -17,10 +17,11 @@ export default class Input extends Common {
   label?: LabelType;
   value?: string;
   name?: string;
-  autofocus?: boolean = false;
-  disabled?: boolean = false;
-  required?: boolean = false;
-  readonly?: boolean = false;
+  form?: FormType;
+  autofocus: boolean = false;
+  disabled: boolean = false;
+  required: boolean = false;
+  readonly: boolean = false;
   options?: InputOptionsConfig;
   validationFailMessages?: FailMessagesConfig;
   readonly render: HTMLInputElement;
@@ -33,6 +34,7 @@ export default class Input extends Common {
    * @param {InputTypeEnum} type - Set the type of input using enum InputTypeEnum.
    * @param {LabelType} [label] - (optional) An instance of Label element to identify the input.
    * @param {string} [name] - (optional) Name of the input (identification for data submitting).
+   * @param {FormType} [form] - (optional) The form element instance related to the input. Required if the input is outside the form element.
    * @param {boolean} [autofocus] - (optional) Boolean to specify whether the input should be set on autofocus or not.
    * @param {boolean} [disabled] - (optional) Boolean to specify whether the input should be set on disabled or not.
    * @param {boolean} [required] - (optional) Boolean to specify whether the input should be set on required or not.
@@ -46,6 +48,7 @@ export default class Input extends Common {
     children,
     type,
     name,
+    form,
     autofocus,
     disabled,
     required,
@@ -58,6 +61,7 @@ export default class Input extends Common {
     this.id = id;
     this.type = type;
     if (name) this.name = name;
+    if (form) this.form = form;
     if (autofocus) this.autofocus = true;
     if (disabled) this.disabled = true;
     if (required) {
@@ -92,6 +96,7 @@ export default class Input extends Common {
   build(): HTMLInputElement {
     const {
       name,
+      form,
       value,
       autofocus,
       disabled,
@@ -104,6 +109,11 @@ export default class Input extends Common {
     let element = super.build("input") as HTMLInputElement;
     element.type = type;
     if (name) element.name = name;
+    if (form) {
+      if (form.id) element.setAttribute("form", form.id);
+      else
+        console.error("The form you connected to the input must have an id.");
+    }
     if (value) element.value = value;
     if (autofocus) element.autofocus = true;
     if (disabled) element.disabled = true;
@@ -120,7 +130,7 @@ export default class Input extends Common {
     super.mount();
     const { label } = this;
     if (label) {
-      label.inputId = this.id;
+      label.formElementId = this.id;
       const labelRender = label.build();
       if (label.position === LabelPositionEnum.BOTTOM)
         this.render.after(labelRender);

@@ -1,6 +1,18 @@
-import { InputOptionsConfig } from "./configObjects";
-import { CommonConstructor } from "./constructors";
-import { FormMethodEnum, InputTypeEnum, LabelPositionEnum, ScopeEnum } from "./enum";
+import Common from "../elements/Common";
+import {
+  ColumnsConfig,
+  FailMessagesConfig,
+  InputOptionsConfig,
+  SourceOptionsConfig,
+} from "./configObjects";
+import {
+  ButtonTypeEnum,
+  FormMethodEnum,
+  InputTypeEnum,
+  ElementPositionEnum,
+  MediaTypeEnum,
+  ScopeEnum,
+} from "./enum";
 
 export interface PageType {
   title?: string;
@@ -42,6 +54,7 @@ export type GenericElement =
   | DetailsType
   | TableType
   | TableSectionType
+  | TableColumnGroupType
   | TableRowType
   | TableCellType
   | TableCellHeaderType
@@ -50,7 +63,16 @@ export type GenericElement =
   | ListItemType
   | DescriptionListType
   | FormType
-  | InputType;
+  | InputType
+  | ButtonType
+  | DropdownType
+  | TextAreaType
+  | FieldsetType
+  | AudioType
+  | VideoType
+  | ImageType
+  | PictureType
+  | FigureType;
 
 export interface ContainerType extends CommonElementType {
   render: HTMLDivElement;
@@ -62,6 +84,19 @@ export interface InsertType extends CommonElementType {
   render: HTMLSpanElement;
   textContent?: string;
   build: () => HTMLSpanElement;
+}
+
+export interface CaptionType extends CommonElementType {
+  render: HTMLElement;
+  textContent?: string;
+  position: ElementPositionEnum;
+  build: () => HTMLElement;
+}
+
+export interface FigureType extends CommonElementType {
+  render: HTMLElement;
+  caption?: CaptionType;
+  build: () => HTMLElement;
 }
 
 export interface LinkType extends CommonElementType {
@@ -96,6 +131,9 @@ export interface DetailsType extends CommonElementType {
   build: () => HTMLDetailsElement;
 }
 
+// ---------------- Type definitions for Table elements ----------------
+// ---------------------------------------------------------------------
+
 export interface TableType extends CommonElementType {
   render: HTMLDetailsElement;
   caption?: string;
@@ -106,6 +144,12 @@ export interface TableSectionType extends CommonElementType {
   render: HTMLTableSectionElement;
   textContent?: string;
   build: () => HTMLTableSectionElement;
+}
+
+export interface TableColumnGroupType extends CommonElementType {
+  columnExtension?: number;
+  columns?: ColumnsConfig[];
+  build: () => HTMLTableColElement;
 }
 
 export interface TableRowType extends CommonElementType {
@@ -125,6 +169,9 @@ export interface TableCellType extends CommonElementType {
 export interface TableCellHeaderType extends TableCellType {
   scope?: ScopeEnum;
 }
+
+// ---------------- Type definitions for List elements ----------------
+// --------------------------------------------------------------------
 
 export interface OrderedListType extends CommonElementType {
   render: HTMLOListElement;
@@ -149,11 +196,15 @@ export interface DescriptionListType extends CommonElementType {
   build: () => HTMLDListElement;
 }
 
+// ---------------- Type definitions for Form elements ----------------
+// --------------------------------------------------------------------
+
 export interface FormType extends CommonElementType {
   render: HTMLFormElement;
   action?: string;
   method?: FormMethodEnum;
   name?: string;
+  noValidation: boolean;
   build: () => HTMLFormElement;
 }
 
@@ -164,18 +215,143 @@ export interface InputType extends CommonElementType {
   label?: LabelType;
   value?: string;
   name?: string;
-  autofocus?: boolean;
-  disabled?: boolean;
-  required?: boolean;
-  readonly?: boolean;
+  form?: FormType;
+  autofocus: boolean;
+  disabled: boolean;
+  required: boolean;
+  readonly: boolean;
   options?: InputOptionsConfig;
+  validationFailMessages?: FailMessagesConfig;
   build: () => HTMLInputElement;
 }
 
 export interface LabelType extends CommonElementType {
   render: HTMLLabelElement;
   textContent?: string;
-  inputId?: string;
-  position: LabelPositionEnum;
+  formElementId?: string;
+  position: ElementPositionEnum;
   build: () => HTMLLabelElement;
+}
+
+export interface ButtonType extends CommonElementType {
+  render: HTMLButtonElement;
+  type: ButtonTypeEnum;
+  form?: FormType;
+  textContent?: string;
+  name?: string;
+  value?: string;
+  disabled: boolean;
+  build: () => HTMLLabelElement;
+}
+
+export interface DropdownType extends CommonElementType {
+  id: string;
+  render: HTMLSelectElement;
+  form?: FormType;
+  label?: LabelType;
+  name?: string;
+  autofocus: boolean;
+  disabled: boolean;
+  required: boolean;
+  multiple: boolean;
+  build: () => HTMLSelectElement;
+}
+
+export interface OptionType extends CommonElementType {
+  render: HTMLOptionElement;
+  textContent?: string;
+  value?: string;
+  disabled: boolean;
+  selected: boolean;
+  build: () => HTMLOptionElement;
+}
+
+export interface OptionsGroupType extends CommonElementType {
+  render: HTMLOptGroupElement;
+  label: string;
+  disabled: boolean;
+  build: () => HTMLOptGroupElement;
+}
+
+export interface TextAreaType extends CommonElementType {
+  render: HTMLTextAreaElement;
+  id: string;
+  form?: FormType;
+  label?: LabelType;
+  name?: string;
+  value?: string;
+  autofocus: boolean;
+  disabled: boolean;
+  required: boolean;
+  readonly: boolean;
+  spellcheck: boolean;
+  width?: number;
+  height?: number;
+  minLength?: number;
+  maxLength?: number;
+  placeholder?: string;
+  validationFailMessages?: FailMessagesConfig;
+  build: () => HTMLTextAreaElement;
+}
+
+export interface LegendType extends CommonElementType {
+  render: HTMLLegendElement;
+  textContent?: string;
+  build: () => HTMLLegendElement;
+}
+
+export interface FieldsetType extends CommonElementType {
+  render: HTMLFieldSetElement;
+  name?: string;
+  form?: FormType;
+  legend?: LegendType;
+  disabled: boolean;
+  build: () => HTMLFieldSetElement;
+}
+
+// ---------------- Type definitions for Media elements ---------------
+// --------------------------------------------------------------------
+
+export interface SourceType extends CommonElementType {
+  render: HTMLSourceElement;
+  mediaType: MediaTypeEnum;
+  options: SourceOptionsConfig;
+  build: () => HTMLSourceElement;
+}
+
+export interface CommonMediaType extends CommonElementType {
+  src?: string;
+  children?: SourceType[];
+  noSupportMessage?: string;
+  autoplay: boolean;
+  showControls: boolean;
+  loop: boolean;
+  muted: boolean;
+}
+
+export interface AudioType extends CommonMediaType {
+  render: HTMLAudioElement;
+  build: () => HTMLAudioElement;
+}
+
+export interface VideoType extends CommonMediaType {
+  render: HTMLVideoElement;
+  height?: number;
+  width?: number;
+  posterFrame?: string;
+  build: () => HTMLVideoElement;
+}
+
+export interface ImageType extends CommonMediaType {
+  render: HTMLImageElement;
+  source: string;
+  description: string;
+  sourceSet?: string;
+  mediaQueries?: string;
+  build: () => HTMLImageElement;
+}
+
+export interface PictureType extends CommonElementType {
+  render: HTMLPictureElement;
+  build: () => HTMLPictureElement;
 }

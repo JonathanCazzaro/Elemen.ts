@@ -1,4 +1,5 @@
 import { TableConstructor } from "../../types/constructors";
+import { TableColumnGroupType, TableRowType, TableSectionType } from "../../types/types";
 import Str from "../../utils/str";
 import Common from "../Common";
 
@@ -6,6 +7,7 @@ import Common from "../Common";
  * Initiates a new Table.
  */
 export default class Table extends Common {
+  children?: TableRowType[] | TableColumnGroupType[] | TableSectionType[];
   caption?: string;
   readonly render: HTMLTableElement;
 

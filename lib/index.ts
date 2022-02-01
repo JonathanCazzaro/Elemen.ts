@@ -6,8 +6,10 @@ export { Router, Page };
 // Generic Elements
 import Container from "./elements/Generic/Container";
 import Insert from "./elements/Generic/Insert";
+import Caption from "./elements/Generic/Caption";
+import Figure from "./elements/Generic/Figure";
 
-export { Container, Insert };
+export { Container, Insert, Caption, Figure };
 
 // Navigation Elements
 import Link from "./elements/Navigation/Link";
@@ -65,5 +67,6 @@ export { Ordered_List, Unordered_List, List_Item };
 import Form from "./elements/Form/Form";
 import Label from "./elements/Form/Label";
 import Input from "./elements/Form/Input";
+import Button from "./elements/Form/Button";
 
-export { Form, Label, Input };
+export { Form, Label, Input, Button };
