@@ -3,7 +3,6 @@ import {
   InputOptionsConfig,
 } from "../../types/configObjects";
 import {
-  HTMLTagEnum,
   InputPatternsEnum,
   InputTypeEnum,
 } from "../../types/enum";

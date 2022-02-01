@@ -1,5 +1,5 @@
 import { OrderedListConstructor } from "../../types/constructors";
-import { GenericElement, ListItemType } from "../../types/types";
+import { ListItemType } from "../../types/types";
 import Common from "../Common";
 
 /**

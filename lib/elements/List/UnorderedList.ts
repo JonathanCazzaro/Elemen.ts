@@ -1,4 +1,4 @@
-import { CommonConstructor, UnorderedListConstructor } from "../../types/constructors";
+import { UnorderedListConstructor } from "../../types/constructors";
 import { ListItemType } from "../../types/types";
 import Common from "../Common";
 

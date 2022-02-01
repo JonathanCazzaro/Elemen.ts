@@ -1,5 +1,4 @@
 import { LinkConstructor } from "../../types/constructors";
-import { LinkType } from "../../types/types";
 import Common from "../Common";
 
 /**

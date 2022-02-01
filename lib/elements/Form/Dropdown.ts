@@ -1,5 +1,5 @@
 import { DropdownConstructor } from "../../types/constructors";
-import { LabelPositionEnum } from "../../types/enum";
+import { ElementPositionEnum } from "../../types/enum";
 import { FormType, LabelType, OptionsGroupType, OptionType } from "../../types/types";
 import Str from "../../utils/str";
 import Common from "../Common";
@@ -93,9 +93,9 @@ export default class Dropdown extends Common {
     if (label) {
       label.formElementId = this.id;
       const labelRender = label.build();
-      if (label.position === LabelPositionEnum.BOTTOM)
+      if (label.position === ElementPositionEnum.BOTTOM)
         this.render.after(labelRender);
-      else if (label.position === LabelPositionEnum.TOP)
+      else if (label.position === ElementPositionEnum.TOP)
         this.render.before(labelRender);
     }
   }

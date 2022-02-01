@@ -1,6 +1,6 @@
 import { FailMessagesConfig } from "../../types/configObjects";
 import { TextAreaConstructor } from "../../types/constructors";
-import { LabelPositionEnum } from "../../types/enum";
+import { ElementPositionEnum } from "../../types/enum";
 import { FormType, LabelType } from "../../types/types";
 import Common from "../Common";
 import { setValidationMessages } from "./inputConfigurator";
@@ -139,9 +139,9 @@ export default class Text_Area extends Common {
     if (label) {
       label.formElementId = this.id;
       const labelRender = label.build();
-      if (label.position === LabelPositionEnum.BOTTOM)
+      if (label.position === ElementPositionEnum.BOTTOM)
         this.render.after(labelRender);
-      else if (label.position === LabelPositionEnum.TOP)
+      else if (label.position === ElementPositionEnum.TOP)
         this.render.before(labelRender);
     }
   }

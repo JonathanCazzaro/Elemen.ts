@@ -1,6 +1,5 @@
-import { OptionConstructor, OptionsGroupConstructor } from "../../types/constructors";
+import { OptionsGroupConstructor } from "../../types/constructors";
 import { OptionType } from "../../types/types";
-import Str from "../../utils/str";
 import Common from "../Common";
 
 /**

@@ -60,13 +60,49 @@ export {
 import Ordered_List from "./elements/List/OrderedList";
 import Unordered_List from "./elements/List/UnorderedList";
 import List_Item from "./elements/List/ListItem";
+import Description_List from "./elements/List/DescriptionList";
+import Description_Term from "./elements/List/DescriptionTerm";
+import Term_Definition from "./elements/List/TermDefinition";
 
-export { Ordered_List, Unordered_List, List_Item };
+export {
+  Ordered_List,
+  Unordered_List,
+  List_Item,
+  Description_List,
+  Description_Term,
+  Term_Definition,
+};
 
 // Form Element
 import Form from "./elements/Form/Form";
 import Label from "./elements/Form/Label";
 import Input from "./elements/Form/Input";
 import Button from "./elements/Form/Button";
+import Dropdown from "./elements/Form/Dropdown";
+import Fieldset from "./elements/Form/Fieldset";
+import Legend from "./elements/Form/Legend";
+import Option from "./elements/Form/Option";
+import Options_Group from "./elements/Form/OptionsGroup";
+import Text_Area from "./elements/Form/TextArea";
 
-export { Form, Label, Input, Button };
+export {
+  Form,
+  Label,
+  Input,
+  Button,
+  Dropdown,
+  Fieldset,
+  Legend,
+  Option,
+  Options_Group,
+  Text_Area,
+};
+
+// Media Element
+import Image from "./elements/Media/Image";
+import Picture from "./elements/Media/Picture";
+import Audio from "./elements/Media/Audio";
+import Video from "./elements/Media/Video";
+import Source from "./elements/Media/Source";
+
+export { Image, Picture, Audio, Video, Source };
