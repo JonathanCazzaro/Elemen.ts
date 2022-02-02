@@ -44,7 +44,7 @@ export default class Str {
   }
 
   /**
-   * Checks if a sourceSet argument for an image matches the following pattern : pathtoimagefile resolution (example : myfile.png 1280w).
+   * Checks if a sourceSet argument for an image matches the following pattern : "pathtoimagefile resolution" (example : myfile.png 1280w).
    * @param {Array.string} sourceSet - The array of strings that should be checked.
    * @returns {boolean}
    */
@@ -57,12 +57,12 @@ export default class Str {
   }
 
   /**
-   * Checks if a mediaQueries argument for an image matches the following pattern : (mediaquery) resolution (example : (min-width: 768px) 480px).
+   * Checks if a mediaQueries argument for an image matches the following pattern : "(mediaquery) resolution" (example : "(min-width: 768px) 480px/vw/em") or just "resolution" (example : "480px/vw/em")
    * @param {Array.string} mediaQueries - The array of strings that should be checked.
    * @returns {boolean}
    */
   static checkMediaQueries(mediaQueries: string[]): boolean {
-    const regex = /^\([a-z-]+:\s.+\)\s[1-9][0-9]{0,3}px|vw|em$/gm;
+    const regex = /^(\([a-z-]+:\s[^\s]+\)?\s)?([1-9][0-9]{0,3}px|vw|em)$/gm;
     for (const source of mediaQueries) {
       if (!regex.test(source)) return false;
     }

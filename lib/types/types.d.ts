@@ -26,6 +26,13 @@ export interface PageType {
   leave: () => void;
 }
 
+export interface UserType {
+  isLogged: boolean;
+  token?: string;
+  [key: string]: any;
+  authenticate: () => boolean;
+}
+
 export interface CommonElementType {
   serial: string;
   parentSerial?: string;

@@ -15,7 +15,7 @@ export default class Video extends CommonMedia {
    * @param {string} [id] - (optional)
    * @param {string} [classes] - (optional) A space is needed between each class.
    * @param {Array.SourceType} [children] - (optional) An array containing the children Source elements is any.
-   * @param {string} [src] - (optional) URL/path of the audio file. Children would then not be processed.
+   * @param {string} [src] - (optional) URL/path of the media file. If used, children elements would then not be processed.
    * @param {string} [noSupportMessage] - (optional) Text to be displayed if the browser does not support the feature.
    * @param {boolean} [autoplay] - (optional) Boolean to specify whether the element should be set on autoplay or not (not recommanded).
    * @param {boolean} [showControls] - (optional) Boolean to specify whether the element should provide controls or not.

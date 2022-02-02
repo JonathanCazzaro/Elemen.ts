@@ -15,9 +15,8 @@ export default class Options_Group extends Common {
    * Initiates a new Options Group (optgroup).
    * @param {string} [id] - (optional)
    * @param {string} [classes] - (optional) A space is needed between each class.
-   * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any.
+   * @param {Array.OptionType} [children] - (optional) An array containing the children elements if any.
    * @param {string} label - Name of the options group, displayed in the browser.
-   * @param {Array.OptionType} options - Instances of option elements.
    * @param {boolean} [disabled] - (optional) Boolean to specify whether the element should be disabled or not.
    */
   constructor({

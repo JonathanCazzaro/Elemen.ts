@@ -1,4 +1,4 @@
-import { PageType } from "../types/types";
+import { PageType, UserType } from "../types/types";
 import { RouterConstructor } from "../types/constructors";
 import ArrayExt from "../utils/arrayExt";
 
@@ -10,13 +10,15 @@ export default class Router {
   private currentPage: PageType;
   private pages: PageType[];
   private notFound: PageType;
+  user?: UserType;
 
   /**
    * Initiates a new Router.
    * @param {Array.PageType} pages - The pages of your application. Use the Page API to make them.
    * @param {PageType} notFound - A special 404 page that will be displayed if the path has no match. Use again Page API.
+   * @param {PageType} [user] - (optional) A user instance for authentification purposes. Required if the application have private pages.
    */
-  constructor({ pages, notFound }: RouterConstructor) {
+  constructor({ pages, notFound, user }: RouterConstructor) {
     pages.forEach((page) => {
       const { path } = page;
       if (!ArrayExt.isObjectUnique(pages, "path", path))
@@ -26,6 +28,7 @@ export default class Router {
     });
     this.pages = pages;
     this.notFound = notFound;
+    if (user) this.user = user;
     this.currentPath = window.location.pathname;
   }
 

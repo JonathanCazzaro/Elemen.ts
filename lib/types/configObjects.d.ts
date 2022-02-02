@@ -1,5 +1,10 @@
 import { InputPatternsEnum } from "./enum";
 
+export type AuthorizationConfig = {
+  isRequired: boolean;
+  userIsLogged: boolean;
+}
+
 export type ColumnsConfig = {
   columnExtension?: number;
   classes?: string[];

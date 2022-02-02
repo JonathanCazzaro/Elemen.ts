@@ -15,7 +15,7 @@ export default class Ordered_List extends Common {
    * Initiates a new Ordered List (ol).
    * @param {string} [id] - (optional)
    * @param {string} [classes] - (optional) A space is needed between each class.
-   * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any.
+   * @param {Array.ListItemType} [children] - (optional) An array containing the children elements if any.
    * @param {boolean} [reversed] - (optional) If true, items will be listed in descending order.
    * @param {number} [startFrom] - (optional) The number the list should start from.
    */

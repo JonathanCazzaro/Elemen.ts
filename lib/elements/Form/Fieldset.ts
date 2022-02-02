@@ -17,9 +17,10 @@ export default class Fieldset extends Common {
    * @param {string} [id] - (optional)
    * @param {string} [classes] - (optional) A space is needed between each class.
    * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any.
-   * @param {string} [value] - (optional) Value which will be sent when submitting.
+   * @param {string} [name] - (optional) Name of the Fieldset (identification for data submitting).
+   * @param {FormType} [form] - (optional) The form element instance related to the fieldset. Required if the fieldset is outside the form element.
+   * @param {string} [legend] - (optional) A Legend element instance to act as a caption for the fieldset.
    * @param {boolean} [disabled] - (optional) Boolean to specify whether the element should be disabled or not.
-   * @param {boolean} [selected] - (optional) Boolean to specify whether the element should be selected or not.
    */
   constructor({
     id,

@@ -7,7 +7,7 @@ import Common from "../Common";
  * Initiates a new Table.
  */
 export default class Table extends Common {
-  children?: TableRowType[] | TableColumnGroupType[] | TableSectionType[];
+  children?: (TableRowType|TableColumnGroupType|TableSectionType)[];
   caption?: string;
   readonly render: HTMLTableElement;
 
@@ -16,7 +16,7 @@ export default class Table extends Common {
    * @param {string} [id] - (optional)
    * @param {string} [classes] - (optional) A space is needed between each class.
    * @param {string} [caption] - (optional) Caption placed at the top of the table.
-   * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any.
+   * @param {Array.(TableRowType|TableColumnGroupType|TableSectionType)} [children] - (optional) An array containing the children elements if any.
    */
   constructor({ id, classes, children, caption }: TableConstructor) {
     super({ id, classes });

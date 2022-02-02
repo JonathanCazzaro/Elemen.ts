@@ -8,7 +8,7 @@ import Common from "../Common";
  * Initiates a new Dropdown (select).
  */
 export default class Dropdown extends Common {
-  children?: OptionsGroupType[] | OptionType[];
+  children?: (OptionsGroupType|OptionType)[];
   id: string;
   form?: FormType;
   name?: string;
@@ -23,7 +23,7 @@ export default class Dropdown extends Common {
    * Initiates a new Dropdown (select).
    * @param {string} id Required.
    * @param {string} [classes] - (optional) A space is needed between each class.
-   * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any (Options Group or Option elements).
+   * @param {Array.(OptionsGroupType|OptionType)} [children] - (optional) An array containing the children elements if any (Options Group or Option elements).
    * @param {FormType} [form] - (optional) The form element instance related to the dropdown, required if placed outside.
    * @param {LabelType} [label] - (optional) An instance of Label element to identify the dropdown.
    * @param {string} [name] - (optional) Name indicator sent with the form as part of the data. Works as a couple with the value attribute.

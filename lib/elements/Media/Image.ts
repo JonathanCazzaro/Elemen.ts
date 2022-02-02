@@ -18,6 +18,8 @@ export default class Image extends Common {
    * @param {string} [classes] - (optional) A space is needed between each class.
    * @param {string} source - URL/path of the image file.
    * @param {string} description - Short description of the image (-> alt). Enter an empty string if the image is purely decorative.
+   * @param {string} [sourceSet] - (optional) An array of alternative sources matching the following pattern : "filepath width" (example: "mysource.png 480w")
+   * @param {string} [mediaQueries] - (optional) An array containing either a mediaquery associated to a width (example: "(min-width: 720px) 540px"), or only a width that will be used if no mediaquery has matched.
    */
   constructor({
     id,
@@ -41,10 +43,11 @@ export default class Image extends Common {
       if (!sourceSet) throw new Error(`mediaQueries argument require to have previously filled the sourceSet argument.`);
       if (!Str.checkMediaQueries(mediaQueries))
         throw new Error(
-          `The mediaQueries argument is invalid. Format must be : "(mediaquery) resolution". Example : "(max-width: 1024px) 768px"`
+          `The mediaQueries argument is invalid. Format must be : "(mediaquery) resolution" or just "resolution. Example : "(max-width: 1024px) 768px/vw/em" or just "768px/vw/em`
         );
       this.mediaQueries = mediaQueries.join(",");
     }
+    this.render = this.build();
   }
 
   /**

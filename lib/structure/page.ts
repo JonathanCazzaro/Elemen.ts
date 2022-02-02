@@ -1,4 +1,4 @@
-import { GenericElement } from "../types/types";
+import { GenericElement, UserType } from "../types/types";
 import { PageConstructor } from "../types/constructors";
 import { FileEnum } from "../types/enum";
 import File from "../utils/file";
@@ -14,6 +14,8 @@ export default class Page {
   readonly cssFiles?: string[];
   readonly jsFiles?: string[];
   isActive: boolean = false;
+  private isPrivate: boolean = false;
+  handleAuthenficationFail: () => void;
 
   /**
    * Initiates a new Page.
@@ -22,6 +24,7 @@ export default class Page {
    * @param {string} [description] - (optional) Description of the page for SEO (should be 155 characters max).
    * @param {Array.string} [cssFiles] - (optional) An array of relative paths to CSS files to be loaded dynamically.
    * @param {Array.string} [jsFiles] - (optional) An array of relative paths to JS files to be loaded dynamically.
+   * @param {Array.string} [isPrivate] - (optional) If true, an authentification check will be performed before serving the page. Default is false.
    */
   constructor({
     title,
@@ -29,6 +32,7 @@ export default class Page {
     path,
     cssFiles,
     jsFiles,
+    isPrivate,
   }: PageConstructor) {
     this.path = path.startsWith("/") ? path : `/${path}`;
 
@@ -50,6 +54,7 @@ export default class Page {
 
     if (cssFiles) this.cssFiles = cssFiles;
     if (jsFiles) this.jsFiles = jsFiles;
+    if (isPrivate) this.isPrivate = true;
   }
 
   private setDescriptionTag(): void {
@@ -74,10 +79,16 @@ export default class Page {
     this.content = elements;
   }
 
+  setAuthenficationFailHandler(customMethod: () => void): void {
+    this.handleAuthenficationFail = customMethod;
+  }
+
   /**
    * Sets the page as active in the browser.
    */
-  reach(): void {
+  reach(user?: UserType): void {
+    if (this.isPrivate) {
+    }
     if (this.title) document.title = this.title;
     else if (!document.title)
       throw new Error(
