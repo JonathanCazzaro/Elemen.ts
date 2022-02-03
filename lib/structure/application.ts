@@ -1,11 +1,15 @@
 import { PageType, UserType } from "../types/types";
-import { RouterConstructor } from "../types/constructors";
+import { ApplicationConstructor } from "../types/constructors";
 import ArrayExt from "../utils/arrayExt";
+import { RoleEnum } from "../types/enum";
+import Str from "../utils/str";
+import { User } from "..";
+const { matchValue } = Str;
 
 /**
- * Initiates a new Router for your application.
+ * Initiates a new Application.
  */
-export default class Router {
+export default class Application {
   private currentPath: string;
   private currentPage: PageType;
   private pages: PageType[];
@@ -13,12 +17,12 @@ export default class Router {
   user?: UserType;
 
   /**
-   * Initiates a new Router.
+   * Initiates a new Application.
    * @param {Array.PageType} pages - The pages of your application. Use the Page API to make them.
    * @param {PageType} notFound - A special 404 page that will be displayed if the path has no match. Use again Page API.
-   * @param {PageType} [user] - (optional) A user instance for authentification purposes. Required if the application have private pages.
+   * @param {Array.UserType} [users] - (optional) An array of user instances for handling roles. Recommended if the application has private pages.
    */
-  constructor({ pages, notFound, user }: RouterConstructor) {
+  constructor({ pages, notFound, user }: ApplicationConstructor) {
     pages.forEach((page) => {
       const { path } = page;
       if (!ArrayExt.isObjectUnique(pages, "path", path))
@@ -53,16 +57,26 @@ export default class Router {
     events.forEach((event) =>
       window.addEventListener(event, (e) => {
         e.preventDefault();
-        this.currentPath = window.location.pathname;
-        if (this.currentPage) {
-          if (this.currentPage.path === this.currentPath) return;
-          else this.currentPage.leave();
+        let { currentPath, currentPage, pages, notFound, user } = this;
+        currentPath = window.location.pathname;
+        if (currentPage) {
+          if (currentPage.path === currentPath) return;
+          else currentPage.leave();
         }
-        const foundPage = this.pages.find(
-          (page) => page.path === this.currentPath
-        );
-        this.currentPage = foundPage ? foundPage : this.notFound;
-        this.currentPage.reach();
+        const foundPage = pages.find((page) => page.path === currentPath);
+        currentPage = foundPage ? foundPage : notFound;
+        const { ADMIN, USER } = RoleEnum;
+        if (matchValue(currentPage.accessLevel, [ADMIN, USER])) {               
+          if ((user && !user.authenticate()) || !user) {            
+            currentPage.denyAccess();
+            if (!user)
+              console.warn(
+                `The page with path ${currentPage.path} has access restrictions. Though there is no user set up to deal with permissions.`
+              );
+            return;
+          }
+        }
+        currentPage.reach();
       })
     );
   }

@@ -1,4 +1,4 @@
-import { Router } from "../..";
+import Application from "../../structure/application";
 import Link from "./Link";
 
 /**
@@ -12,7 +12,7 @@ export default class NavLink extends Link {
     const element = super.build();
     element.addEventListener("click", (e) => {
       e.preventDefault();
-      Router.goTo(this.target);
+      Application.goTo(this.target);
     });
     return element;
   }

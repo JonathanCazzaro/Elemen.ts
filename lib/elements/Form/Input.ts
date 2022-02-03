@@ -62,6 +62,14 @@ export default class Input extends Common {
     this.type = type;
     if (name) this.name = name;
     if (form) this.form = form;
+    else if (
+      this.type === InputTypeEnum.SUBMIT ||
+      this.type === InputTypeEnum.RESET
+    ) {
+      throw new Error(
+        "The form attribute must be filled in when constructing a submit/reset input."
+      );
+    }
     if (autofocus) this.autofocus = true;
     if (disabled) this.disabled = true;
     if (required) {
@@ -121,8 +129,9 @@ export default class Input extends Common {
     if (readonly) element.readOnly = true;
 
     if (options) element = setInputOptions(element, options);
-    if (validationFailMessages) element = setValidationMessages(element, validationFailMessages);
-      
+    if (validationFailMessages)
+      element = setValidationMessages(element, validationFailMessages);
+
     return element;
   }
 
@@ -136,6 +145,14 @@ export default class Input extends Common {
         this.render.after(labelRender);
       else if (label.position === ElementPositionEnum.TOP)
         this.render.before(labelRender);
+    }
+    if (this.type === InputTypeEnum.SUBMIT) {
+      this.render.addEventListener("click", (event) => {
+        event.preventDefault();
+        this.form.render.dispatchEvent(
+          new Event(this.form.noValidation ? "submit" : "trysubmit")
+        );
+      });
     }
   }
 }

@@ -80,3 +80,9 @@ export enum MediaTypeEnum {
   VIDEO,
   PICTURE,
 }
+
+export enum RoleEnum {
+  VISITOR = "visitor",
+  USER = "user",
+  ADMIN = "admin",
+}

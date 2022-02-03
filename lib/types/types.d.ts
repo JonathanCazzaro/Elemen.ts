@@ -12,6 +12,7 @@ import {
   ElementPositionEnum,
   MediaTypeEnum,
   ScopeEnum,
+  RoleEnum,
 } from "./enum";
 
 export interface PageType {
@@ -21,16 +22,20 @@ export interface PageType {
   cssFiles?: string[];
   jsFiles?: string[];
   isActive: boolean;
+  accessLevel: RoleEnum;
   setContent: (elements: GenericElement[]) => void;
-  reach: () => void;
+  reach: (user?: UserType) => void;
   leave: () => void;
+  denyAccess: () => void | null;
 }
 
 export interface UserType {
   isLogged: boolean;
+  role: RoleEnum;
   token?: string;
   [key: string]: any;
-  authenticate: () => boolean;
+  authenticate: (this: UserType) => Promise<boolean> | boolean | null;
+  connect: (this: UserType) => Promise<boolean> | boolean | null;
 }
 
 export interface CommonElementType {

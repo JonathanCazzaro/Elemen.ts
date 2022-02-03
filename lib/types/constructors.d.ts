@@ -6,6 +6,7 @@ import {
   ElementPositionEnum,
   MediaTypeEnum,
   ScopeEnum,
+  RoleEnum,
 } from "./enum";
 import {
   CaptionType,
@@ -28,7 +29,7 @@ import {
 
 // --------------------- Structure Constructors ---------------------
 
-export interface RouterConstructor {
+export interface ApplicationConstructor {
   /**
    * @param {Array.PageType} pages - The pages of your application. Use the Page API to make them.
    */
@@ -38,7 +39,7 @@ export interface RouterConstructor {
    */
   notFound: PageType;
   /**
-   * @param {PageType} [user] - (optional) A user instance for authentification purposes. Required if the application have private pages.
+   * @param {UserType} [user] - (optional) A user instance for handling roles. Recommended if the application has private pages.
    */
   user?: UserType;
 }
@@ -65,16 +66,30 @@ export interface PageConstructor {
    */
   jsFiles?: string[];
   /**
-   * @param {Array.string} [isPrivate] - (optional) If true, an authentification check will be performed before serving the page. Default is false.
+   * @param {RoleEnum} [accessLevel] - (optional) Define the access level of the page using enum RoleEnum. If not set, default will be VISITOR.
    */
-  isPrivate?: boolean;
+  accessLevel?: RoleEnum;
+  /**
+   * @param {function} [denyAccess] - (optional) Behaviour of the application when the access to the page is not granted.
+   */
+  denyAccess?: () => void;
 }
 
 export interface UserConstructor {
+  /**
+   * @param {object} [properties] - (optional) Any key/value couple needed to define the user.
+   */
   properties?: {
     [key: string]: any;
   };
-  authenticate: (this: UserType) => boolean;  
+  /**
+   * @param {function} [authenticate] - (optional) Custom method to handle authentication (with tokens for example).
+   */
+  authenticate?: (this: UserType) => Promise<boolean> | boolean;
+  /**
+   * @param {function} [connect] - (optional) Custom method to handle connection.
+   */
+  connect?: (this: UserType) => Promise<boolean> | boolean;
 }
 
 // --------------------- Element Constructors ---------------------

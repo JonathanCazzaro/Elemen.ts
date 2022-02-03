@@ -21,7 +21,7 @@ export default class Button extends Common {
    * @param {string} [classes] - (optional) A space is needed between each class.
    * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any.
    * @param {ButtonTypeEnum} type - Role of the button, use enum type ButtonTypeEnum to define it.
-   * @param {FormType} [form] - (optional) The form element instance related to the button, required with a submit or reset type button if it is outside the form.
+   * @param {FormType} [form] - (optional) The form element instance related to the button, required with a submit or reset type button.
    * @param {string} [textContent] - (optional) Text to be displayed inside the element.
    * @param {string} [name] - (optional) Name indicator sent with the form as part of the data. Works as a couple with the value attribute.
    * @param {string} [value] - (optional) Additional data sent with the form. Useless if name not defined.
@@ -80,5 +80,17 @@ export default class Button extends Common {
     if (disabled) element.disabled = true;
     if (textContent) element.textContent = textContent;
     return element;
+  }
+
+  mount(): void {
+    super.mount();
+    if (this.type === ButtonTypeEnum.SUBMIT) {
+      this.render.addEventListener("click", (event) => {
+        event.preventDefault();
+        this.form.render.dispatchEvent(
+          new Event(this.form.noValidation ? "submit" : "trysubmit")
+        );
+      });
+    }
   }
 }
