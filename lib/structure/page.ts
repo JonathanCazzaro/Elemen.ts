@@ -2,6 +2,7 @@ import { GenericElement, UserType } from "../types/types";
 import { PageConstructor } from "../types/constructors";
 import { FileEnum, RoleEnum } from "../types/enum";
 import File from "../utils/file";
+const { load, unload } = File;
 
 /**
  * Initiates a new Page.
@@ -93,8 +94,8 @@ export default class Page {
       );
     this.setDescriptionTag();
 
-    if (this.cssFiles) File.load(FileEnum.CSS, this.cssFiles);
-    if (this.jsFiles) File.load(FileEnum.JS, this.jsFiles);
+    if (this.cssFiles) load(FileEnum.CSS, this.cssFiles);
+    if (this.jsFiles) load(FileEnum.JS, this.jsFiles);
 
     this.isActive = true;
     if (this.content) this.content.forEach((element) => element.mount());
@@ -104,8 +105,8 @@ export default class Page {
    * Clears the page from the document.
    */
   leave(): void {
-    if (this.cssFiles) File.unload(FileEnum.CSS, this.cssFiles);
-    if (this.jsFiles) File.unload(FileEnum.JS, this.jsFiles);
+    if (this.cssFiles) unload(FileEnum.CSS, this.cssFiles);
+    if (this.jsFiles) unload(FileEnum.JS, this.jsFiles);
 
     this.isActive = false;
     if (this.content) this.content.forEach((element) => element.unmount());

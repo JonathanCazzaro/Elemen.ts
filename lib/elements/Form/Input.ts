@@ -4,6 +4,7 @@ import {
 } from "../../types/configObjects";
 import { InputConstructor } from "../../types/constructors";
 import { InputTypeEnum, ElementPositionEnum } from "../../types/enum";
+const { SUBMIT, RESET, PASSWORD, TEXT } = InputTypeEnum;
 import { FormType, LabelType } from "../../types/types";
 import Common from "../Common";
 import { setInputOptions, setValidationMessages } from "./inputConfigurator";
@@ -14,7 +15,6 @@ import { setInputOptions, setValidationMessages } from "./inputConfigurator";
 export default class Input extends Common {
   id: string;
   type: InputTypeEnum;
-  label?: LabelType;
   value?: string;
   name?: string;
   form?: FormType;
@@ -32,7 +32,6 @@ export default class Input extends Common {
    * @param {string} [classes] - (optional) A space is needed between each class.
    * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any.
    * @param {InputTypeEnum} type - Set the type of input using enum InputTypeEnum.
-   * @param {LabelType} [label] - (optional) An instance of Label element to identify the input.
    * @param {string} [name] - (optional) Name of the input (identification for data submitting).
    * @param {FormType} [form] - (optional) The form element instance related to the input. Required if the input is outside the form element.
    * @param {boolean} [autofocus] - (optional) Boolean to specify whether the input should be set on autofocus or not.
@@ -53,7 +52,6 @@ export default class Input extends Common {
     disabled,
     required,
     readonly,
-    label,
     options,
     validationFailMessages,
   }: InputConstructor) {
@@ -62,10 +60,7 @@ export default class Input extends Common {
     this.type = type;
     if (name) this.name = name;
     if (form) this.form = form;
-    else if (
-      this.type === InputTypeEnum.SUBMIT ||
-      this.type === InputTypeEnum.RESET
-    ) {
+    else if (this.type === SUBMIT || this.type === RESET) {
       throw new Error(
         "The form attribute must be filled in when constructing a submit/reset input."
       );
@@ -84,7 +79,6 @@ export default class Input extends Common {
       } else this.required = true;
     }
     if (readonly) this.readonly = true;
-    if (label) this.label = label;
     if (options) {
       const parsedOptions = Object.entries(options);
       if (parsedOptions.length > 1)
@@ -96,6 +90,43 @@ export default class Input extends Common {
     if (validationFailMessages)
       this.validationFailMessages = validationFailMessages;
     this.render = this.build();
+  }
+
+  /**
+   * Reveals the content of the input for a given duration (has effect only with password type input). Acts as a toggle if no duration is given.
+   * @param {number} [timer] - (optional) The time the input should stay revealed (in milliseconds).
+   * @param {function} [callback] - (optional) A callback that would be called when the timer is over.
+   */
+  reveal(timer?: number, callback?: () => void): void {
+    if (this.type === PASSWORD) {
+      if (this.render.type === PASSWORD) {
+        this.render.type = TEXT;
+      } else {
+        if (!timer) {
+          this.render.type = PASSWORD;
+          return;
+        }
+        return;
+      }
+      if (timer) {
+        setTimeout(() => {
+          this.render.type = PASSWORD;
+          callback();
+        }, timer);
+      }
+    }
+  }
+
+  /**
+   * Define any specific actions when the input gets or loses focus.
+   * @param {function} callback - Behaviour when the input gets focus.
+   * @param {function} [blurCallback] - (optional) Behaviour when the input loses focus.
+   */
+  onFocus(callback: () => void, blurCallback?: () => void): void {
+    this.render.onfocus = callback;
+    if (blurCallback) {
+      this.render.onblur = blurCallback;
+    }
   }
 
   /**
@@ -137,15 +168,6 @@ export default class Input extends Common {
 
   mount(): void {
     super.mount();
-    const { label } = this;
-    if (label) {
-      label.formElementId = this.id;
-      const labelRender = label.build();
-      if (label.position === ElementPositionEnum.BOTTOM)
-        this.render.after(labelRender);
-      else if (label.position === ElementPositionEnum.TOP)
-        this.render.before(labelRender);
-    }
     if (this.type === InputTypeEnum.SUBMIT) {
       this.render.addEventListener("click", (event) => {
         event.preventDefault();

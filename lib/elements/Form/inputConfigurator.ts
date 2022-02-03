@@ -7,6 +7,7 @@ import {
   InputTypeEnum,
 } from "../../types/enum";
 import Str from "../../utils/str";
+const { checkDate, checkDateTime, isValidRegex, checkTime } = Str;
 
 const setInputOptions = (
   element: HTMLInputElement,
@@ -36,14 +37,14 @@ const setInputOptions = (
     case DATE:
       const { min, max, incrementStep } = options;
       if (min) {
-        if (Str.checkDate(min.toString())) element.min = min.toString();
+        if (checkDate(min.toString())) element.min = min.toString();
         else
           throw new Error(
             "The minimum date is not matching the yyyy-MM-dd format."
           );
       }
       if (max) {
-        if (Str.checkDate(max.toString())) element.min = max.toString();
+        if (checkDate(max.toString())) element.min = max.toString();
         else
           throw new Error(
             "The maximum date is not matching the yyyy-MM-dd format."
@@ -53,14 +54,14 @@ const setInputOptions = (
       break;
     case DATETIME_LOCAL:
       if (min) {
-        if (Str.checkDateTime(min.toString())) element.min = min.toString();
+        if (checkDateTime(min.toString())) element.min = min.toString();
         else
           throw new Error(
             "The minimum date is not matching the yyyy-MM-ddThh:mm format."
           );
       }
       if (max) {
-        if (Str.checkDateTime(max.toString())) element.min = max.toString();
+        if (checkDateTime(max.toString())) element.min = max.toString();
         else
           throw new Error(
             "The maximum date is not matching the yyyy-MM-ddThh:mm format."
@@ -101,7 +102,7 @@ const setInputOptions = (
               if (element.type === URL) element.pattern = template;
               break;
             default:
-              if (Str.isValidRegex(template)) {
+              if (isValidRegex(template)) {
                 element.pattern = template;
               } else
                 console.error(
@@ -127,12 +128,12 @@ const setInputOptions = (
       break;
     case TIME:
       if (min) {
-        if (Str.checkTime(min.toString())) element.min = min.toString();
+        if (checkTime(min.toString())) element.min = min.toString();
         else
           throw new Error("The minimum time is not matching the hh:mm format.");
       }
       if (max) {
-        if (Str.checkTime(max.toString())) element.min = max.toString();
+        if (checkTime(max.toString())) element.min = max.toString();
         else
           throw new Error("The maximum time is not matching the hh:mm format.");
       }
@@ -165,10 +166,10 @@ function setValidationMessages(
       typeMismatch,
       valueMissing,
     } = customMessages;
-    let message = "";
+    let message = "";    
 
-    for (const state in element) {
-      if (element.validity[state]) {
+    for (const state in element.validity) {      
+      if (element.validity[state]) {        
         switch (state) {
           case "valueMissing":
             message = valueMissing ? valueMissing : "";

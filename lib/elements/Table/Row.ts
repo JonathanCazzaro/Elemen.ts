@@ -1,6 +1,7 @@
 import { TableRowConstructor } from "../../types/constructors";
 import { TableCellHeaderType, TableCellType } from "../../types/types";
 import Str from "../../utils/str";
+const { matchValue } = Str;
 import Common from "../Common";
 
 /**
@@ -22,7 +23,7 @@ export default class Row extends Common {
       this.children = [];
       const authorizedContent = ["TH", "TD"];
       children.forEach((child) => {
-        if (Str.matchValue(child.render.tagName, authorizedContent))
+        if (matchValue(child.render.tagName, authorizedContent))
           this.children.push(child);
         else
           throw new Error(

@@ -1,6 +1,7 @@
 import { TableConstructor } from "../../types/constructors";
 import { TableColumnGroupType, TableRowType, TableSectionType } from "../../types/types";
 import Str from "../../utils/str";
+const { matchValue } = Str;
 import Common from "../Common";
 
 /**
@@ -25,7 +26,7 @@ export default class Table extends Common {
       this.children = [];
       const authorizedContent = ["TR", "COLGROUP", "THEAD", "TBODY", "TFOOT"];
       children.forEach((child) => {
-        if (Str.matchValue(child.render.tagName, authorizedContent))
+        if (matchValue(child.render.tagName, authorizedContent))
           this.children.push(child);
         else
           throw new Error(

@@ -1,5 +1,6 @@
 import { FormConstructor } from "../../types/constructors";
 import { FormMethodEnum } from "../../types/enum";
+import { GenericElement } from "../../types/types";
 import Common from "../Common";
 
 /**
@@ -16,7 +17,6 @@ export default class Form extends Common {
    * Initiates a new Form.
    * @param {string} [id] - (optional)
    * @param {string} [classes] - (optional) A space is needed between each class.
-   * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any.
    * @param {string} [action] - (optional) Target URL where the data should be sent on submit.
    * @param {FormMethodEnum} [method] - (optional) HTTP method used to send the form. Use enum type FormMethodEnum to specify value.
    * @param {string} [name] - (optional) Name of the form (must be unique in the document).
@@ -25,18 +25,21 @@ export default class Form extends Common {
   constructor({
     id,
     classes,
-    children,
     action,
     method,
     name,
     noValidation,
   }: FormConstructor) {
-    super({ id, classes, children });
+    super({ id, classes });
     if (action) this.action = action;
     if (method) this.method = method;
     if (name) this.name = name;
     if (noValidation) this.noValidation = true;
     this.render = this.build();
+  }
+
+  setChildren(children: GenericElement[]): void {
+    this.children = children;
   }
 
   onSubmit(callback: (event: Event) => void): void {

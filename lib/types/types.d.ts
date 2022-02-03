@@ -76,6 +76,7 @@ export type GenericElement =
   | DescriptionListType
   | FormType
   | InputType
+  | LabelType
   | ButtonType
   | DropdownType
   | TextAreaType
@@ -217,6 +218,8 @@ export interface FormType extends CommonElementType {
   method?: FormMethodEnum;
   name?: string;
   noValidation: boolean;
+  setChildren: (children: GenericElement[]) => void;
+  onSubmit: (callback: (event: Event) => void) => void;
   build: () => HTMLFormElement;
 }
 
@@ -224,7 +227,6 @@ export interface InputType extends CommonElementType {
   id: string;
   render: HTMLInputElement;
   type: InputTypeEnum;
-  label?: LabelType;
   value?: string;
   name?: string;
   form?: FormType;
@@ -234,6 +236,8 @@ export interface InputType extends CommonElementType {
   readonly: boolean;
   options?: InputOptionsConfig;
   validationFailMessages?: FailMessagesConfig;
+  reveal: (timer?: number, callback?: () => void) => void;
+  onFocus: (callback: () => void, blurCallback?: () => void) => void;
   build: () => HTMLInputElement;
 }
 
@@ -241,7 +245,6 @@ export interface LabelType extends CommonElementType {
   render: HTMLLabelElement;
   textContent?: string;
   formElementId?: string;
-  position: ElementPositionEnum;
   build: () => HTMLLabelElement;
 }
 
@@ -260,7 +263,6 @@ export interface DropdownType extends CommonElementType {
   id: string;
   render: HTMLSelectElement;
   form?: FormType;
-  label?: LabelType;
   name?: string;
   autofocus: boolean;
   disabled: boolean;
@@ -289,7 +291,6 @@ export interface TextAreaType extends CommonElementType {
   render: HTMLTextAreaElement;
   id: string;
   form?: FormType;
-  label?: LabelType;
   name?: string;
   value?: string;
   autofocus: boolean;
@@ -360,6 +361,7 @@ export interface ImageType extends CommonMediaType {
   description: string;
   sourceSet?: string;
   mediaQueries?: string;
+  setSource: (newSource: string) => void;
   build: () => HTMLImageElement;
 }
 

@@ -40,7 +40,7 @@ export default class Button extends Common {
   }: ButtonConstructor) {
     super({ id, classes, children });
     if (textContent) this.textContent = textContent;
-    this.type = type;
+    this.type = type;    
     if (form) this.form = form;
     else if (
       this.type === ButtonTypeEnum.SUBMIT ||

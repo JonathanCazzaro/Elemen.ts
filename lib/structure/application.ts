@@ -1,9 +1,9 @@
 import { PageType, UserType } from "../types/types";
 import { ApplicationConstructor } from "../types/constructors";
 import ArrayExt from "../utils/arrayExt";
+const { isObjectUnique } = ArrayExt;
 import { RoleEnum } from "../types/enum";
 import Str from "../utils/str";
-import { User } from "..";
 const { matchValue } = Str;
 
 /**
@@ -25,7 +25,7 @@ export default class Application {
   constructor({ pages, notFound, user }: ApplicationConstructor) {
     pages.forEach((page) => {
       const { path } = page;
-      if (!ArrayExt.isObjectUnique(pages, "path", path))
+      if (!isObjectUnique(pages, "path", path))
         throw new Error(
           `The pages of your application must have unique paths.`
         );

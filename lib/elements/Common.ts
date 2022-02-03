@@ -1,6 +1,7 @@
 import { GenericElement } from "../types/types";
 import { CommonConstructor } from "../types/constructors";
 import ArrayExt from "../utils/arrayExt";
+const { remove, toggle } = ArrayExt;
 import Serial from "../utils/serial";
 
 export default class Common {
@@ -37,7 +38,7 @@ export default class Common {
   removeClass(oldClass: string): void {
     const parsedClass = oldClass.split(" ");
     parsedClass.forEach((className) => {
-      this.classes = ArrayExt.remove(this.classes, className);
+      this.classes = remove(this.classes, className);
       this.render.classList.remove(className);
     });
   }
@@ -49,7 +50,7 @@ export default class Common {
   toggleClass(className: string): void {
     const parsedClass = className.split(" ");
     parsedClass.forEach((className) => {
-      this.classes = ArrayExt.toggle(this.classes, className);
+      this.classes = toggle(this.classes, className);
       this.render.classList.toggle(className);
     });
   }

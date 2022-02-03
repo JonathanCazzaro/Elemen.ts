@@ -1,5 +1,6 @@
 import { ImageConstructor } from "../../types/constructors";
 import Str from "../../utils/str";
+const { checkSourceSet, checkMediaQueries } = Str;
 import Common from "../Common";
 
 /**
@@ -33,21 +34,33 @@ export default class Image extends Common {
     this.source = source;
     this.description = description;
     if (sourceSet) {
-      if (!Str.checkSourceSet(sourceSet))
+      if (!checkSourceSet(sourceSet))
         throw new Error(
           `The sourceSet argument is invalid. Format must be : "filepath resolution". Example : "myimage.jpg 480w"`
         );
       this.sourceSet = sourceSet.join(",");
     }
     if (mediaQueries) {
-      if (!sourceSet) throw new Error(`mediaQueries argument require to have previously filled the sourceSet argument.`);
-      if (!Str.checkMediaQueries(mediaQueries))
+      if (!sourceSet)
+        throw new Error(
+          `mediaQueries argument require to have previously filled the sourceSet argument.`
+        );
+      if (!checkMediaQueries(mediaQueries))
         throw new Error(
           `The mediaQueries argument is invalid. Format must be : "(mediaquery) resolution" or just "resolution. Example : "(max-width: 1024px) 768px/vw/em" or just "768px/vw/em`
         );
       this.mediaQueries = mediaQueries.join(",");
     }
     this.render = this.build();
+  }
+
+  /**
+   * Sets a new source for the image.
+   * @param {string} newSource - URL/path of the image file.
+   */
+  setSource(newSource: string): void {
+    this.source = newSource;
+    this.render.src = this.source;
   }
 
   /**

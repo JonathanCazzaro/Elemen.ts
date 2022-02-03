@@ -10,7 +10,6 @@ import { setValidationMessages } from "./inputConfigurator";
  */
 export default class Text_Area extends Common {
   id: string;
-  label?: LabelType;
   value?: string;
   name?: string;
   form?: FormType;
@@ -31,7 +30,6 @@ export default class Text_Area extends Common {
    * Initiates a new Text Area (textarea).
    * @param {string} id Required.
    * @param {string} [classes] - (optional) A space is needed between each class.
-   * @param {LabelType} [label] - (optional) An instance of Label element to identify the input.
    * @param {string} [name] - (optional) Name of the text area (identification for data submitting).
    * @param {string} [value] - (optional) Value of the field.
    * @param {FormType} [form] - (optional) The form element instance related to the text area. Required if the element is outside the form.
@@ -58,7 +56,6 @@ export default class Text_Area extends Common {
     required,
     readonly,
     spellcheck,
-    label,
     placeholder,
     minLength,
     maxLength,
@@ -76,7 +73,6 @@ export default class Text_Area extends Common {
     if (required) this.required = true;
     if (readonly) this.readonly = true;
     if (spellcheck) this.spellcheck = true;
-    if (label) this.label = label;
     if (placeholder) this.placeholder = placeholder;
     if (minLength) this.minLength = minLength;
     if (maxLength) this.maxLength = maxLength;
@@ -132,18 +128,5 @@ export default class Text_Area extends Common {
       element = setValidationMessages(element, validationFailMessages);
 
     return element;
-  }
-
-  mount(): void {
-    super.mount();
-    const { label } = this;
-    if (label) {
-      label.formElementId = this.id;
-      const labelRender = label.build();
-      if (label.position === ElementPositionEnum.BOTTOM)
-        this.render.after(labelRender);
-      else if (label.position === ElementPositionEnum.TOP)
-        this.render.before(labelRender);
-    }
   }
 }

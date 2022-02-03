@@ -1,5 +1,6 @@
 import { CommonConstructor } from "../../types/constructors";
 import Str from "../../utils/str";
+const { matchValue } = Str;
 import Common from "../Common";
 
 /**
@@ -20,7 +21,7 @@ export default class Description_List extends Common {
       this.children = [];
       const authorizedContent = ["DT", "DD", "DIV"];
       children.forEach((child) => {
-        if (Str.matchValue(child.render.tagName, authorizedContent))
+        if (matchValue(child.render.tagName, authorizedContent))
           this.children.push(child);
         else
           throw new Error(

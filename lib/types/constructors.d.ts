@@ -274,7 +274,15 @@ export interface ListItemConstructor extends TextConstructor {}
 
 // ------ Form Elements Constructors ------
 
-export interface FormConstructor extends CommonConstructor {
+export interface FormConstructor {
+  /**
+   * @param {string} [id] - (optional)
+   */
+  id?: string;
+  /**
+   * @param {string} [classes] - (optional) A space is needed between each class.
+   */
+  classes?: string;
   /**
    * @param {string} [action] - (optional) Target URL where the data should be sent on submit.
    */
@@ -299,10 +307,6 @@ export interface InputConstructor extends CommonConstructor {
    */
   id: string;
   /**
-   * @param {LabelType} [label] - (optional) An instance of Label element to identify the input.
-   */
-  label?: LabelType;
-  /**
    * @param {string} [name] - (optional) Name of the input (identification for data submitting).
    */
   name?: string;
@@ -313,19 +317,19 @@ export interface InputConstructor extends CommonConstructor {
   /**
    * @param {boolean} [autofocus] - (optional) Boolean to specify whether the input should be set on autofocus or not.
    */
-  autofocus: boolean;
+  autofocus?: boolean;
   /**
    * @param {boolean} [disabled] - (optional) Boolean to specify whether the input should be set on disabled or not.
    */
-  disabled: boolean;
+  disabled?: boolean;
   /**
    * @param {boolean} [required] - (optional) Boolean to specify whether the input should be set on required or not.
    */
-  required: boolean;
+  required?: boolean;
   /**
    * @param {boolean} [readonly] - (optional) Boolean to specify whether the input should be set on readonly or not.
    */
-  readonly: boolean;
+  readonly?: boolean;
   /**
    * @param {InputTypeEnum} type - Set the type of input using enum InputTypeEnum.
    */
@@ -342,9 +346,9 @@ export interface InputConstructor extends CommonConstructor {
 
 export interface LabelConstructor extends TextConstructor {
   /**
-   * @param {ElementPositionEnum} position - Defines whether the label should be placed before or after the related element. Use enum ElementPositionEnum.
+   * @param {string} [formElementId] - (optional) The ID of the related element. Required if the element is not a direct child of the label.
    */
-  position: ElementPositionEnum;
+  formElementId?: string;
 }
 
 export type InputOptionsConstructor = {
@@ -506,10 +510,6 @@ export interface DropdownConstructor extends CommonConstructor {
    */
   name?: string;
   /**
-   * @param {LabelType} [label] - (optional) An instance of Label element to identify the dropdown.
-   */
-  label?: LabelType;
-  /**
    * @param {boolean} [disabled] - (optional) Boolean to specify whether the dropdown should be disabled or not.
    */
   disabled?: boolean;
@@ -570,10 +570,6 @@ export interface TextAreaConstructor extends CommonConstructor {
    * @param {FormType} [form] - (optional) The form element instance related to the text area. Required if the element is outside the form.
    */
   form?: FormType;
-  /**
-   * @param {LabelType} [label] - (optional) An instance of Label element to identify the input.
-   */
-  label?: LabelType;
   /**
    * @param {string} [placeholder] - (optional) Default text to be displayed before the user start typing.
    */
