@@ -5,33 +5,47 @@ import Common from "../Common";
  * Initiates a new Link (a).
  */
 export default class Link extends Common {
-  textContent?: string;
-  target?: string;
-  readonly render: HTMLAnchorElement;
+  #target?: string;
+  #render: HTMLAnchorElement;
 
   /**
-   * Initiates a new Link/NavLink (a).
+   * Initiates a new Link (a).
    * @param {string} [id] - (optional)
    * @param {string} [classes] - (optional) A space is needed between each class.
+   * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {string} [textContent] - (optional) Text to be displayed inside the element.
    * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any.
    * @param {string} [target] - (optional) Target of the link (url, local path, etc...).
    */
-  constructor({ id, classes, textContent, children, target }: LinkConstructor) {
-    super({ id, classes, children });
-    if (textContent) this.textContent = textContent;
-    if (target) this.target = target;
-    this.render = this.build();
+  constructor({ id, classes, exclusionList, textContent, children, target }: LinkConstructor) {
+    super({ id, classes, children, exclusionList });
+    const { setRender, setTarget, setTextContent, build } = this;
+    setRender(build("a"));
+    if (textContent) setTextContent(textContent);
+    if (target) setTarget(target);
   }
 
-  /**
-   * Renders the HTML Element.
-   */
-  build(): HTMLAnchorElement {
-    const { textContent, target } = this;
-    const element = super.build("a") as HTMLAnchorElement;
-    if (textContent) element.textContent = textContent;
-    if (target) element.href = target;
-    return element;
+  // ***************************
+  // Getters
+  // ***************************
+
+  get target(): string {
+    return this.#target;
+  }
+
+  get render(): HTMLAnchorElement {
+    return this.#render;
+  }
+
+  // ***************************
+  // Setters
+  // ***************************
+
+  setTarget(target: string) {
+    this.#target = this.#render.href = target;
+  }
+
+  setRender(render: HTMLAnchorElement) {
+    this.#render = render;
   }
 }

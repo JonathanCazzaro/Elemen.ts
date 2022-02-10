@@ -1,11 +1,8 @@
-import {
-  FailMessagesConfig,
-  InputOptionsConfig,
-} from "../../types/configObjects";
-import { InputConstructor } from "../../types/constructors";
-import { InputTypeEnum, ElementPositionEnum } from "../../types/enum";
+import { FailMessagesConfig, InputOptionsConfig, OnFocusConfig } from "../../types/configObjects";
+import { InputConstructor, InputOptionsConstructor } from "../../types/constructors";
+import { InputTypeEnum } from "../../types/enum";
 const { SUBMIT, RESET, PASSWORD, TEXT } = InputTypeEnum;
-import { FormType, LabelType } from "../../types/types";
+import { FormType } from "../../types/types";
 import Common from "../Common";
 import { setInputOptions, setValidationMessages } from "./inputConfigurator";
 
@@ -13,23 +10,24 @@ import { setInputOptions, setValidationMessages } from "./inputConfigurator";
  * Initiates a new Input.
  */
 export default class Input extends Common {
-  id: string;
-  type: InputTypeEnum;
-  value?: string;
-  name?: string;
-  form?: FormType;
-  autofocus: boolean = false;
-  disabled: boolean = false;
-  required: boolean = false;
-  readonly: boolean = false;
-  options?: InputOptionsConfig;
-  validationFailMessages?: FailMessagesConfig;
-  readonly render: HTMLInputElement;
+  #id: string;
+  #type: InputTypeEnum;
+  #value?: string;
+  #name?: string;
+  #form?: FormType;
+  #autofocus: boolean = false;
+  #disabled: boolean = false;
+  #required: boolean = false;
+  #readonly: boolean = false;
+  #options?: InputOptionsConfig;
+  #validationFailMessages?: FailMessagesConfig;
+  #render: HTMLInputElement;
 
   /**
    * Initiates a new Input.
    * @param {string} id Required.
    * @param {string} [classes] - (optional) A space is needed between each class.
+   * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any.
    * @param {InputTypeEnum} type - Set the type of input using enum InputTypeEnum.
    * @param {string} [name] - (optional) Name of the input (identification for data submitting).
@@ -45,6 +43,7 @@ export default class Input extends Common {
     id,
     classes,
     children,
+    exclusionList,
     type,
     name,
     form,
@@ -55,41 +54,141 @@ export default class Input extends Common {
     options,
     validationFailMessages,
   }: InputConstructor) {
-    super({ classes, children });
-    this.id = id;
-    this.type = type;
-    if (name) this.name = name;
-    if (form) this.form = form;
+    super({ id, classes, children, exclusionList });
+    const {
+      setRender,
+      setType,
+      setName,
+      setForm,
+      setAutofocus,
+      setDisabled,
+      setRequired,
+      setReadonly,
+      setOptions,
+      setValidationFailMessages,
+      build,
+    } = this;
+
+    setRender(build("input"));
+    setType(type);
+    if (name) setName(name);
+    if (form) setForm(form);
     else if (this.type === SUBMIT || this.type === RESET) {
-      throw new Error(
-        "The form attribute must be filled in when constructing a submit/reset input."
-      );
+      throw new Error("The form attribute must be filled in when constructing a submit/reset input.");
     }
-    if (autofocus) this.autofocus = true;
-    if (disabled) this.disabled = true;
-    if (required) {
-      if (
-        ["color", "hidden", "range", "submit", "reset", "button"].includes(
-          this.type
-        )
-      ) {
-        console.error(
-          `Input type ${this.type} has no required argument implementation.`
-        );
-      } else this.required = true;
+    if (autofocus) setAutofocus(true);
+    if (disabled) setDisabled(true);
+    if (required) setRequired(true);
+    if (readonly) setReadonly(true);
+    if (options) setOptions(options);
+    if (validationFailMessages) setValidationFailMessages(validationFailMessages);
+  }
+
+  // ***************************
+  // Getters
+  // ***************************
+
+  get render(): HTMLInputElement {
+    return this.#render;
+  }
+
+  get type(): InputTypeEnum {
+    return this.#type;
+  }
+
+  get value(): string {
+    return this.#value;
+  }
+
+  get name(): string {
+    return this.#name;
+  }
+
+  get form(): FormType {
+    return this.#form;
+  }
+
+  get autofocus(): boolean {
+    return this.#autofocus;
+  }
+
+  get disabled(): boolean {
+    return this.#disabled;
+  }
+
+  get required(): boolean {
+    return this.#required;
+  }
+
+  get readonly(): boolean {
+    return this.#readonly;
+  }
+
+  get options(): InputOptionsConfig {
+    return this.#options;
+  }
+
+  get validationFailMessages(): FailMessagesConfig {
+    return this.#validationFailMessages;
+  }
+
+  // ***************************
+  // Setters
+  // ***************************
+
+  setRender(render: HTMLInputElement) {
+    this.#render = render;
+  }
+
+  setType(type: InputTypeEnum) {
+    this.#type = this.#render.type = type;
+  }
+
+  setValue(value: string) {
+    this.#value = this.#render.value = value;
+  }
+
+  setName(name: string) {
+    this.#name = this.#render.name = name;
+  }
+
+  setForm(form: FormType) {
+    this.#form = form;
+    if (form.id) this.#render.setAttribute("form", form.id);
+    else throw new Error("The form you connected to the input must have an id.");
+  }
+
+  setAutofocus(value: boolean) {
+    this.#autofocus = this.#render.autofocus = value;
+  }
+
+  setDisabled(value: boolean) {
+    this.#disabled = this.#render.disabled = value;
+  }
+
+  setRequired(value: boolean) {
+    if (["color", "hidden", "range", "submit", "reset", "button"].includes(this.type)) {
+      console.error(`Input type ${this.type} has no required argument implementation.`);
+    } else {
+      this.#required = this.#render.required = value;
     }
-    if (readonly) this.readonly = true;
-    if (options) {
-      const parsedOptions = Object.entries(options);
-      if (parsedOptions.length > 1)
-        console.warn(
-          "You cannot set multiple configuration objects as input options. By default, only the first object will be kept."
-        );
-      this.options = parsedOptions[0][1];
-    }
-    if (validationFailMessages)
-      this.validationFailMessages = validationFailMessages;
-    this.render = this.build();
+  }
+
+  setReadonly(value: boolean) {
+    this.#readonly = this.#render.readOnly = value;
+  }
+
+  setOptions(options: InputOptionsConstructor) {
+    const parsedOptions = Object.entries(options);
+    if (parsedOptions.length > 1)
+      console.warn("You cannot set multiple configuration objects as input options. By default, only the first object will be kept.");
+    this.#options = parsedOptions[0][1];
+    this.setRender(setInputOptions(this.#render, this.#options));
+  }
+
+  setValidationFailMessages(messages: FailMessagesConfig) {
+    this.#validationFailMessages = messages;
+    this.setRender(setValidationMessages(this.#render, messages));
   }
 
   /**
@@ -117,53 +216,21 @@ export default class Input extends Common {
     }
   }
 
-  /**
-   * Define any specific actions when the input gets or loses focus.
-   * @param {function} callback - Behaviour when the input gets focus.
-   * @param {function} [blurCallback] - (optional) Behaviour when the input loses focus.
+  /** Specifies a behaviour when the element gets or loses focus.
+   * @param configuration - Config object to handle focus.
    */
-  onFocus(callback: () => void, blurCallback?: () => void): void {
-    this.render.onfocus = callback;
-    if (blurCallback) {
-      this.render.onblur = blurCallback;
-    }
+  focus(configuration: OnFocusConfig): void {
+    const { onElement, onFocusLoss } = configuration;
+    if (onElement) this.render.addEventListener("focus", onElement);
+    if (onFocusLoss) this.render.addEventListener("blur", onFocusLoss);
   }
 
   /**
-   * Renders the HTML Element.
+   * Define any specific actions when a change has been made to the element.
+   * @param {function} callback - Behaviour after the element had changed.
    */
-  build(): HTMLInputElement {
-    const {
-      name,
-      form,
-      value,
-      autofocus,
-      disabled,
-      required,
-      readonly,
-      type,
-      options,
-      validationFailMessages,
-    } = this;
-    let element = super.build("input") as HTMLInputElement;
-    element.type = type;
-    if (name) element.name = name;
-    if (form) {
-      if (form.id) element.setAttribute("form", form.id);
-      else
-        console.error("The form you connected to the input must have an id.");
-    }
-    if (value) element.value = value;
-    if (autofocus) element.autofocus = true;
-    if (disabled) element.disabled = true;
-    if (required) element.required = true;
-    if (readonly) element.readOnly = true;
-
-    if (options) element = setInputOptions(element, options);
-    if (validationFailMessages)
-      element = setValidationMessages(element, validationFailMessages);
-
-    return element;
+  onChange(callback: (event?: Event) => void): void {
+    this.render.addEventListener("change", callback);
   }
 
   mount(): void {
@@ -171,9 +238,7 @@ export default class Input extends Common {
     if (this.type === InputTypeEnum.SUBMIT) {
       this.render.addEventListener("click", (event) => {
         event.preventDefault();
-        this.form.render.dispatchEvent(
-          new Event(this.form.noValidation ? "submit" : "trysubmit")
-        );
+        this.#form.render.dispatchEvent(new Event(this.form.noValidation ? "submit" : "trysubmit"));
       });
     }
   }

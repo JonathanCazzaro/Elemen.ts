@@ -1,7 +1,6 @@
 import { FailMessagesConfig } from "../../types/configObjects";
 import { TextAreaConstructor } from "../../types/constructors";
-import { ElementPositionEnum } from "../../types/enum";
-import { FormType, LabelType } from "../../types/types";
+import { FormType } from "../../types/types";
 import Common from "../Common";
 import { setValidationMessages } from "./inputConfigurator";
 
@@ -9,27 +8,28 @@ import { setValidationMessages } from "./inputConfigurator";
  * Initiates a new Text Area (textarea).
  */
 export default class Text_Area extends Common {
-  id: string;
-  value?: string;
-  name?: string;
-  form?: FormType;
-  width?: number;
-  height?: number;
-  placeholder?: string;
-  minLength?: number;
-  maxLength?: number;
-  autofocus: boolean = false;
-  disabled: boolean = false;
-  required: boolean = false;
-  readonly: boolean = false;
-  spellcheck: boolean = false;
-  validationFailMessages?: FailMessagesConfig;
-  readonly render: HTMLTextAreaElement;
+  #id: string;
+  #value?: string;
+  #name?: string;
+  #form?: FormType;
+  #width?: number;
+  #height?: number;
+  #placeholder?: string;
+  #minLength?: number;
+  #maxLength?: number;
+  #autofocus: boolean = false;
+  #disabled: boolean = false;
+  #required: boolean = false;
+  #readonly: boolean = false;
+  #spellcheck: boolean = false;
+  #validationFailMessages?: FailMessagesConfig;
+  #render: HTMLTextAreaElement;
 
   /**
    * Initiates a new Text Area (textarea).
    * @param {string} id Required.
    * @param {string} [classes] - (optional) A space is needed between each class.
+   * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {string} [name] - (optional) Name of the text area (identification for data submitting).
    * @param {string} [value] - (optional) Value of the field.
    * @param {FormType} [form] - (optional) The form element instance related to the text area. Required if the element is outside the form.
@@ -48,6 +48,7 @@ export default class Text_Area extends Common {
   constructor({
     id,
     classes,
+    exclusionList,
     name,
     value,
     form,
@@ -63,70 +64,178 @@ export default class Text_Area extends Common {
     height,
     validationFailMessages,
   }: TextAreaConstructor) {
-    super({ classes });
-    this.id = id;
-    if (name) this.name = name;
-    if (value) this.value = value;
-    if (form) this.form = form;
-    if (autofocus) this.autofocus = true;
-    if (disabled) this.disabled = true;
-    if (required) this.required = true;
-    if (readonly) this.readonly = true;
-    if (spellcheck) this.spellcheck = true;
-    if (placeholder) this.placeholder = placeholder;
-    if (minLength) this.minLength = minLength;
-    if (maxLength) this.maxLength = maxLength;
-    if (width) this.width = width;
-    if (height) this.height = height;
-    if (validationFailMessages)
-      this.validationFailMessages = validationFailMessages;
-    this.render = this.build();
+    super({ id, classes, exclusionList });
+    const {
+      setRender,
+      setName,
+      setValue,
+      setForm,
+      setAutofocus,
+      setDisabled,
+      setReadonly,
+      setRequired,
+      setSpellcheck,
+      setPlaceholder,
+      setMinLength,
+      setMaxLength,
+      setWidth,
+      setHeight,
+      setValidationFailMessages,
+      build,
+    } = this;
+    setRender(build("textarea"));
+    if (name) setName(name);
+    if (value) setValue(value);
+    if (form) setForm(form);
+    if (autofocus) setAutofocus(true);
+    if (disabled) setDisabled(true);
+    if (required) setRequired(true);
+    if (readonly) setReadonly(true);
+    if (spellcheck) setSpellcheck(true);
+    if (placeholder) setPlaceholder(placeholder);
+    if (minLength) setMinLength(minLength);
+    if (maxLength) setMaxLength(maxLength);
+    if (width) setWidth(width);
+    if (height) setHeight(height);
+    if (validationFailMessages) setValidationFailMessages(validationFailMessages);
+  }
+
+  // ***************************
+  // Getters
+  // ***************************
+
+  get render(): HTMLTextAreaElement {
+    return this.#render;
+  }
+
+  get value(): string {
+    return this.#value;
+  }
+
+  get name(): string {
+    return this.#name;
+  }
+
+  get form(): FormType {
+    return this.#form;
+  }
+
+  get width(): number {
+    return this.#width;
+  }
+
+  get height(): number {
+    return this.#height;
+  }
+
+  get placeholder(): string {
+    return this.#placeholder;
+  }
+
+  get minLength(): number {
+    return this.#minLength;
+  }
+
+  get maxLength(): number {
+    return this.#maxLength;
+  }
+
+  get autofocus(): boolean {
+    return this.#autofocus;
+  }
+
+  get disabled(): boolean {
+    return this.#disabled;
+  }
+
+  get required(): boolean {
+    return this.#required;
+  }
+
+  get readonly(): boolean {
+    return this.#readonly;
+  }
+
+  get spellcheck(): boolean {
+    return this.#spellcheck;
+  }
+
+  get validationFailMessages(): FailMessagesConfig {
+    return this.#validationFailMessages;
+  }
+
+  // ***************************
+  // Setters
+  // ***************************
+
+  setRender(render: HTMLTextAreaElement) {
+    this.#render = render;
+  }
+
+  setValue(value: string) {
+    this.#value = this.#render.value = value;
+  }
+
+  setName(name: string) {
+    this.#name = this.#render.name = name;
+  }
+
+  setForm(form: FormType) {
+    this.#form = form;
+    if (form.id) this.#render.setAttribute("form", form.id);
+    else throw new Error("The form you connected to the text area must have an id.");
+  }
+
+  setWidth(width: number) {
+    this.#width = this.#render.cols = width;
+  }
+
+  setHeight(height: number) {
+    this.#height = this.#render.rows = height;
+  }
+
+  setPlaceholder(placeholder: string) {
+    this.#placeholder = this.#render.placeholder = placeholder;
+  }
+
+  setMinLength(minLength: number) {
+    this.#minLength = this.#render.minLength = minLength;
+  }
+
+  setMaxLength(maxLength: number) {
+    this.#maxLength = this.#render.maxLength = maxLength;
+  }
+
+  setAutofocus(value: boolean) {
+    this.#autofocus = this.#render.autofocus = value;
+  }
+
+  setDisabled(value: boolean) {
+    this.#disabled = this.#render.disabled = value;
+  }
+
+  setRequired(value: boolean) {
+    this.#required = this.#render.required = value;
+  }
+
+  setReadonly(value: boolean) {
+    this.#readonly = this.#render.readOnly = value;
+  }
+
+  setSpellcheck(value: boolean) {
+    this.#spellcheck = this.#render.spellcheck = value;
+  }
+
+  setValidationFailMessages(messages: FailMessagesConfig) {
+    this.#validationFailMessages = messages;
+    this.setRender(setValidationMessages(this.#render, messages));
   }
 
   /**
-   * Renders the HTML Element.
+   * Define any specific actions when a change has been made to the element.
+   * @param {function} callback - Behaviour after the element had changed.
    */
-  build(): HTMLTextAreaElement {
-    const {
-      name,
-      form,
-      value,
-      autofocus,
-      disabled,
-      required,
-      readonly,
-      spellcheck,
-      validationFailMessages,
-      maxLength,
-      minLength,
-      placeholder,
-      width,
-      height,
-    } = this;
-    let element = super.build("textarea") as HTMLTextAreaElement;
-    if (name) element.name = name;
-    if (value) element.value = value;
-    if (form) {
-      if (form.id) element.setAttribute("form", form.id);
-      else
-        console.error(
-          "The form you connected to the text area must have an id."
-        );
-    }
-    if (placeholder) element.placeholder = placeholder;
-    if (minLength) element.minLength = minLength;
-    if (maxLength) element.minLength = maxLength;
-    if (width) element.cols = width;
-    if (height) element.rows = height;
-    if (autofocus) element.autofocus = true;
-    if (disabled) element.disabled = true;
-    if (required) element.required = true;
-    if (readonly) element.readOnly = true;
-    if (spellcheck) element.spellcheck = true;
-
-    if (validationFailMessages)
-      element = setValidationMessages(element, validationFailMessages);
-
-    return element;
+  onChange(callback: (event?: Event) => void): void {
+    this.render.addEventListener("change", callback);
   }
 }

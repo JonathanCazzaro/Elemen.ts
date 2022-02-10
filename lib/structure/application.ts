@@ -25,10 +25,7 @@ export default class Application {
   constructor({ pages, notFound, user }: ApplicationConstructor) {
     pages.forEach((page) => {
       const { path } = page;
-      if (!isObjectUnique(pages, "path", path))
-        throw new Error(
-          `The pages of your application must have unique paths.`
-        );
+      if (!isObjectUnique(pages, "path", path)) throw new Error(`The pages of your application must have unique paths.`);
     });
     this.pages = pages;
     this.notFound = notFound;
@@ -41,11 +38,7 @@ export default class Application {
    * @param {string} newPath - Enter the new path (example : /contact or just contact).
    */
   static goTo(newPath: string) {
-    history.pushState(
-      {},
-      "set new path",
-      newPath.startsWith("/") ? newPath : `/${newPath}`
-    );
+    history.pushState({}, "set new path", newPath.startsWith("/") ? newPath : `/${newPath}`);
     window.dispatchEvent(new Event("pathchange"));
   }
 
@@ -57,17 +50,20 @@ export default class Application {
     events.forEach((event) =>
       window.addEventListener(event, (e) => {
         e.preventDefault();
-        let { currentPath, currentPage, pages, notFound, user } = this;
-        currentPath = window.location.pathname;
-        if (currentPage) {
-          if (currentPage.path === currentPath) return;
-          else currentPage.leave();
+        const { pages, notFound, user } = this;
+        this.currentPath = window.location.pathname;
+
+        if (this.currentPage) {
+          if (this.currentPage.path === this.currentPath) return;
+          else this.currentPage.leave();
         }
-        const foundPage = pages.find((page) => page.path === currentPath);
-        currentPage = foundPage ? foundPage : notFound;
+        const foundPage = pages.find((page) => page.path === this.currentPath);
+        this.currentPage = foundPage ? foundPage : notFound;
+
         const { ADMIN, USER } = RoleEnum;
-        if (matchValue(currentPage.accessLevel, [ADMIN, USER])) {               
-          if ((user && !user.authenticate()) || !user) {            
+        const { currentPage } = this;
+        if (matchValue(currentPage.accessLevel, [ADMIN, USER])) {
+          if ((user && !user.authenticate()) || !user) {
             currentPage.denyAccess();
             if (!user)
               console.warn(

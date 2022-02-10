@@ -1,18 +1,10 @@
 import { FailMessagesConfig, PatternConfig } from "./configObjects";
-import {
-  ButtonTypeEnum,
-  FormMethodEnum,
-  InputTypeEnum,
-  ElementPositionEnum,
-  MediaTypeEnum,
-  ScopeEnum,
-  RoleEnum,
-} from "./enum";
+import { ButtonTypeEnum, FormMethodEnum, InputTypeEnum, ElementPositionEnum, MediaTypeEnum, ScopeEnum, RoleEnum } from "./enum";
 import {
   CaptionType,
   FormType,
   GenericElement,
-  LabelType,
+  ImageType,
   LegendType,
   ListItemType,
   OptionsGroupType,
@@ -107,6 +99,23 @@ export interface CommonConstructor {
    * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any.
    */
   children?: GenericElement[];
+  /**
+   * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
+   */
+  exclusionList?: string[];
+}
+
+export interface FactoryConstructor {
+  /**
+   * @param {GenericElement} template - The template element used by the new factory.
+   */
+  template: GenericElement;
+  // /**
+  //  * @param {object} modifications - Key/value couples where key is the name of the property to target, and value an array of values whose length will determine how many new instances the factory will produce.
+  //  */
+  // modifications: {
+  //   [property: string]: any[];
+  // };
 }
 
 // ------ Text Elements Constructors ------
@@ -226,6 +235,10 @@ export interface TableColGroupConstructor {
    */
   classes?: string;
   /**
+   * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
+   */
+  exclusionList?: string[];
+  /**
    * @param {number} [columnExtension] - (optional) Defines the quantity of columns upon which the element is extending. Must be strictly superior to 0.
    */
   columnExtension?: number;
@@ -283,6 +296,10 @@ export interface FormConstructor {
    * @param {string} [classes] - (optional) A space is needed between each class.
    */
   classes?: string;
+  /**
+   * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
+   */
+  exclusionList?: string[];
   /**
    * @param {string} [action] - (optional) Target URL where the data should be sent on submit.
    */
@@ -645,7 +662,7 @@ export type AUDIO_VIDEO = {
   /**
    * @param {string} src - Path to the resource.
    */
-  src: string;
+  source: string;
   /**
    * @param {string} [type] - (optional) MIME type of the resource.
    */
@@ -682,7 +699,7 @@ export interface CommonMediaConstructor extends CommonConstructor {
   /**
    * @param {string} [src] - (optional) URL of the media file. If used, children elements would then not be processed.
    */
-  src?: string;
+  source?: string;
   /**
    * @param {Array.SourceType} [children] - (optional) An array containing the children Source elements is any.
    */
@@ -742,4 +759,11 @@ export interface ImageConstructor extends CommonConstructor {
    * @param {string} [mediaQueries] - (optional) An array containing either a mediaquery associated to a width (example: "(min-width: 720px) 540px"), or only a width that will be used if no mediaquery has matched.
    */
   mediaQueries?: string[];
+}
+
+export interface PictureConstructor extends CommonConstructor {
+  /**
+   * @param {Array.(SourceType|ImageType)} [children] - (optional) An array containing the children Source or Image elements if any.
+   */
+  children?: (SourceType | ImageType)[];
 }

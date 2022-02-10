@@ -5,29 +5,18 @@ import Common from "../Common";
  * Initiates a new Term Definition (dd).
  */
 export default class Term_Definition extends Common {
-  textContent?: string;
-  readonly render: HTMLElement;
-
   /**
    * Initiates a new Term Definition (dd).
    * @param {string} [id] - (optional)
    * @param {string} [classes] - (optional) A space is needed between each class.
+   * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {string} [textContent] - (optional) Text to be displayed inside the element.
    * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any.
    */
-  constructor({ id, classes, textContent, children }: TextConstructor) {
-    super({ id, classes, children });
-    if (textContent) this.textContent = textContent;
-    this.render = this.build();
-  }
-
-  /**
-   * Renders the HTML Element.
-   */
-   build(): HTMLElement {
-    const { textContent } = this;
-    const element = super.build("dd") as HTMLElement;
-    if (textContent) element.textContent = textContent;
-    return element;
+  constructor({ id, classes, exclusionList, textContent, children }: TextConstructor) {
+    super({ id, classes, children, exclusionList });
+    const { setRender, setTextContent, build } = this;
+    setRender(build("dd"));
+    if (textContent) setTextContent(textContent);
   }
 }

@@ -5,23 +5,36 @@ import Common from "../Common";
  * Initiates a new Legend.
  */
 export default class Legend extends Common {
-  textContent?: string;
-  readonly render: HTMLLegendElement;
+  #render: HTMLLegendElement;
 
   /**
    * Initiates a new Legend.
    * @param {string} [id] - (optional)
    * @param {string} [classes] - (optional) A space is needed between each class.
+   * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {string} [textContent] - (optional) Text to be displayed inside the element.
    */
-  constructor({
-    id,
-    classes,
-    textContent,
-  }: TextConstructor) {
-    super({ id, classes });
-    if (textContent) this.textContent = textContent;
-    this.render = this.build();
+  constructor({ id, classes, textContent, exclusionList }: TextConstructor) {
+    super({ id, classes, exclusionList });
+    const { setRender, setTextContent, build } = this;
+    setRender(build("legend"));
+    if (textContent) setTextContent(textContent);
+  }
+
+  // ***************************
+  // Getters
+  // ***************************
+
+  get render(): HTMLLegendElement {
+    return this.#render;
+  }
+
+  // ***************************
+  // Setters
+  // ***************************
+
+  setRender(render: HTMLLegendElement) {
+    this.#render = render;
   }
 
   mount(): void {
@@ -34,15 +47,5 @@ export default class Legend extends Common {
     console.error(
       "The mount and unmount methods do not apply on Label elements. To use such an element, you need to pass it to the legend property of the element it has been designed for."
     );
-  }
-
-  /**
-   * Renders the HTML Element.
-   */
-  build(): HTMLLegendElement {
-    const { textContent } = this;
-    const element = super.build("legend") as HTMLLegendElement;
-    if (textContent) element.textContent = textContent;
-    return element;
   }
 }

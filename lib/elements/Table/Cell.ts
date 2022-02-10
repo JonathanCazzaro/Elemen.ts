@@ -5,50 +5,60 @@ import Common from "../Common";
  * Initiates a new Cell (td).
  */
 export default class Cell extends Common {
-  textContent?: string;
-  rowExtension?: number;
-  columnExtension?: number;
-  readonly render: HTMLTableCellElement;
+  #rowExtension?: number;
+  #columnExtension?: number;
+  #render: HTMLTableCellElement;
 
   /**
    * Initiates a new Cell (td).
    * @param {string} [id] - (optional)
    * @param {string} [classes] - (optional) A space is needed between each class.
+   * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {string} [textContent] - (optional) Text to be displayed inside the element.
    * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any.
    * @param {number} [rowExtension] - (optional) Defines the quantity of rows upon which the cell is extending. Must be strictly superior to 0.
    * @param {number} [columnExtension] - (optional) Defines the quantity of columns upon which the cell is extending. Must be strictly superior to 0.
    */
-  constructor({
-    id,
-    classes,
-    children,
-    textContent,
-    rowExtension,
-    columnExtension,
-  }: TableCellConstructor) {
-    super({ id, classes, children });
-    if (textContent) this.textContent = textContent;
-    if (rowExtension) {
-      if (rowExtension > 0) this.rowExtension = rowExtension;
-      else throw new Error(`The value of rowExtension cannot be negative.`);
-    };
-    if (columnExtension) {
-      if (columnExtension > 0) this.columnExtension = columnExtension;
-      else throw new Error(`The value of columnExtension cannot be negative.`);
-    };
-    this.render = this.build();
+  constructor({ id, classes, exclusionList, children, textContent, rowExtension, columnExtension }: TableCellConstructor) {
+    super({ id, classes, children, exclusionList });
+    const { setRender, setColumnExtension, setRowExtension, setTextContent, build } = this;
+    setRender(build("td"));
+    if (rowExtension) setRowExtension(rowExtension);
+    if (columnExtension) setColumnExtension(columnExtension);
+    if (textContent) setTextContent(textContent);
   }
 
-  /**
-   * Renders the HTML Element.
-   */
-  build(): HTMLTableCellElement {
-    const { textContent, rowExtension, columnExtension } = this;
-    const element = super.build("td") as HTMLTableCellElement;
-    if (textContent) element.textContent = textContent;
-    if (rowExtension) element.rowSpan = rowExtension;
-    if (columnExtension) element.colSpan = columnExtension;
-    return element;
+  // ***************************
+  // Getters
+  // ***************************
+
+  get columnExtension(): number {
+    return this.#columnExtension;
+  }
+
+  get rowExtension(): number {
+    return this.#rowExtension;
+  }
+
+  get render(): HTMLTableCellElement {
+    return this.#render;
+  }
+
+  // ***************************
+  // Setters
+  // ***************************
+
+  setColumnExtension(extension: number) {
+    if (extension > 0) this.#columnExtension = this.#render.colSpan = extension;
+    else throw new Error(`The value of columnExtension cannot be negative.`);
+  }
+
+  setRowExtension(extension: number) {
+    if (extension > 0) this.#rowExtension = this.#render.rowSpan = extension;
+    else throw new Error(`The value of rowExtension cannot be negative.`);
+  }
+
+  setRender(render: HTMLTableCellElement) {
+    this.#render = render;
   }
 }

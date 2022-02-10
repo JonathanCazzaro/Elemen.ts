@@ -9,9 +9,7 @@ export default class ArrayExt {
    * @returns {boolean}
    */
   static isObjectUnique(arrayToBeTested: any[], referenceKey: string, value: string): boolean {
-    const refCount: any[] = arrayToBeTested.filter(
-      (entry) => entry[referenceKey] === value
-    );
+    const refCount: any[] = arrayToBeTested.filter((entry) => entry[referenceKey] === value);
     if (refCount.length > 1) return false;
     else return true;
   }
@@ -35,7 +33,7 @@ export default class ArrayExt {
    * @returns {Array.any} The outputted array.
    */
   static toggle(array: any[], element: any): any[] {
-    const removeElement = this.remove(array, element);
+    const removeElement = ArrayExt.remove(array, element);
     if (removeElement.length === array.length) return [...array, element];
     else return removeElement;
   }

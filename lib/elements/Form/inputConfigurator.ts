@@ -32,7 +32,7 @@ const setInputOptions = (
   switch (element.type) {
     case RADIO:
     case CHECKBOX:
-      if (options.checked) element.checked = true;
+      element.checked = options.checked ? true : false;
       break;
     case DATE:
       const { min, max, incrementStep } = options;
@@ -117,7 +117,7 @@ const setInputOptions = (
     case FILE:
       const { fileType, multiple } = options;
       if (fileType) element.accept = fileType.join(",");
-      if (multiple) element.multiple = true;
+      element.multiple = multiple ? true : false;
       break;
     case RANGE:
     case NUMBER:

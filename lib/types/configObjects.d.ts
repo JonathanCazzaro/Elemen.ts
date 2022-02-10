@@ -1,9 +1,46 @@
 import { InputPatternsEnum } from "./enum";
 
+export type OnEventConfig = {
+  /**
+   * @param {function} onElement - Callback function to describe what happens when the element is the target of the event. First parameter gives access to the event.
+   */
+  onElement?: (event?: Event) => void;
+};
+
+export type OnFocusConfig = OnEventConfig & {
+  /**
+   * @param {function} onFocusLoss - Callback function to handle focus loss. First parameter gives access to the event.
+   */
+  onFocusLoss?: (event?: Event) => void;
+};
+
+export type OnClickConfig = OnEventConfig & {
+  /**
+   * @param {function} outsideElement - Callback function to handle clicks outside the element. First parameter gives access to the event.
+   */
+  outsideElement?: (event?: Event) => void;
+};
+
+export type OnHoverConfig = OnEventConfig & {
+  /**
+   * @param {function} onMouseLeave - Callback function to handle mouse leaving the element. First parameter gives access to the event.
+   */
+  onMouseLeave?: (event?: Event) => void;
+};
+
+export type CloneModifsConfig = {
+  /**
+   * @param {string} properties - The properties that will be modified on the new instances, each one separated with a space from the other.
+   * @param {Array.Array.any} values - An array of arrays, each one containing the values for each new instance, in the same order you declared the properties right above.
+   */
+  properties: string;
+  values: any[][];
+};
+
 export type AuthorizationConfig = {
   isRequired: boolean;
   userIsLogged: boolean;
-}
+};
 
 export type ColumnsConfig = {
   columnExtension?: number;
@@ -70,8 +107,8 @@ export type FailMessagesConfig = {
 };
 
 export type SourceOptionsConfig = {
-  src?: string;
+  source?: string;
   type?: string;
   mediaQuery?: string;
   sourceSet?: string;
-}
+};

@@ -5,17 +5,18 @@ import CommonMedia from "./Common";
  * Initiates a new Video.
  */
 export default class Video extends CommonMedia {
-  height?: number;
-  width?: number;
-  posterFrame?: string;
-  readonly render: HTMLVideoElement;
+  #height?: number;
+  #width?: number;
+  #posterFrame?: string;
+  #render: HTMLVideoElement;
 
   /**
    * Initiates a new Video.
    * @param {string} [id] - (optional)
    * @param {string} [classes] - (optional) A space is needed between each class.
+   * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {Array.SourceType} [children] - (optional) An array containing the children Source elements is any.
-   * @param {string} [src] - (optional) URL/path of the media file. If used, children elements would then not be processed.
+   * @param {string} [source] - (optional) URL/path of the media file. If used, children elements would then not be processed.
    * @param {string} [noSupportMessage] - (optional) Text to be displayed if the browser does not support the feature.
    * @param {boolean} [autoplay] - (optional) Boolean to specify whether the element should be set on autoplay or not (not recommanded).
    * @param {boolean} [showControls] - (optional) Boolean to specify whether the element should provide controls or not.
@@ -28,7 +29,8 @@ export default class Video extends CommonMedia {
   constructor({
     id,
     classes,
-    src,
+    exclusionList,
+    source,
     children,
     noSupportMessage,
     autoplay,
@@ -42,44 +44,59 @@ export default class Video extends CommonMedia {
     super({
       id,
       classes,
+      exclusionList,
       children,
-      src,
+      source,
       noSupportMessage,
       autoplay,
       showControls,
       loop,
       muted,
     });
-    if (height) this.height = height;
-    if (width) this.width = width;
-    if (posterFrame) this.posterFrame = posterFrame;
+    const { setRender, setHeight, setWidth, setPosterFrame, build } = this;
+    setRender(build("video"));
+    if (height) setHeight(height);
+    if (width) setWidth(width);
+    if (posterFrame) setPosterFrame(posterFrame);
   }
 
-  /**
-   * Renders the HTML Element.
-   */
-  build(): HTMLVideoElement {
-    const {
-      src,
-      noSupportMessage,
-      autoplay,
-      showControls,
-      loop,
-      muted,
-      height,
-      width,
-      posterFrame,
-    } = this;
-    const element = super.build("video") as HTMLVideoElement;
-    if (src) element.src = src;
-    if (noSupportMessage) element.textContent = noSupportMessage;
-    if (autoplay) element.autoplay = true;
-    if (showControls) element.controls = true;
-    if (loop) element.loop = true;
-    if (muted) element.muted = true;
-    if (height) element.height = height;
-    if (width) element.width = width;
-    if (posterFrame) element.poster = posterFrame;
-    return element;
+  // ***************************
+  // Getters
+  // ***************************
+
+  get render(): HTMLVideoElement {
+    return this.#render;
+  }
+
+  get height(): number {
+    return this.#height;
+  }
+
+  get width(): number {
+    return this.#width;
+  }
+
+  get posterFrame(): string {
+    return this.#posterFrame;
+  }
+
+  // ***************************
+  // Setters
+  // ***************************
+
+  setRender(render: HTMLVideoElement) {
+    this.#render = render;
+  }
+
+  setHeight(height: number) {
+    this.#height = this.#render.height = height;
+  }
+
+  setWidth(width: number) {
+    this.#width = this.#render.width = width;
+  }
+
+  setPosterFrame(posterFrame: string) {
+    this.#posterFrame = this.#render.poster = posterFrame;
   }
 }

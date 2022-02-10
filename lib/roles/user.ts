@@ -9,13 +9,10 @@ export default class User {
   isLogged: boolean = false;
   role: RoleEnum = RoleEnum.VISITOR;
   token?: string;
-  authenticate: (this: UserType) => Promise<boolean> | boolean | null =
-    function (this) {
-      return null;
-    };
-  connect: (this: UserType) => Promise<boolean> | boolean | null = function (
-    this
-  ) {
+  authenticate: (this: UserType) => Promise<boolean> | boolean | null = function (this) {
+    return null;
+  };
+  connect: (this: UserType) => Promise<boolean> | boolean | null = function (this) {
     return null;
   };
 

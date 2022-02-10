@@ -3,20 +3,113 @@ import { CommonConstructor } from "../types/constructors";
 import ArrayExt from "../utils/arrayExt";
 const { remove, toggle } = ArrayExt;
 import Serial from "../utils/serial";
+import { CloneModifsConfig, OnClickConfig, OnHoverConfig } from "../types/configObjects";
 
 export default class Common {
-  readonly serial: string;
-  parentSerial?: string;
-  children?: GenericElement[];
-  id?: string;
-  classes?: string[];
-  readonly render: HTMLElement;
+  readonly #serial: string;
+  #parentSerial?: string;
+  #children?: GenericElement[];
+  #id?: string;
+  #classes?: string[];
+  #textContent?: string;
+  #exclusionList?: string[];
+  #isMounted: boolean = false;
+  #render: HTMLElement;
 
-  constructor({ id, classes, children }: CommonConstructor) {
-    this.serial = Serial.generate(6);
-    if (id) this.id = id;
-    if (classes) this.classes = classes.split(" ");
-    if (children) this.children = children;
+  constructor({ id, classes, children, exclusionList }: CommonConstructor) {
+    this.#serial = Serial.generate(6);
+    if (id) this.setId(id);
+    if (classes) this.setClasses(classes);
+    if (children) this.setChildren(children);
+    if (exclusionList) this.setExclusionList(exclusionList);
+  }
+
+  // ***************************
+  // Getters
+  // ***************************
+
+  get textContent(): string {
+    return this.#textContent;
+  }
+
+  get serial(): string {
+    return this.#serial;
+  }
+
+  get parentSerial(): string {
+    return this.#parentSerial;
+  }
+
+  get classes(): string[] {
+    return this.#classes;
+  }
+
+  get id(): string {
+    return this.#id;
+  }
+
+  get children(): GenericElement[] {
+    return this.#children;
+  }
+
+  get exclusionList(): string[] {
+    return this.#exclusionList;
+  }
+
+  get isMounted(): boolean {
+    return this.#isMounted;
+  }
+
+  get render(): HTMLElement {
+    return this.#render;
+  }
+
+  // ***************************
+  // Setters
+  // ***************************
+
+  setTextContent(textContent: string) {
+    this.#textContent = this.#render.textContent = textContent;
+  }
+
+  setParentSerial(serial: string) {
+    this.#parentSerial = serial;
+  }
+
+  setId(id: string) {
+    this.#id = id;
+    if (this.render) this.#render.id = id;
+  }
+
+  setClasses(classes: string | string[]) {
+    this.#classes = typeof classes === "string" ? classes.split(" ") : classes;
+    if (this.render) this.#classes.forEach((className) => this.#render.classList.add(className));
+  }
+
+  setChildren(children: GenericElement[]) {
+    if (this.isMounted) {
+      this.removeChildren();
+      children.forEach((child) => {
+        child.setParentSerial(this.serial);
+        child.mount();
+      });
+    }
+    this.#children = children;
+  }
+
+  setExclusionList(list: string[]) {
+    this.#exclusionList = [];
+    list.forEach((item) => {
+      this.#exclusionList.push(item.startsWith("/") ? item : `/${item}`);
+    });
+  }
+
+  setRender(render: HTMLElement) {
+    this.#render = render;
+  }
+
+  protected removeChildren() {
+    this.#children.forEach((child) => child.unmount());
   }
 
   /**
@@ -24,6 +117,7 @@ export default class Common {
    * @param {string} newClass - One or more classes each separated with a space.
    */
   addClass(newClass: string): void {
+    if (!this.classes) this.setClasses("");
     const parsedClass = newClass.split(" ");
     parsedClass.forEach((className) => {
       this.classes.push(className);
@@ -36,9 +130,10 @@ export default class Common {
    * @param {string} oldClass - One or more classes each separated with a space.
    */
   removeClass(oldClass: string): void {
+    if (!this.classes) this.setClasses([]);
     const parsedClass = oldClass.split(" ");
     parsedClass.forEach((className) => {
-      this.classes = remove(this.classes, className);
+      this.setClasses(remove(this.classes, className));
       this.render.classList.remove(className);
     });
   }
@@ -48,10 +143,11 @@ export default class Common {
    * @param {string} className - One or more classes each separated with a space.
    */
   toggleClass(className: string): void {
+    if (!this.classes) this.setClasses([]);
     const parsedClass = className.split(" ");
-    parsedClass.forEach((className) => {
-      this.classes = toggle(this.classes, className);
-      this.render.classList.toggle(className);
+    parsedClass.forEach((name) => {
+      this.setClasses(toggle(this.classes, name));
+      this.render.classList.toggle(name);
     });
   }
 
@@ -60,31 +156,15 @@ export default class Common {
    * @returns {HTMLElement | undefined} The HTMLElement or undefined in not found.
    */
   getElementBySerial(serial: string): HTMLElement | undefined {
-    const foundElement = document.querySelector(
-      `[data-serial="${serial}"`
-    ) as HTMLElement;
+    const foundElement = document.querySelector(`[data-serial="${serial}"`) as HTMLElement;
     return foundElement ? foundElement : undefined;
   }
 
-  /**
-   * Checks if the element is currently mounted in the DOM.
-   * @returns {boolean}
-   */
-  isMounted(): boolean {
-    const foundElement = this.getElementBySerial(this.serial);
-    return foundElement ? true : false;
-  }
-
-  /**
-   * Renders the element as HTML code.
-   * @returns {any} Type depends on each element.
-   */
-  build(tag: string): any {
+  protected build(tag: string): any {
     const { id, classes, serial } = this;
     const element = document.createElement(tag);
     if (id) element.id = id;
-    if (classes)
-      classes.forEach((className) => element.classList.add(className));
+    if (classes) classes.forEach((className) => element.classList.add(className));
     element.dataset.serial = serial;
     return element;
   }
@@ -93,11 +173,18 @@ export default class Common {
    * Mounts the element into the DOM.
    */
   mount(): void {
-    if (this.children)
-      this.children.forEach((child) => (child.parentSerial = this.serial));
-    if (!this.parentSerial)
-      document.querySelector("body").appendChild(this.render);
+    if (this.exclusionList) {
+      for (const item of this.exclusionList) {
+        if (window.location.pathname === item) {
+          this.unmount();
+          return;
+        }
+      }
+    }
+    if (this.children) this.children.forEach((child) => child.setParentSerial(this.serial));
+    if (!this.parentSerial) document.querySelector("body").appendChild(this.render);
     else this.getElementBySerial(this.parentSerial).appendChild(this.render);
+    this.#isMounted = true;
 
     if (this.children) this.children.forEach((child) => child.mount());
   }
@@ -106,13 +193,54 @@ export default class Common {
    * Unmounts the element from the DOM.
    */
   unmount(): void {
-    this.render.remove();
+    this.getElementBySerial(this.serial).remove();
+    this.setParentSerial("");
+    this.#isMounted = false;
   }
 
   /** Specifies a behaviour when the element is clicked.
-   * @param callback - Callback function to describe what happens when the element is clicked.
+   * @param {function} configuration - Config object to handle click on element and/or outside element.
    */
-  onClick(callback: () => void): void {
-    this.render.addEventListener("click", callback);
+  click(configuration: OnClickConfig): void {
+    const { onElement, outsideElement } = configuration;
+    if (onElement) this.render.addEventListener("click", onElement);
+    if (outsideElement) {
+      const onClickOutside = (event: Event) => {
+        const target = <HTMLElement>event.target;
+        if (target.dataset.serial !== this.serial) outsideElement(event);
+      };
+      document.addEventListener("click", onClickOutside);
+    }
+  }
+
+  /**
+   * Produces a given number of instances based upon the current instance.
+   * @param {number} amount - The quantity of new instances.
+   * @param {FactoryModifsConfig} modifications - Configuration object : "properties" takes a string with the properties to alter separated with a space, and "values" takes an array of arrays, each one containing the values for each new instance, in the same order you declared the properties right above.
+   */
+  clone(amount: number, modifications: CloneModifsConfig): GenericElement[] {
+    let production = [];
+    const { properties, values } = modifications;
+    const parsedProps = properties.split(" ");
+    for (let index = 0; index < amount; index++) {
+      let newInstance = Object.assign({}, this);
+      Object.defineProperty(newInstance, "serial", {
+        value: Serial.generate(6),
+        writable: false,
+      });
+      newInstance.render.dataset.serial = newInstance.serial;
+
+      production.push(newInstance);
+    }
+    return production;
+  }
+
+  /** Specifies a behaviour when the element is hovered.
+   * @param {function} configuration - Config object to handle hovering in and out.
+   */
+  hover(configuration: OnHoverConfig): void {
+    const { onElement, onMouseLeave } = configuration;
+    if (onElement) this.render.addEventListener("mouseover", onElement);
+    if (onMouseLeave) this.render.addEventListener("mouseout", onMouseLeave);
   }
 }

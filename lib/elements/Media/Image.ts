@@ -7,72 +7,84 @@ import Common from "../Common";
  * Initiates a new Image (img).
  */
 export default class Image extends Common {
-  source: string;
-  description: string;
-  sourceSet?: string;
-  mediaQueries?: string;
-  readonly render: HTMLImageElement;
+  #source: string;
+  #description: string;
+  #sourceSet?: string;
+  #mediaQueries?: string;
+  #render: HTMLImageElement;
 
   /**
    * Initiates a new Image (img).
    * @param {string} [id] - (optional)
    * @param {string} [classes] - (optional) A space is needed between each class.
+   * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {string} source - URL/path of the image file.
    * @param {string} description - Short description of the image (-> alt). Enter an empty string if the image is purely decorative.
    * @param {string} [sourceSet] - (optional) An array of alternative sources matching the following pattern : "filepath width" (example: "mysource.png 480w")
    * @param {string} [mediaQueries] - (optional) An array containing either a mediaquery associated to a width (example: "(min-width: 720px) 540px"), or only a width that will be used if no mediaquery has matched.
    */
-  constructor({
-    id,
-    classes,
-    source,
-    description,
-    sourceSet,
-    mediaQueries,
-  }: ImageConstructor) {
-    super({ id, classes });
-    this.source = source;
-    this.description = description;
-    if (sourceSet) {
-      if (!checkSourceSet(sourceSet))
-        throw new Error(
-          `The sourceSet argument is invalid. Format must be : "filepath resolution". Example : "myimage.jpg 480w"`
-        );
-      this.sourceSet = sourceSet.join(",");
-    }
-    if (mediaQueries) {
-      if (!sourceSet)
-        throw new Error(
-          `mediaQueries argument require to have previously filled the sourceSet argument.`
-        );
-      if (!checkMediaQueries(mediaQueries))
-        throw new Error(
-          `The mediaQueries argument is invalid. Format must be : "(mediaquery) resolution" or just "resolution. Example : "(max-width: 1024px) 768px/vw/em" or just "768px/vw/em`
-        );
-      this.mediaQueries = mediaQueries.join(",");
-    }
-    this.render = this.build();
+  constructor({ id, classes, exclusionList, source, description, sourceSet, mediaQueries }: ImageConstructor) {
+    super({ id, classes, exclusionList });
+    const { setRender, setSource, setSourceSet, setDescription, setMediaQueries, build } = this;
+    setRender(build("img"));
+    setSource(source);
+    setDescription(description);
+    if (sourceSet) setSourceSet(sourceSet);
+    if (mediaQueries) setMediaQueries(mediaQueries);
   }
 
-  /**
-   * Sets a new source for the image.
-   * @param {string} newSource - URL/path of the image file.
-   */
-  setSource(newSource: string): void {
-    this.source = newSource;
-    this.render.src = this.source;
+  // ***************************
+  // Getters
+  // ***************************
+
+  get render(): HTMLImageElement {
+    return this.#render;
   }
 
-  /**
-   * Renders the HTML Element.
-   */
-  build(): HTMLImageElement {
-    const { source, description, sourceSet, mediaQueries } = this;
-    const element = super.build("img") as HTMLImageElement;
-    element.src = source;
-    if (sourceSet) element.srcset = sourceSet;
-    if (mediaQueries) element.sizes = mediaQueries;
-    element.alt = description;
-    return element;
+  get source(): string {
+    return this.#source;
+  }
+
+  get description(): string {
+    return this.#description;
+  }
+
+  get sourceSet(): string {
+    return this.#sourceSet;
+  }
+
+  get mediaQueries(): string {
+    return this.#mediaQueries;
+  }
+
+  // ***************************
+  // Setters
+  // ***************************
+
+  setRender(render: HTMLImageElement) {
+    this.#render = render;
+  }
+
+  setSource(source: string) {
+    this.#source = this.#render.src = source;
+  }
+
+  setDescription(description: string) {
+    this.#description = this.#render.alt = description;
+  }
+
+  setSourceSet(set: string[]) {
+    if (!checkSourceSet(set))
+      throw new Error(`The sourceSet argument is invalid. Format must be : "filepath resolution". Example : "myimage.jpg 480w"`);
+    this.#sourceSet = this.#render.srcset = set.join(",");
+  }
+
+  setMediaQueries(queries: string[]) {
+    if (!this.sourceSet) throw new Error("mediaQueries argument require to have previously filled the sourceSet argument.");
+    if (!checkMediaQueries(queries))
+      throw new Error(
+        `The mediaQueries argument is invalid. Format must be : "(mediaquery) resolution" or just "resolution. Example : "(max-width: 1024px) 768px/vw/em" or just "768px/vw/em`
+      );
+    this.#mediaQueries = this.#render.sizes = queries.join(",");
   }
 }

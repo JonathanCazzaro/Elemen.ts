@@ -1,19 +1,14 @@
-import Common from "../elements/Common";
 import {
   ColumnsConfig,
   FailMessagesConfig,
   InputOptionsConfig,
+  OnClickConfig,
+  OnFocusConfig,
+  OnHoverConfig,
   SourceOptionsConfig,
 } from "./configObjects";
-import {
-  ButtonTypeEnum,
-  FormMethodEnum,
-  InputTypeEnum,
-  ElementPositionEnum,
-  MediaTypeEnum,
-  ScopeEnum,
-  RoleEnum,
-} from "./enum";
+import { InputOptionsConstructor, SourceOptionsConstructor, TableColConfigConstructor } from "./constructors";
+import { ButtonTypeEnum, FormMethodEnum, InputTypeEnum, ElementPositionEnum, MediaTypeEnum, ScopeEnum, RoleEnum } from "./enum";
 
 export interface PageType {
   title?: string;
@@ -23,10 +18,10 @@ export interface PageType {
   jsFiles?: string[];
   isActive: boolean;
   accessLevel: RoleEnum;
-  setContent: (elements: GenericElement[]) => void;
-  reach: (user?: UserType) => void;
-  leave: () => void;
-  denyAccess: () => void | null;
+  setContent(elements: GenericElement[]): void;
+  reach(user?: UserType): void;
+  leave(): void;
+  denyAccess(): void | null;
 }
 
 export interface UserType {
@@ -34,25 +29,35 @@ export interface UserType {
   role: RoleEnum;
   token?: string;
   [key: string]: any;
-  authenticate: (this: UserType) => Promise<boolean> | boolean | null;
-  connect: (this: UserType) => Promise<boolean> | boolean | null;
+  authenticate(this: UserType): Promise<boolean> | boolean | null;
+  connect(this: UserType): Promise<boolean> | boolean | null;
 }
 
 export interface CommonElementType {
   serial: string;
   parentSerial?: string;
+  setParentSerial(serial: string): void;
   children?: GenericElement[];
+  setChildren(children: GenericElement[]): void;
   id?: string;
+  setId(id: string): void;
   classes?: string[];
+  setClasses(classes: string | string[]): void;
+  textContent?: string;
+  setTextContent(textContent: string): void;
+  exclusionList?: string[];
+  setExclusionList(list: string[]): void;
   render: HTMLElement;
-  addClass: (newClass: string) => void;
-  removeClass: (oldClass: string) => void;
-  toggleClass: (className: string) => void;
-  getElementBySerial: (serial: string) => HTMLElement | undefined;
-  build: (tag: string) => any;
-  mount: () => void;
-  unmount: () => void;
-  onClick: (callback: () => void) => void;
+  setRender(render: HTMLElement): void;
+  isMounted: boolean;
+  addClass(newClass: string): void;
+  removeClass(oldClass: string): void;
+  toggleClass(className: string): void;
+  getElementBySerial(serial: string): HTMLElement | undefined;
+  mount(): void;
+  unmount(): void;
+  click(configuration: OnClickConfig): void;
+  hover(configuration: OnHoverConfig): void;
 }
 
 export type GenericElement =
@@ -62,7 +67,6 @@ export type GenericElement =
   | ContainerType
   | LinkType
   | InsertType
-  | GenericStructureType
   | DetailsType
   | TableType
   | TableSectionType
@@ -87,285 +91,359 @@ export type GenericElement =
   | PictureType
   | FigureType;
 
+// ---------------- Type definitions for Generic elements ----------------
+// -----------------------------------------------------------------------
+
 export interface ContainerType extends CommonElementType {
   render: HTMLDivElement;
-  textContent?: string;
-  build: () => HTMLDivElement;
+  setRender(render: HTMLDivElement): void;
 }
 
 export interface InsertType extends CommonElementType {
   render: HTMLSpanElement;
-  textContent?: string;
-  build: () => HTMLSpanElement;
+  setRender(render: HTMLSpanElement): void;
 }
 
 export interface CaptionType extends CommonElementType {
-  render: HTMLElement;
-  textContent?: string;
   position: ElementPositionEnum;
-  build: () => HTMLElement;
 }
 
 export interface FigureType extends CommonElementType {
-  render: HTMLElement;
   caption?: CaptionType;
-  build: () => HTMLElement;
 }
 
+// ---------------- Type definitions for Navigation elements ----------------
+// --------------------------------------------------------------------------
+
 export interface LinkType extends CommonElementType {
-  render: HTMLAnchorElement;
-  textContent?: string;
   target?: string;
-  build: () => HTMLAnchorElement;
+  setTarget(target: string): void;
+  render: HTMLAnchorElement;
+  setRender(render: HTMLAnchorElement): void;
 }
+
+// ---------------- Type definitions for Text elements -----------------
+// ---------------------------------------------------------------------
 
 export interface TextType extends CommonElementType {
   render: HTMLParagraphElement;
-  textContent?: string;
-  build: () => HTMLParagraphElement;
+  setRender(render: HTMLParagraphElement): void;
 }
 
 export interface TitleType extends CommonElementType {
+  level: number;
   render: HTMLHeadingElement;
-  textContent?: string;
-  build: () => HTMLHeadingElement;
+  setRender(render: HTMLHeadingElement): void;
 }
 
-export interface GenericStructureType extends CommonElementType {
-  render: HTMLElement;
-  textContent?: string;
-  build: () => HTMLElement;
-}
+// ---------------- Type definitions for Structure elements -----------------
+// --------------------------------------------------------------------------
 
 export interface DetailsType extends CommonElementType {
-  render: HTMLDetailsElement;
-  textContent?: string;
   summary?: string;
-  build: () => HTMLDetailsElement;
+  setSummary(summary: string): void;
+  render: HTMLDetailsElement;
+  setRender(render: HTMLDetailsElement): void;
 }
 
 // ---------------- Type definitions for Table elements ----------------
 // ---------------------------------------------------------------------
 
 export interface TableType extends CommonElementType {
-  render: HTMLDetailsElement;
+  children?: (TableRowType | TableColumnGroupType | TableSectionType)[];
+  setChildren(children: (TableRowType | TableColumnGroupType | TableSectionType)[]): void;
   caption?: string;
-  build: () => HTMLTableElement;
+  setCaption(caption: string): void;
+  render: HTMLTableElement;
+  setRender(render: HTMLTableElement): void;
 }
 
 export interface TableSectionType extends CommonElementType {
   render: HTMLTableSectionElement;
-  textContent?: string;
-  build: () => HTMLTableSectionElement;
+  setRender(render: HTMLTableSectionElement): void;
 }
 
 export interface TableColumnGroupType extends CommonElementType {
   columnExtension?: number;
+  setColumnExtension(extension: number): void;
   columns?: ColumnsConfig[];
-  build: () => HTMLTableColElement;
+  setColumns(columns: TableColConfigConstructor[]): void;
+  render: HTMLTableColElement;
+  setRender(render: HTMLTableColElement): void;
 }
 
 export interface TableRowType extends CommonElementType {
   render: HTMLTableRowElement;
-  textContent?: string;
-  build: () => HTMLTableRowElement;
+  setRender(render: HTMLTableRowElement): void;
 }
 
 export interface TableCellType extends CommonElementType {
-  render: HTMLTableCellElement;
-  textContent?: string;
   rowExtension?: number;
+  setRowExtension(extension: number): void;
   columnExtension?: number;
-  build: () => HTMLTableCellElement;
+  setColumnExtension(extension: number): void;
+  render: HTMLTableCellElement;
+  setRender(render: HTMLTableCellElement): void;
 }
 
 export interface TableCellHeaderType extends TableCellType {
   scope?: ScopeEnum;
+  setScope(scope: ScopeEnum): void;
 }
 
 // ---------------- Type definitions for List elements ----------------
 // --------------------------------------------------------------------
 
 export interface OrderedListType extends CommonElementType {
-  render: HTMLOListElement;
   reversed: boolean;
+  setReversed(value: boolean): void;
   startFrom?: number;
-  build: () => HTMLOListElement;
+  setStartFrom(value: number): void;
+  render: HTMLOListElement;
+  setRender(render: HTMLOListElement): void;
 }
 
 export interface UnorderedListType extends CommonElementType {
   render: HTMLUListElement;
-  build: () => HTMLUListElement;
+  setRender(render: HTMLUListElement): void;
 }
 
 export interface ListItemType extends CommonElementType {
   render: HTMLLIElement;
-  textContent?: string;
-  build: () => HTMLLIElement;
+  setRender(render: HTMLLIElement): void;
 }
 
 export interface DescriptionListType extends CommonElementType {
   render: HTMLDListElement;
-  build: () => HTMLDListElement;
+  setRender(render: HTMLDListElement): void;
 }
 
 // ---------------- Type definitions for Form elements ----------------
 // --------------------------------------------------------------------
 
 export interface FormType extends CommonElementType {
-  render: HTMLFormElement;
   action?: string;
+  setAction(action: string): void;
   method?: FormMethodEnum;
+  setMethod(method: FormMethodEnum): void;
   name?: string;
+  setName(name: string): void;
   noValidation: boolean;
-  setChildren: (children: GenericElement[]) => void;
+  setNoValidation(value: boolean): void;
   onSubmit: (callback: (event: Event) => void) => void;
-  build: () => HTMLFormElement;
+  render: HTMLFormElement;
+  setRender(render: HTMLFormElement): void;
 }
 
 export interface InputType extends CommonElementType {
   id: string;
-  render: HTMLInputElement;
   type: InputTypeEnum;
+  setType(type: InputTypeEnum): void;
   value?: string;
+  setValue(value: string): void;
   name?: string;
+  setName(name: string): void;
   form?: FormType;
+  setForm(form: FormType): void;
   autofocus: boolean;
+  setAutofocus(value: boolean): void;
   disabled: boolean;
+  setDisabled(value: boolean): void;
   required: boolean;
+  setRequired(value: boolean): void;
   readonly: boolean;
+  setReadonly(value: boolean): void;
   options?: InputOptionsConfig;
+  setOptions(options: InputOptionsConstructor): void;
   validationFailMessages?: FailMessagesConfig;
+  setValidationFailMessages(messages: FailMessagesConfig): void;
   reveal: (timer?: number, callback?: () => void) => void;
-  onFocus: (callback: () => void, blurCallback?: () => void) => void;
-  build: () => HTMLInputElement;
+  focus: (configuration: OnFocusConfig) => void;
+  onChange(callback: (event?: Event) => void): void;
+  render: HTMLInputElement;
+  setRender(render: HTMLInputElement): void;
 }
 
 export interface LabelType extends CommonElementType {
-  render: HTMLLabelElement;
-  textContent?: string;
   formElementId?: string;
-  build: () => HTMLLabelElement;
+  setFormElementId(id: string): void;
+  render: HTMLLabelElement;
+  setRender(render: HTMLLabelElement): void;
 }
 
 export interface ButtonType extends CommonElementType {
-  render: HTMLButtonElement;
   type: ButtonTypeEnum;
+  setType(type: ButtonTypeEnum): void;
   form?: FormType;
+  setForm(form: FormType): void;
   textContent?: string;
+  setTextContent(textContent: string): void;
   name?: string;
+  setName(name: string): void;
   value?: string;
+  setValue(value: string): void;
   disabled: boolean;
-  build: () => HTMLLabelElement;
+  setDisabled(value: boolean): void;
+  render: HTMLButtonElement;
+  setRender(render: HTMLButtonElement): void;
 }
 
 export interface DropdownType extends CommonElementType {
   id: string;
-  render: HTMLSelectElement;
+  children?: (OptionsGroupType | OptionType)[];
+  setChildren(children: (OptionsGroupType | OptionType)[]): void;
   form?: FormType;
+  setForm(form: FormType): void;
   name?: string;
+  setName(name: string): void;
+  value: string;
+  setValue(value: string): void;
   autofocus: boolean;
+  setAutofocus(value: boolean): void;
   disabled: boolean;
+  setDisabled(value: boolean): void;
   required: boolean;
+  setRequired(value: boolean): void;
   multiple: boolean;
-  build: () => HTMLSelectElement;
+  setMultiple(value: boolean): void;
+  onChange(callback: (event?: Event) => void): void;
+  render: HTMLSelectElement;
+  setRender(render: HTMLSelectElement): void;
 }
 
 export interface OptionType extends CommonElementType {
-  render: HTMLOptionElement;
-  textContent?: string;
   value?: string;
+  setValue(value: string): void;
   disabled: boolean;
+  setDisabled(value: boolean): void;
   selected: boolean;
-  build: () => HTMLOptionElement;
+  setSelected(value: boolean): void;
+  render: HTMLOptionElement;
+  setRender(render: HTMLOptionElement): void;
 }
 
 export interface OptionsGroupType extends CommonElementType {
-  render: HTMLOptGroupElement;
   label: string;
+  setLabel(label: string): void;
   disabled: boolean;
-  build: () => HTMLOptGroupElement;
+  setDisabled(value: boolean): void;
+  render: HTMLOptGroupElement;
+  setRender(render: HTMLOptGroupElement): void;
 }
 
 export interface TextAreaType extends CommonElementType {
-  render: HTMLTextAreaElement;
   id: string;
   form?: FormType;
+  setForm(form: FormType): void;
   name?: string;
+  setName(name: string): void;
   value?: string;
-  autofocus: boolean;
+  setValue(value: string): void;
+  setAutofocus(value: boolean): void;
   disabled: boolean;
+  setDisabled(value: boolean): void;
   required: boolean;
+  setRequired(value: boolean): void;
   readonly: boolean;
+  setReadonly(value: boolean): void;
   spellcheck: boolean;
+  setSpellcheck(value: boolean): void;
   width?: number;
+  setWidth(width: number): void;
   height?: number;
+  setHeight(height: number): void;
   minLength?: number;
+  setMinLength(minLength: number): void;
   maxLength?: number;
+  setMaxLength(maxLength: number): void;
   placeholder?: string;
+  setPlaceholder(placeholder: string): void;
   validationFailMessages?: FailMessagesConfig;
-  build: () => HTMLTextAreaElement;
+  setValidationFailMessages(messages: FailMessagesConfig): void;
+  onChange(callback: (event?: Event) => void): void;
+  render: HTMLTextAreaElement;
+  setRender(render: HTMLTextAreaElement): void;
 }
 
 export interface LegendType extends CommonElementType {
   render: HTMLLegendElement;
-  textContent?: string;
-  build: () => HTMLLegendElement;
+  setRender(render: HTMLLegendElement): void;
 }
 
 export interface FieldsetType extends CommonElementType {
-  render: HTMLFieldSetElement;
-  name?: string;
   form?: FormType;
+  setForm(form: FormType): void;
+  name?: string;
+  setName(name: string): void;
   legend?: LegendType;
+  setLegend(legend: LegendType): void;
   disabled: boolean;
-  build: () => HTMLFieldSetElement;
+  setDisabled(value: boolean): void;
+  render: HTMLFieldSetElement;
+  setRender(render: HTMLFieldSetElement): void;
 }
 
 // ---------------- Type definitions for Media elements ---------------
 // --------------------------------------------------------------------
 
 export interface SourceType extends CommonElementType {
-  render: HTMLSourceElement;
   mediaType: MediaTypeEnum;
+  setMediaType(mediaType: MediaTypeEnum): void;
   options: SourceOptionsConfig;
-  build: () => HTMLSourceElement;
+  setOptions(options: SourceOptionsConstructor): void;
+  render: HTMLSourceElement;
+  setRender(render: HTMLSourceElement): void;
 }
 
 export interface CommonMediaType extends CommonElementType {
-  src?: string;
+  source?: string;
+  setSource(source: string): void;
   children?: SourceType[];
+  setChildren(children: SourceType[]): void;
   noSupportMessage?: string;
+  setNoSupportMessage(message: string): void;
   autoplay: boolean;
+  setAutoplay(value: boolean): void;
   showControls: boolean;
+  setShowControls(value: boolean): void;
   loop: boolean;
+  setLoop(value: boolean): void;
   muted: boolean;
+  setMuted(value: boolean): void;
 }
 
 export interface AudioType extends CommonMediaType {
   render: HTMLAudioElement;
-  build: () => HTMLAudioElement;
+  setRender(render: HTMLAudioElement): void;
 }
 
 export interface VideoType extends CommonMediaType {
-  render: HTMLVideoElement;
   height?: number;
+  setHeight(height: number): void;
   width?: number;
+  setWidth(width: number): void;
   posterFrame?: string;
-  build: () => HTMLVideoElement;
+  setPosterFrame(posterFrame: string): void;
+  render: HTMLVideoElement;
+  setRender(render: HTMLVideoElement): void;
 }
 
 export interface ImageType extends CommonMediaType {
-  render: HTMLImageElement;
   source: string;
+  setSource: (source: string) => void;
   description: string;
+  setDescription(description: string): void;
   sourceSet?: string;
+  setSourceSet(set: string[]): void;
   mediaQueries?: string;
-  setSource: (newSource: string) => void;
-  build: () => HTMLImageElement;
+  setMediaQueries(queries: string[]): void;
+  render: HTMLImageElement;
+  setRender(render: HTMLImageElement): void;
 }
 
 export interface PictureType extends CommonElementType {
+  children: (SourceType | ImageType)[];
+  setChildren(children: (SourceType | ImageType)[]): void;
   render: HTMLPictureElement;
-  build: () => HTMLPictureElement;
+  setRender(render: HTMLPictureElement): void;
 }
