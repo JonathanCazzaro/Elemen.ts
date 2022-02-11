@@ -9,7 +9,6 @@ const { matchValue } = Str;
  */
 export default class Picture extends Common {
   #children?: (SourceType | ImageType)[];
-  #render: HTMLPictureElement;
 
   /**
    * Initiates a new Picture.
@@ -20,9 +19,9 @@ export default class Picture extends Common {
    */
   constructor({ id, classes, exclusionList, children }: PictureConstructor) {
     super({ id, classes, children, exclusionList });
-    const { setRender, setChildren, build } = this;
-    setRender(build("picture"));
-    if (children) setChildren(children);
+    const element = this.build("picture");
+    this.setRender(element);  
+    if (children) this.setChildren(children);
   }
 
   // ***************************
@@ -30,7 +29,7 @@ export default class Picture extends Common {
   // ***************************
 
   get render(): HTMLPictureElement {
-    return this.#render;
+    return this._render as HTMLPictureElement;
   }
 
   get children(): (SourceType | ImageType)[] {
@@ -40,10 +39,6 @@ export default class Picture extends Common {
   // ***************************
   // Setters
   // ***************************
-
-  setRender(render: HTMLPictureElement) {
-    this.#render = render;
-  }
 
   setChildren(children: (SourceType | ImageType)[]) {
     if (this.isMounted) this.removeChildren();

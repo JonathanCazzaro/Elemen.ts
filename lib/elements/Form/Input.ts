@@ -21,7 +21,6 @@ export default class Input extends Common {
   #readonly: boolean = false;
   #options?: InputOptionsConfig;
   #validationFailMessages?: FailMessagesConfig;
-  #render: HTMLInputElement;
 
   /**
    * Initiates a new Input.
@@ -55,33 +54,20 @@ export default class Input extends Common {
     validationFailMessages,
   }: InputConstructor) {
     super({ id, classes, children, exclusionList });
-    const {
-      setRender,
-      setType,
-      setName,
-      setForm,
-      setAutofocus,
-      setDisabled,
-      setRequired,
-      setReadonly,
-      setOptions,
-      setValidationFailMessages,
-      build,
-    } = this;
-
-    setRender(build("input"));
-    setType(type);
-    if (name) setName(name);
-    if (form) setForm(form);
+    const element = this.build("input");
+    this.setRender(element);
+    this.setType(type);
+    if (name) this.setName(name);
+    if (form) this.setForm(form);
     else if (this.type === SUBMIT || this.type === RESET) {
       throw new Error("The form attribute must be filled in when constructing a submit/reset input.");
     }
-    if (autofocus) setAutofocus(true);
-    if (disabled) setDisabled(true);
-    if (required) setRequired(true);
-    if (readonly) setReadonly(true);
-    if (options) setOptions(options);
-    if (validationFailMessages) setValidationFailMessages(validationFailMessages);
+    if (autofocus) this.setAutofocus(true);
+    if (disabled) this.setDisabled(true);
+    if (required) this.setRequired(true);
+    if (readonly) this.setReadonly(true);
+    if (options) this.setOptions(options);
+    if (validationFailMessages) this.setValidationFailMessages(validationFailMessages);
   }
 
   // ***************************
@@ -89,7 +75,7 @@ export default class Input extends Common {
   // ***************************
 
   get render(): HTMLInputElement {
-    return this.#render;
+    return this._render as HTMLInputElement; 
   }
 
   get type(): InputTypeEnum {
@@ -136,46 +122,42 @@ export default class Input extends Common {
   // Setters
   // ***************************
 
-  setRender(render: HTMLInputElement) {
-    this.#render = render;
-  }
-
   setType(type: InputTypeEnum) {
-    this.#type = this.#render.type = type;
+    this.#type = this.render.type = type;
   }
 
   setValue(value: string) {
-    this.#value = this.#render.value = value;
+    this.#value = this.render.value = value;
   }
 
   setName(name: string) {
-    this.#name = this.#render.name = name;
+    this.#name = this.render.name = name;
   }
 
   setForm(form: FormType) {
     this.#form = form;
-    if (form.id) this.#render.setAttribute("form", form.id);
+    if (form.id) this.render.setAttribute("form", form.id);
     else throw new Error("The form you connected to the input must have an id.");
   }
 
   setAutofocus(value: boolean) {
-    this.#autofocus = this.#render.autofocus = value;
+    this.#autofocus = this.render.autofocus = value;
   }
 
   setDisabled(value: boolean) {
-    this.#disabled = this.#render.disabled = value;
+    this.#disabled = this.render.disabled = value;
   }
 
   setRequired(value: boolean) {
     if (["color", "hidden", "range", "submit", "reset", "button"].includes(this.type)) {
       console.error(`Input type ${this.type} has no required argument implementation.`);
     } else {
-      this.#required = this.#render.required = value;
+      this.#required = this.render.required = value;
     }
   }
 
   setReadonly(value: boolean) {
-    this.#readonly = this.#render.readOnly = value;
+    this.#readonly = this.render.readOnly = value;
   }
 
   setOptions(options: InputOptionsConstructor) {
@@ -183,12 +165,12 @@ export default class Input extends Common {
     if (parsedOptions.length > 1)
       console.warn("You cannot set multiple configuration objects as input options. By default, only the first object will be kept.");
     this.#options = parsedOptions[0][1];
-    this.setRender(setInputOptions(this.#render, this.#options));
+    this.setRender(setInputOptions(this.render, this.#options));
   }
 
   setValidationFailMessages(messages: FailMessagesConfig) {
     this.#validationFailMessages = messages;
-    this.setRender(setValidationMessages(this.#render, messages));
+    this.setRender(setValidationMessages(this.render, messages));
   }
 
   /**

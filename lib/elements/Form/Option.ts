@@ -8,7 +8,6 @@ export default class Option extends Common {
   #value?: string;
   #disabled: boolean = false;
   #selected: boolean = false;
-  #render: HTMLOptionElement;
 
   /**
    * Initiates a new Option.
@@ -22,12 +21,12 @@ export default class Option extends Common {
    */
   constructor({ id, classes, exclusionList, textContent, value, disabled, selected }: OptionConstructor) {
     super({ id, classes, exclusionList });
-    const { setRender, setValue, setDisabled, setSelected, setTextContent, build } = this;
-    setRender(build("option"));
-    if (textContent) setTextContent(textContent);
-    if (value) setValue(value);
-    if (disabled) setDisabled(true);
-    if (selected) setSelected(true);
+    const element = this.build("option");
+    this.setRender(element);
+    if (textContent) this.setTextContent(textContent);
+    if (value) this.setValue(value);
+    if (disabled) this.setDisabled(true);
+    if (selected) this.setSelected(true);
   }
 
   // ***************************
@@ -47,7 +46,7 @@ export default class Option extends Common {
   }
 
   get render(): HTMLOptionElement {
-    return this.#render;
+    return this._render as HTMLOptionElement;
   }
 
   // ***************************
@@ -55,18 +54,14 @@ export default class Option extends Common {
   // ***************************
 
   setValue(value: string) {
-    this.#value = this.#render.value = value;
+    this.#value = this.render.value = value;
   }
 
   setDisabled(value: boolean) {
-    this.#disabled = this.#render.disabled = value;
+    this.#disabled = this.render.disabled = value;
   }
 
   setSelected(value: boolean) {
-    this.#selected = this.#render.selected = value;
-  }
-
-  setRender(render: HTMLOptionElement) {
-    this.#render = render;
+    this.#selected = this.render.selected = value;
   }
 }

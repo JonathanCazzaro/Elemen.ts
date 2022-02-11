@@ -18,10 +18,9 @@ export default class Caption extends Common {
    * @param {string} [textContent] - (optional) Text to be displayed inside the element.
    */
   constructor({ id, classes, exclusionList, textContent, position, children }: CaptionConstructor) {
-    super({ id, classes, children, exclusionList });
-    const { setRender, setTextContent, build  } = this;
-    setRender(build("figcaption"));
-    if (textContent) setTextContent(textContent);
+    super({ id, classes, children, exclusionList, textContent });
+    const element= this.build("figcaption");
+    this.setRender(element);
     this.#position = position;
   }
 
@@ -32,11 +31,7 @@ export default class Caption extends Common {
   get position(): ElementPositionEnum {
     return this.#position;
   }
-
-  // ***************************
-  // Setters
-  // ***************************
-
+  
   mount(): void {
     console.error(
       "The mount and unmount methods do not apply on Caption elements. To use such an element, you need to pass it to the caption argument of the element it has been designed for."

@@ -1,12 +1,10 @@
-import { ContainerConstructor } from "../../types/constructors";
+import { CommonConstructor } from "../../types/constructors";
 import Common from "../Common";
 
 /**
  * Initiates a new Container (div).
  */
 export default class Container extends Common {
-  #render: HTMLDivElement;
-
   /**
    * Initiates a new Container (div).
    * @param {string} [id] - (optional)
@@ -15,26 +13,17 @@ export default class Container extends Common {
    * @param {string} [textContent] - (optional) Text to be displayed inside the element.
    * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any.
    */
-  constructor({ id, classes, exclusionList, textContent, children }: ContainerConstructor) {
-    super({ id, classes, children, exclusionList });
-    const { setTextContent, setRender, build  } = this;
-    setRender(build("div"));
-    if (textContent) setTextContent(textContent);
+  constructor({ id, classes, exclusionList, textContent, children }: CommonConstructor) {
+    super({ id, classes, children, exclusionList, textContent });
+    const element = this.build("div");
+    this.setRender(element);  
   }
 
-  // ***************************
+    // ***************************
   // Getters
   // ***************************
 
   get render(): HTMLDivElement {
-    return this.#render;
-  }
-
-  // ***************************
-  // Setters
-  // ***************************
-
-  setRender(render: HTMLDivElement) {
-    this.#render = render;
+    return this._render as HTMLDivElement;
   }
 }

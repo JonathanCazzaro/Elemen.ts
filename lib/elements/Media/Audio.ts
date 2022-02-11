@@ -5,8 +5,6 @@ import CommonMedia from "./Common";
  * Initiates a new Audio.
  */
 export default class Audio extends CommonMedia {
-  #render: HTMLAudioElement;
-
   /**
    * Initiates a new Audio.
    * @param {string} [id] - (optional)
@@ -33,8 +31,8 @@ export default class Audio extends CommonMedia {
       loop,
       muted,
     });
-    const { setRender, build } = this;
-    setRender(build("audio"));
+    const element = this.build("audio");
+    this.setRender(element);  
   }
 
   // ***************************
@@ -42,14 +40,6 @@ export default class Audio extends CommonMedia {
   // ***************************
 
   get render(): HTMLAudioElement {
-    return this.#render;
-  }
-
-  // ***************************
-  // Setters
-  // ***************************
-
-  setRender(render: HTMLAudioElement) {
-    this.#render = render;
+    return this._render as HTMLAudioElement;
   }
 }

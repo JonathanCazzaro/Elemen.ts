@@ -19,8 +19,8 @@ export default class Figure extends Common {
    */
   constructor({ id, classes, exclusionList, children, caption }: FigureConstructor) {
     super({ id, classes, children, exclusionList });
-    const { setRender, build } = this;
-    setRender(build("figure"));
+    const element = this.build("figure");
+    this.setRender(element);
     if (caption) this.#caption = caption;
   }
 
@@ -37,14 +37,13 @@ export default class Figure extends Common {
    */
   mount(): void {
     super.mount();
-    const { caption, render } = this;
-    if (caption) {
-      switch (caption.position) {
+    if (this.#caption) {
+      switch (this.#caption.position) {
         case ElementPositionEnum.TOP:
-          render.prepend(caption.render);
+          this.render.prepend(this.#caption.render);
           break;
         case ElementPositionEnum.BOTTOM:
-          render.append(caption.render);
+          this.render.append(this.#caption.render);
           break;
       }
     }

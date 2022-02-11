@@ -7,7 +7,6 @@ import Common from "../Common";
 export default class Cell extends Common {
   #rowExtension?: number;
   #columnExtension?: number;
-  #render: HTMLTableCellElement;
 
   /**
    * Initiates a new Cell (td).
@@ -21,11 +20,11 @@ export default class Cell extends Common {
    */
   constructor({ id, classes, exclusionList, children, textContent, rowExtension, columnExtension }: TableCellConstructor) {
     super({ id, classes, children, exclusionList });
-    const { setRender, setColumnExtension, setRowExtension, setTextContent, build } = this;
-    setRender(build("td"));
-    if (rowExtension) setRowExtension(rowExtension);
-    if (columnExtension) setColumnExtension(columnExtension);
-    if (textContent) setTextContent(textContent);
+    const element = this.build("td");
+    this.setRender(element);
+    if (rowExtension) this.setRowExtension(rowExtension);
+    if (columnExtension) this.setColumnExtension(columnExtension);
+    if (textContent) this.setTextContent(textContent);
   }
 
   // ***************************
@@ -41,7 +40,7 @@ export default class Cell extends Common {
   }
 
   get render(): HTMLTableCellElement {
-    return this.#render;
+    return this._render as HTMLTableCellElement;
   }
 
   // ***************************
@@ -49,16 +48,12 @@ export default class Cell extends Common {
   // ***************************
 
   setColumnExtension(extension: number) {
-    if (extension > 0) this.#columnExtension = this.#render.colSpan = extension;
+    if (extension > 0) this.#columnExtension = this.render.colSpan = extension;
     else throw new Error(`The value of columnExtension cannot be negative.`);
   }
 
   setRowExtension(extension: number) {
-    if (extension > 0) this.#rowExtension = this.#render.rowSpan = extension;
+    if (extension > 0) this.#rowExtension = this.render.rowSpan = extension;
     else throw new Error(`The value of rowExtension cannot be negative.`);
-  }
-
-  setRender(render: HTMLTableCellElement) {
-    this.#render = render;
   }
 }

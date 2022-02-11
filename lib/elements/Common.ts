@@ -1,4 +1,4 @@
-import { GenericElement } from "../types/types";
+import { GenericElement, HTMLElementModel } from "../types/types";
 import { CommonConstructor } from "../types/constructors";
 import ArrayExt from "../utils/arrayExt";
 const { remove, toggle } = ArrayExt;
@@ -14,23 +14,20 @@ export default class Common {
   #textContent?: string;
   #exclusionList?: string[];
   #isMounted: boolean = false;
-  #render: HTMLElement;
+  protected _render: HTMLElementModel;
 
-  constructor({ id, classes, children, exclusionList }: CommonConstructor) {
+  constructor({ id, classes, children, exclusionList, textContent }: CommonConstructor) {
     this.#serial = Serial.generate(6);
-    if (id) this.setId(id);
-    if (classes) this.setClasses(classes);
+    if (id) this.#id = id;
+    if (classes) this.#classes = typeof classes === "string" ? classes.split(" ") : classes;
     if (children) this.setChildren(children);
     if (exclusionList) this.setExclusionList(exclusionList);
+    if (textContent) this.#textContent = textContent;
   }
 
   // ***************************
   // Getters
   // ***************************
-
-  get textContent(): string {
-    return this.#textContent;
-  }
 
   get serial(): string {
     return this.#serial;
@@ -48,6 +45,10 @@ export default class Common {
     return this.#id;
   }
 
+  get textContent(): string {
+    return this.#textContent;
+  }
+
   get children(): GenericElement[] {
     return this.#children;
   }
@@ -61,15 +62,19 @@ export default class Common {
   }
 
   get render(): HTMLElement {
-    return this.#render;
+    return this._render;
   }
 
   // ***************************
   // Setters
   // ***************************
 
+  protected setRender(render: HTMLElementModel) {
+    this._render = render;
+  }
+
   setTextContent(textContent: string) {
-    this.#textContent = this.#render.textContent = textContent;
+    this.#textContent = this._render.textContent = textContent;
   }
 
   setParentSerial(serial: string) {
@@ -77,13 +82,12 @@ export default class Common {
   }
 
   setId(id: string) {
-    this.#id = id;
-    if (this.render) this.#render.id = id;
+    this.#id = this._render.id = id;
   }
 
   setClasses(classes: string | string[]) {
     this.#classes = typeof classes === "string" ? classes.split(" ") : classes;
-    if (this.render) this.#classes.forEach((className) => this.#render.classList.add(className));
+    if (this._render) this.#classes.forEach((className) => this._render.classList.add(className));
   }
 
   setChildren(children: GenericElement[]) {
@@ -104,12 +108,8 @@ export default class Common {
     });
   }
 
-  setRender(render: HTMLElement) {
-    this.#render = render;
-  }
-
   protected removeChildren() {
-    this.#children.forEach((child) => child.unmount());
+    this.children.forEach((child) => child.unmount());
   }
 
   /**
@@ -161,32 +161,36 @@ export default class Common {
   }
 
   protected build(tag: string): any {
-    const { id, classes, serial } = this;
     const element = document.createElement(tag);
-    if (id) element.id = id;
-    if (classes) classes.forEach((className) => element.classList.add(className));
-    element.dataset.serial = serial;
+    if (this.#id) element.id = this.#id;
+    if (this.#classes) this.#classes.forEach((className) => element.classList.add(className));
+    if (this.#textContent) element.textContent = this.#textContent;
+    element.dataset.serial = this.#serial;
     return element;
   }
 
   /**
    * Mounts the element into the DOM.
    */
-  mount(): void {
-    if (this.exclusionList) {
-      for (const item of this.exclusionList) {
+  mount(): void {    
+    if (this.#exclusionList) {
+      for (const item of this.#exclusionList) {
         if (window.location.pathname === item) {
           this.unmount();
           return;
         }
       }
     }
-    if (this.children) this.children.forEach((child) => child.setParentSerial(this.serial));
+    if (this.children) this.children.forEach((child) => child.setParentSerial(this.serial));    
     if (!this.parentSerial) document.querySelector("body").appendChild(this.render);
     else this.getElementBySerial(this.parentSerial).appendChild(this.render);
+    if (this.children) {
+      this.children.forEach((child) => {
+        child.setParentSerial(this.serial);
+        child.mount();
+      });
+    }
     this.#isMounted = true;
-
-    if (this.children) this.children.forEach((child) => child.mount());
   }
 
   /**

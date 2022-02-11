@@ -10,7 +10,6 @@ import Common from "../Common";
 export default class Table extends Common {
   #children?: (TableRowType | TableColumnGroupType | TableSectionType)[];
   #caption?: string;
-  #render: HTMLTableElement;
 
   /**
    * Initiates a new Table.
@@ -22,10 +21,10 @@ export default class Table extends Common {
    */
   constructor({ id, classes, exclusionList, children, caption }: TableConstructor) {
     super({ id, classes, exclusionList });
-    const { setRender, setCaption, setChildren, build } = this;
-    setRender(build("table"));
-    if (caption) setCaption(caption);
-    if (children) setChildren(children);
+    const element = this.build("table");
+    this.setRender(element);
+    if (caption) this.setCaption(caption);
+    if (children) this.setChildren(children);
   }
 
   // ***************************
@@ -41,7 +40,7 @@ export default class Table extends Common {
   }
 
   get render(): HTMLTableElement {
-    return this.#render;
+    return this._render as HTMLTableElement;
   }
 
   // ***************************
@@ -54,7 +53,7 @@ export default class Table extends Common {
     const authorizedContent = ["TR", "COLGROUP", "THEAD", "TBODY", "TFOOT"];
     children.forEach((child) => {
       if (matchValue(child.render.tagName, authorizedContent)) {
-        if (this.isMounted) {
+        if (this.isMounted) {          
           child.setParentSerial(this.serial);
           child.mount();
         }
@@ -65,16 +64,12 @@ export default class Table extends Common {
 
   setCaption(caption: string) {
     this.#caption = caption;
-    const existingCaption = this.#render.getElementsByTagName("caption")[0];
+    const existingCaption = this.render.getElementsByTagName("caption")[0];
     if (existingCaption) existingCaption.textContent = caption;
     else {
       const captionElement = document.createElement("caption");
       captionElement.textContent = caption;
-      this.#render.prepend(captionElement);
+      this.render.prepend(captionElement);
     }
-  }
-
-  setRender(render: HTMLTableElement) {
-    this.#render = render;
   }
 }

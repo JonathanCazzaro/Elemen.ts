@@ -11,7 +11,6 @@ export default class Image extends Common {
   #description: string;
   #sourceSet?: string;
   #mediaQueries?: string;
-  #render: HTMLImageElement;
 
   /**
    * Initiates a new Image (img).
@@ -25,12 +24,12 @@ export default class Image extends Common {
    */
   constructor({ id, classes, exclusionList, source, description, sourceSet, mediaQueries }: ImageConstructor) {
     super({ id, classes, exclusionList });
-    const { setRender, setSource, setSourceSet, setDescription, setMediaQueries, build } = this;
-    setRender(build("img"));
-    setSource(source);
-    setDescription(description);
-    if (sourceSet) setSourceSet(sourceSet);
-    if (mediaQueries) setMediaQueries(mediaQueries);
+    const element = this.build("img");
+    this.setRender(element);  
+    this.setSource(source);
+    this.setDescription(description);
+    if (sourceSet) this.setSourceSet(sourceSet);
+    if (mediaQueries) this.setMediaQueries(mediaQueries);
   }
 
   // ***************************
@@ -38,7 +37,7 @@ export default class Image extends Common {
   // ***************************
 
   get render(): HTMLImageElement {
-    return this.#render;
+    return this._render as HTMLImageElement;
   }
 
   get source(): string {
@@ -61,22 +60,18 @@ export default class Image extends Common {
   // Setters
   // ***************************
 
-  setRender(render: HTMLImageElement) {
-    this.#render = render;
-  }
-
   setSource(source: string) {
-    this.#source = this.#render.src = source;
+    this.#source = this.render.src = source;
   }
 
   setDescription(description: string) {
-    this.#description = this.#render.alt = description;
+    this.#description = this.render.alt = description;
   }
 
   setSourceSet(set: string[]) {
     if (!checkSourceSet(set))
       throw new Error(`The sourceSet argument is invalid. Format must be : "filepath resolution". Example : "myimage.jpg 480w"`);
-    this.#sourceSet = this.#render.srcset = set.join(",");
+    this.#sourceSet = this.render.srcset = set.join(",");
   }
 
   setMediaQueries(queries: string[]) {
@@ -85,6 +80,6 @@ export default class Image extends Common {
       throw new Error(
         `The mediaQueries argument is invalid. Format must be : "(mediaquery) resolution" or just "resolution. Example : "(max-width: 1024px) 768px/vw/em" or just "768px/vw/em`
       );
-    this.#mediaQueries = this.#render.sizes = queries.join(",");
+    this.#mediaQueries = this.render.sizes = queries.join(",");
   }
 }

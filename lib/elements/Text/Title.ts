@@ -6,7 +6,6 @@ import Common from "../Common";
  */
 export default class Title extends Common {
   #level: number;
-  #render: HTMLHeadingElement;
 
   /**
    * Initiates a new Title (h*).
@@ -18,12 +17,11 @@ export default class Title extends Common {
    * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any.
    */
   constructor({ id, classes, exclusionList, textContent, children, level }: TitleConstructor) {
-    super({ id, classes, children, exclusionList });
+    super({ id, classes, children, exclusionList, textContent });
     if (level > 6 || level < 1) throw new Error("Title's level should be set between 1 and 6.");
     else this.#level = level;
-    const { setRender, setTextContent, build } = this;
-    setRender(build(`h${this.level}`));
-    if (textContent) setTextContent(textContent);
+    const element = this.build(`h${this.#level}`);
+    this.setRender(element);
   }
 
   // ***************************
@@ -31,18 +29,10 @@ export default class Title extends Common {
   // ***************************
 
   get render(): HTMLHeadingElement {
-    return this.#render;
+    return this._render as HTMLHeadingElement;
   }
 
   get level(): number {
     return this.#level;
-  }
-
-  // ***************************
-  // Setters
-  // ***************************
-
-  setRender(render: HTMLHeadingElement) {
-    this.#render = render;
   }
 }

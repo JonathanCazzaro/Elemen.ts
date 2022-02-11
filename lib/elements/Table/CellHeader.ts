@@ -9,7 +9,6 @@ export default class Cell_Header extends Common {
   #rowExtension?: number;
   #columnExtension?: number;
   #scope?: ScopeEnum;
-  #render: HTMLTableCellElement;
 
   /**
    * Initiates a new Cell Header (th).
@@ -24,11 +23,11 @@ export default class Cell_Header extends Common {
    */
   constructor({ id, classes, exclusionList, children, textContent, rowExtension, columnExtension, scope }: TableCellHeaderConstructor) {
     super({ id, classes, children, exclusionList });
-    const { setRender, setColumnExtension, setRowExtension, setScope, setTextContent, build } = this;
-    setRender(build("th"));
-    if (rowExtension) setRowExtension(rowExtension);
-    if (columnExtension) setColumnExtension(columnExtension);
-    if (scope) setScope(scope);
+    const element = this.build("th");
+    this.setRender(element);
+    if (rowExtension) this.setRowExtension(rowExtension);
+    if (columnExtension) this.setColumnExtension(columnExtension);
+    if (scope) this.setScope(scope);
   }
 
   // ***************************
@@ -48,7 +47,7 @@ export default class Cell_Header extends Common {
   }
 
   get render(): HTMLTableCellElement {
-    return this.#render;
+    return this._render as HTMLTableCellElement;
   }
 
   // ***************************
@@ -56,20 +55,16 @@ export default class Cell_Header extends Common {
   // ***************************
 
   setColumnExtension(extension: number) {
-    if (extension > 0) this.#columnExtension = this.#render.colSpan = extension;
+    if (extension > 0) this.#columnExtension = this.render.colSpan = extension;
     else throw new Error(`The value of columnExtension cannot be negative.`);
   }
 
   setRowExtension(extension: number) {
-    if (extension > 0) this.#rowExtension = this.#render.rowSpan = extension;
+    if (extension > 0) this.#rowExtension = this.render.rowSpan = extension;
     else throw new Error(`The value of rowExtension cannot be negative.`);
   }
 
   setScope(scope: ScopeEnum) {
-    this.#scope = this.#render.scope = scope;
-  }
-
-  setRender(render: HTMLTableCellElement) {
-    this.#render = render;
+    this.#scope = this.render.scope = scope;
   }
 }

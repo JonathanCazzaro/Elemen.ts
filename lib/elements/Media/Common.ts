@@ -11,11 +11,10 @@ export default class CommonMedia extends Common {
   #showControls: boolean = false;
   #loop: boolean = false;
   #muted: boolean = false;
-  #render: HTMLAudioElement | HTMLVideoElement;
 
   constructor({ id, classes, exclusionList, source, children, noSupportMessage, autoplay, showControls, loop, muted }: CommonMediaConstructor) {
     super({ id, classes, exclusionList });
-    if (source) this.#source = source;    
+    if (source) this.#source = source;
     if (children) this.setChildren(children);
     if (noSupportMessage) this.#noSupportMessage = noSupportMessage;
     if (autoplay) this.#autoplay = true;
@@ -56,13 +55,17 @@ export default class CommonMedia extends Common {
     return this.#muted;
   }
 
+  get render(): HTMLAudioElement | HTMLVideoElement {
+    return this._render as HTMLAudioElement | HTMLVideoElement;
+  }
+
   // ***************************
   // Setters
   // ***************************
 
   setSource(source: string) {
     if (this.children) throw new Error("In order to use the source attribute, you must get rid of the children elements.");
-    this.#source = this.#render.src = source;
+    this.#source = this.render.src = source;
   }
 
   setChildren(children: SourceType[]) {
@@ -83,23 +86,23 @@ export default class CommonMedia extends Common {
   }
 
   setNoSupportMessage(message: string) {
-    this.#noSupportMessage = this.#render.textContent = message;
+    this.#noSupportMessage = this.render.textContent = message;
   }
 
   setAutoplay(value: boolean) {
-    this.#autoplay = this.#render.autoplay = value;
+    this.#autoplay = this.render.autoplay = value;
   }
 
   setShowControls(value: boolean) {
-    this.#showControls = this.#render.controls = value;
+    this.#showControls = this.render.controls = value;
   }
 
   setLoop(value: boolean) {
-    this.#loop = this.#render.loop = value;
+    this.#loop = this.render.loop = value;
   }
 
   setMuted(value: boolean) {
-    this.#muted = this.#render.muted = value;
+    this.#muted = this.render.muted = value;
   }
 
   protected build(tag: string): any {

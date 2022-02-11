@@ -7,7 +7,6 @@ import Common from "../Common";
  */
 export default class Unordered_List extends Common {
   #children?: ListItemType[];
-  #render: HTMLUListElement;
 
   /**
    * Initiates a new Unordered List (ul).
@@ -18,9 +17,9 @@ export default class Unordered_List extends Common {
    */
   constructor({ id, classes, exclusionList, children }: UnorderedListConstructor) {
     super({ id, classes, exclusionList });
-    const { setRender, setChildren, build } = this;
-    setRender(build("ul"));
-    if (children) setChildren(children);
+    const element = this.build("ul");
+    this.setRender(element);  
+    if (children) this.setChildren(children);
   }
 
   // ***************************
@@ -32,7 +31,7 @@ export default class Unordered_List extends Common {
   }
 
   get render(): HTMLUListElement {
-    return this.#render;
+    return this._render as HTMLUListElement;
   }
 
   // ***************************
@@ -51,9 +50,5 @@ export default class Unordered_List extends Common {
         this.#children.push(child);
       } else throw new Error("List can only take List_Item elements as children.");
     });
-  }
-
-  setRender(render: HTMLUListElement) {
-    this.#render = render;
   }
 }

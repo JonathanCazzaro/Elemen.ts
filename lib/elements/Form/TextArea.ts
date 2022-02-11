@@ -23,7 +23,6 @@ export default class Text_Area extends Common {
   #readonly: boolean = false;
   #spellcheck: boolean = false;
   #validationFailMessages?: FailMessagesConfig;
-  #render: HTMLTextAreaElement;
 
   /**
    * Initiates a new Text Area (textarea).
@@ -65,39 +64,22 @@ export default class Text_Area extends Common {
     validationFailMessages,
   }: TextAreaConstructor) {
     super({ id, classes, exclusionList });
-    const {
-      setRender,
-      setName,
-      setValue,
-      setForm,
-      setAutofocus,
-      setDisabled,
-      setReadonly,
-      setRequired,
-      setSpellcheck,
-      setPlaceholder,
-      setMinLength,
-      setMaxLength,
-      setWidth,
-      setHeight,
-      setValidationFailMessages,
-      build,
-    } = this;
-    setRender(build("textarea"));
-    if (name) setName(name);
-    if (value) setValue(value);
-    if (form) setForm(form);
-    if (autofocus) setAutofocus(true);
-    if (disabled) setDisabled(true);
-    if (required) setRequired(true);
-    if (readonly) setReadonly(true);
-    if (spellcheck) setSpellcheck(true);
-    if (placeholder) setPlaceholder(placeholder);
-    if (minLength) setMinLength(minLength);
-    if (maxLength) setMaxLength(maxLength);
-    if (width) setWidth(width);
-    if (height) setHeight(height);
-    if (validationFailMessages) setValidationFailMessages(validationFailMessages);
+    const element = this.build("textarea");
+    this.setRender(element);
+    if (name) this.setName(name);
+    if (value) this.setValue(value);
+    if (form) this.setForm(form);
+    if (autofocus) this.setAutofocus(true);
+    if (disabled) this.setDisabled(true);
+    if (required) this.setRequired(true);
+    if (readonly) this.setReadonly(true);
+    if (spellcheck) this.setSpellcheck(true);
+    if (placeholder) this.setPlaceholder(placeholder);
+    if (minLength) this.setMinLength(minLength);
+    if (maxLength) this.setMaxLength(maxLength);
+    if (width) this.setWidth(width);
+    if (height) this.setHeight(height);
+    if (validationFailMessages) this.setValidationFailMessages(validationFailMessages);
   }
 
   // ***************************
@@ -105,7 +87,7 @@ export default class Text_Area extends Common {
   // ***************************
 
   get render(): HTMLTextAreaElement {
-    return this.#render;
+    return this._render as HTMLTextAreaElement;
   }
 
   get value(): string {
@@ -168,67 +150,63 @@ export default class Text_Area extends Common {
   // Setters
   // ***************************
 
-  setRender(render: HTMLTextAreaElement) {
-    this.#render = render;
-  }
-
   setValue(value: string) {
-    this.#value = this.#render.value = value;
+    this.#value = this.render.value = value;
   }
 
   setName(name: string) {
-    this.#name = this.#render.name = name;
+    this.#name = this.render.name = name;
   }
 
   setForm(form: FormType) {
     this.#form = form;
-    if (form.id) this.#render.setAttribute("form", form.id);
+    if (form.id) this.render.setAttribute("form", form.id);
     else throw new Error("The form you connected to the text area must have an id.");
   }
 
   setWidth(width: number) {
-    this.#width = this.#render.cols = width;
+    this.#width = this.render.cols = width;
   }
 
   setHeight(height: number) {
-    this.#height = this.#render.rows = height;
+    this.#height = this.render.rows = height;
   }
 
   setPlaceholder(placeholder: string) {
-    this.#placeholder = this.#render.placeholder = placeholder;
+    this.#placeholder = this.render.placeholder = placeholder;
   }
 
   setMinLength(minLength: number) {
-    this.#minLength = this.#render.minLength = minLength;
+    this.#minLength = this.render.minLength = minLength;
   }
 
   setMaxLength(maxLength: number) {
-    this.#maxLength = this.#render.maxLength = maxLength;
+    this.#maxLength = this.render.maxLength = maxLength;
   }
 
   setAutofocus(value: boolean) {
-    this.#autofocus = this.#render.autofocus = value;
+    this.#autofocus = this.render.autofocus = value;
   }
 
   setDisabled(value: boolean) {
-    this.#disabled = this.#render.disabled = value;
+    this.#disabled = this.render.disabled = value;
   }
 
   setRequired(value: boolean) {
-    this.#required = this.#render.required = value;
+    this.#required = this.render.required = value;
   }
 
   setReadonly(value: boolean) {
-    this.#readonly = this.#render.readOnly = value;
+    this.#readonly = this.render.readOnly = value;
   }
 
   setSpellcheck(value: boolean) {
-    this.#spellcheck = this.#render.spellcheck = value;
+    this.#spellcheck = this.render.spellcheck = value;
   }
 
   setValidationFailMessages(messages: FailMessagesConfig) {
     this.#validationFailMessages = messages;
-    this.setRender(setValidationMessages(this.#render, messages));
+    this.setRender(setValidationMessages(this.render, messages));
   }
 
   /**

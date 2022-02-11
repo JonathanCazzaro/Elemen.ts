@@ -8,7 +8,6 @@ export default class Video extends CommonMedia {
   #height?: number;
   #width?: number;
   #posterFrame?: string;
-  #render: HTMLVideoElement;
 
   /**
    * Initiates a new Video.
@@ -53,11 +52,11 @@ export default class Video extends CommonMedia {
       loop,
       muted,
     });
-    const { setRender, setHeight, setWidth, setPosterFrame, build } = this;
-    setRender(build("video"));
-    if (height) setHeight(height);
-    if (width) setWidth(width);
-    if (posterFrame) setPosterFrame(posterFrame);
+    const element = this.build("video");
+    this.setRender(element);  
+    if (height) this.setHeight(height);
+    if (width) this.setWidth(width);
+    if (posterFrame) this.setPosterFrame(posterFrame);
   }
 
   // ***************************
@@ -65,7 +64,7 @@ export default class Video extends CommonMedia {
   // ***************************
 
   get render(): HTMLVideoElement {
-    return this.#render;
+    return this._render as HTMLVideoElement;
   }
 
   get height(): number {
@@ -84,19 +83,15 @@ export default class Video extends CommonMedia {
   // Setters
   // ***************************
 
-  setRender(render: HTMLVideoElement) {
-    this.#render = render;
-  }
-
   setHeight(height: number) {
-    this.#height = this.#render.height = height;
+    this.#height = this.render.height = height;
   }
 
   setWidth(width: number) {
-    this.#width = this.#render.width = width;
+    this.#width = this.render.width = width;
   }
 
   setPosterFrame(posterFrame: string) {
-    this.#posterFrame = this.#render.poster = posterFrame;
+    this.#posterFrame = this.render.poster = posterFrame;
   }
 }

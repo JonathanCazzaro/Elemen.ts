@@ -10,7 +10,6 @@ export default class Fieldset extends Common {
   #form?: FormType;
   #legend?: LegendType;
   #disabled: boolean = false;
-  #render: HTMLFieldSetElement;
 
   /**
    * Initiates a new Fieldset.
@@ -25,11 +24,11 @@ export default class Fieldset extends Common {
    */
   constructor({ id, classes, children, exclusionList, form, legend, disabled }: FieldsetConstructor) {
     super({ id, classes, children, exclusionList });
-    const { setRender, setForm, setLegend, setDisabled, build } = this;
-    setRender(build("fieldset"));
-    if (disabled) setDisabled(true);
-    if (form) setForm(form);
-    if (legend) setLegend(legend);
+    const element = this.build("fieldset");
+    this.setRender(element);
+    if (disabled) this.setDisabled(true);
+    if (form) this.setForm(form);
+    if (legend) this.setLegend(legend);
   }
 
   // ***************************
@@ -53,7 +52,7 @@ export default class Fieldset extends Common {
   }
 
   get render(): HTMLFieldSetElement {
-    return this.#render;
+    return this._render as HTMLFieldSetElement;
   }
 
   // ***************************
@@ -61,12 +60,12 @@ export default class Fieldset extends Common {
   // ***************************
 
   setName(name: string) {
-    this.#name = this.#render.name = name;
+    this.#name = this.render.name = name;
   }
 
   setForm(form: FormType) {
     this.#form = form;
-    if (form.id) this.#render.setAttribute("form", form.id);
+    if (form.id) this.render.setAttribute("form", form.id);
     else throw new Error("The form you connected to the fieldset must have an id.");
   }
 
@@ -83,10 +82,6 @@ export default class Fieldset extends Common {
   }
 
   setDisabled(value: boolean) {
-    this.#disabled = this.#render.disabled = value;
-  }
-
-  setRender(render: HTMLFieldSetElement) {
-    this.#render = render;
+    this.#disabled = this.render.disabled = value;
   }
 }

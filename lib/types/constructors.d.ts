@@ -103,6 +103,10 @@ export interface CommonConstructor {
    * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    */
   exclusionList?: string[];
+  /**
+   * @param {string} [textContent] - (optional) Text to be displayed inside the element.
+   */
+  textContent?: string;
 }
 
 export interface FactoryConstructor {
@@ -120,14 +124,7 @@ export interface FactoryConstructor {
 
 // ------ Text Elements Constructors ------
 
-export interface TextConstructor extends CommonConstructor {
-  /**
-   * @param {string} [textContent] - (optional) Text to be displayed inside the element.
-   */
-  textContent?: string;
-}
-
-export interface TitleConstructor extends TextConstructor {
+export interface TitleConstructor extends CommonConstructor {
   /**
    * @param {number} level - Level of the title.
    */
@@ -136,10 +133,7 @@ export interface TitleConstructor extends TextConstructor {
 
 // ------ Generic Elements Constructors ------
 
-export interface ContainerConstructor extends TextConstructor {}
-export interface InsertConstructor extends TextConstructor {}
-
-export interface CaptionConstructor extends TextConstructor {
+export interface CaptionConstructor extends CommonConstructor {
   /**
    * @param {ElementPositionEnum} position - Defines whether the caption should be placed before or after the related element. Use enum ElementPositionEnum.
    */
@@ -155,8 +149,7 @@ export interface FigureConstructor extends CommonConstructor {
 
 // ------ Structure Elements Constructors ------
 
-export interface GenericStructureConstructor extends TextConstructor {}
-export interface DetailsConstructor extends TextConstructor {
+export interface DetailsConstructor extends CommonConstructor {
   /**
    * @param {string} [summary] - (optional) Caption intented to give information about the hidden content.
    */
@@ -165,7 +158,7 @@ export interface DetailsConstructor extends TextConstructor {
 
 // ------ Navigation Elements Constructors ------
 
-export interface LinkConstructor extends TextConstructor {
+export interface LinkConstructor extends CommonConstructor {
   /**
    * @param {string} [target] - (optional) Target of the link (url, local path, etc...).
    */
@@ -192,7 +185,7 @@ export interface TableSectionConstructor extends CommonConstructor {
   children?: TableRowType[];
 }
 
-export interface TableCellHeaderConstructor extends TextConstructor {
+export interface TableCellHeaderConstructor extends CommonConstructor {
   /**
    * @param {number} [rowExtension] - (optional) Defines the quantity of rows upon which the cell is extending. Must be strictly superior to 0.
    */
@@ -214,7 +207,7 @@ export interface TableRowConstructor extends CommonConstructor {
   children?: (TableCellType | TableCellHeaderType)[];
 }
 
-export interface TableCellConstructor extends TextConstructor {
+export interface TableCellConstructor extends CommonConstructor {
   /**
    * @param {number} [rowExtension] - (optional) Defines the quantity of rows upon which the cell is extending. Must be strictly superior to 0.
    */
@@ -282,8 +275,6 @@ export interface UnorderedListConstructor extends CommonConstructor {
    */
   children?: ListItemType[];
 }
-
-export interface ListItemConstructor extends TextConstructor {}
 
 // ------ Form Elements Constructors ------
 
@@ -361,7 +352,7 @@ export interface InputConstructor extends CommonConstructor {
   validationFailMessages?: FailMessagesConfig;
 }
 
-export interface LabelConstructor extends TextConstructor {
+export interface LabelConstructor extends CommonConstructor {
   /**
    * @param {string} [formElementId] - (optional) The ID of the related element. Required if the element is not a direct child of the label.
    */
@@ -490,7 +481,7 @@ export type TIME = {
   incrementStep?: number;
 };
 
-export interface ButtonConstructor extends TextConstructor {
+export interface ButtonConstructor extends CommonConstructor {
   /**
    * @param {ButtonTypeEnum} type - Role of the button, use enum type ButtonTypeEnum to define it.
    */
@@ -544,7 +535,7 @@ export interface DropdownConstructor extends CommonConstructor {
   multiple?: boolean;
 }
 
-export interface OptionConstructor extends TextConstructor {
+export interface OptionConstructor extends CommonConstructor {
   /**
    * @param {string} [value] - (optional) Value which will be sent when submitting.
    */

@@ -9,7 +9,6 @@ export default class Options_Group extends Common {
   #children?: OptionType[];
   #label: string;
   #disabled: boolean = false;
-  #render: HTMLOptGroupElement;
 
   /**
    * Initiates a new Options Group (optgroup).
@@ -22,11 +21,11 @@ export default class Options_Group extends Common {
    */
   constructor({ id, classes, children, exclusionList, label, disabled }: OptionsGroupConstructor) {
     super({ id, classes, exclusionList });
-    const { setRender, setChildren, setLabel, setDisabled, build } = this;
-    setRender(build("optgroup"));
-    setLabel(label);
-    if (children) setChildren(children);
-    if (disabled) setDisabled(true);
+    const element = this.build("optgroup");
+    this.setRender(element);
+    this.setLabel(label);
+    if (children) this.setChildren(children);
+    if (disabled) this.setDisabled(true);
   }
 
   // ***************************
@@ -46,7 +45,7 @@ export default class Options_Group extends Common {
   }
 
   get render(): HTMLOptGroupElement {
-    return this.#render;
+    return this._render as HTMLOptGroupElement;
   }
 
   // ***************************
@@ -68,14 +67,10 @@ export default class Options_Group extends Common {
   }
 
   setLabel(label: string) {
-    this.#label = this.#render.label = label;
+    this.#label = this.render.label = label;
   }
 
   setDisabled(value: boolean) {
-    this.#disabled = this.#render.disabled = value;
-  }
-
-  setRender(render: HTMLOptGroupElement) {
-    this.#render = render;
+    this.#disabled = this.render.disabled = value;
   }
 }

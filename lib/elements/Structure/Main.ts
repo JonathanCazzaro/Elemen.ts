@@ -1,4 +1,4 @@
-import { GenericStructureConstructor } from "../../types/constructors";
+import { CommonConstructor } from "../../types/constructors";
 import Common from "../Common";
 
 /**
@@ -13,10 +13,9 @@ export default class Main extends Common {
    * @param {string} [textContent] - (optional) Text to be displayed inside the element.
    * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any.
    */
-  constructor({ id, classes, exclusionList, textContent, children }: GenericStructureConstructor) {
-    super({ id, classes, children, exclusionList });
-    const { setRender, setTextContent, build } = this;
-    setRender(build("main"));
-    if (textContent) setTextContent(textContent);
+  constructor({ id, classes, exclusionList, textContent, children }: CommonConstructor) {
+    super({ id, classes, children, exclusionList, textContent });
+    const element = this.build("main");
+    this.setRender(element);
   }
 }

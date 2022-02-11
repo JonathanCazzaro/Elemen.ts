@@ -1,6 +1,5 @@
 import { FormConstructor } from "../../types/constructors";
 import { FormMethodEnum } from "../../types/enum";
-import { GenericElement } from "../../types/types";
 import Common from "../Common";
 
 /**
@@ -11,7 +10,6 @@ export default class Form extends Common {
   #method?: FormMethodEnum;
   #name?: string;
   #noValidation: boolean = false;
-  #render: HTMLFormElement;
 
   /**
    * Initiates a new Form.
@@ -25,12 +23,12 @@ export default class Form extends Common {
    */
   constructor({ id, classes, exclusionList, action, method, name, noValidation }: FormConstructor) {
     super({ id, classes, exclusionList });
-    const { setRender, setAction, setMethod, setName, setNoValidation, build } = this;
-    setRender(build("form"));
-    if (action) setAction(action);
-    if (method) setMethod(method);
-    if (name) setName(name);
-    setNoValidation(noValidation ? true : false);
+    const element = this.build("form");
+    this.setRender(element);  
+    if (action) this.setAction(action);
+    if (method) this.setMethod(method);
+    if (name) this.setName(name);
+    this.setNoValidation(noValidation ? true : false);
   }
 
   // ***************************
@@ -38,7 +36,7 @@ export default class Form extends Common {
   // ***************************
 
   get render(): HTMLFormElement {
-    return this.#render;
+    return this._render as HTMLFormElement;
   }
 
   get action(): string {
@@ -61,36 +59,32 @@ export default class Form extends Common {
   // Setters
   // ***************************
 
-  setRender(render: HTMLFormElement) {
-    this.#render = render;
-  }
-
   setAction(action: string) {
-    this.#action = this.#render.action = action;
+    this.#action = this.render.action = action;
   }
 
   setMethod(method: FormMethodEnum) {
-    this.#method = this.#render.method = method;
+    this.#method = this.render.method = method;
   }
 
   setName(name: string) {
-    this.#name = this.#render.name = name;
+    this.#name = this.render.name = name;
   }
 
   setNoValidation(value: boolean) {
-    this.#noValidation = this.#render.noValidate = value;
+    this.#noValidation = this.render.noValidate = value;
     const handleSubmit = (event: KeyboardEvent) => {
       if (event.key === "Enter") {
         event.preventDefault();
-        this.#render.dispatchEvent(new Event("trysubmit"));
+        this.render.dispatchEvent(new Event("trysubmit"));
       }
-    }
+    };
     if (!value) {
-      this.#render.addEventListener("submit", (e) => e.preventDefault());
-      this.#render.addEventListener("keypress", handleSubmit);
+      this.render.addEventListener("submit", (e) => e.preventDefault());
+      this.render.addEventListener("keypress", handleSubmit);
     } else {
-      this.#render.removeEventListener("submit", (e) => e.preventDefault());
-      this.#render.removeEventListener("keypress", handleSubmit);
+      this.render.removeEventListener("submit", (e) => e.preventDefault());
+      this.render.removeEventListener("keypress", handleSubmit);
     }
   }
 

@@ -6,7 +6,6 @@ import Common from "../Common";
  */
 export default class Label extends Common {
   #formElementId?: string;
-  #render: HTMLLabelElement;
 
   /**
    * Initiates a new Label.
@@ -18,11 +17,10 @@ export default class Label extends Common {
    * @param {string} [textContent] - (optional) Text to be displayed inside the element.
    */
   constructor({ id, classes, formElementId, textContent, children, exclusionList }: LabelConstructor) {
-    super({ id, classes, children, exclusionList });
-    const { setRender, setTextContent, setFormElementId, build } = this;
-    setRender(build("label"));
-    if (formElementId) setFormElementId(formElementId);
-    if (textContent) setTextContent(textContent);
+    super({ id, classes, children, exclusionList, textContent });
+    const element = this.build("label");
+    this.setRender(element);
+    if (formElementId) this.setFormElementId(formElementId);
   }
 
   // ***************************
@@ -30,7 +28,7 @@ export default class Label extends Common {
   // ***************************
 
   get render(): HTMLLabelElement {
-    return this.#render;
+    return this._render as HTMLLabelElement;
   }
 
   get formElementId(): string {
@@ -42,10 +40,6 @@ export default class Label extends Common {
   // ***************************
 
   setFormElementId(id: string) {
-    this.#formElementId = this.#render.htmlFor = id;
-  }
-
-  setRender(render: HTMLLabelElement) {
-    this.#render = render;
+    this.#formElementId = this.render.htmlFor = id;
   }
 }

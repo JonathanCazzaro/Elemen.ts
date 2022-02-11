@@ -1,12 +1,10 @@
-import { ListItemConstructor } from "../../types/constructors";
+import { CommonConstructor } from "../../types/constructors";
 import Common from "../Common";
 
 /**
  * Initiates a new List Item (li).
  */
 export default class List_Item extends Common {
-  #render: HTMLLIElement;
-
   /**
    * Initiates a new List Item (li).
    * @param {string} [id] - (optional)
@@ -15,11 +13,10 @@ export default class List_Item extends Common {
    * @param {string} [textContent] - (optional) Text to be displayed inside the element.
    * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any.
    */
-  constructor({ id, classes, textContent, children, exclusionList }: ListItemConstructor) {
-    super({ id, classes, children, exclusionList });
-    const { setRender, setTextContent, build } = this;
-    setRender(build("li"));
-    if (textContent) setTextContent(textContent);
+  constructor({ id, classes, textContent, children, exclusionList }: CommonConstructor) {
+    super({ id, classes, children, exclusionList, textContent });
+    const element = this.build("li");
+    this.setRender(element);  
   }
 
   // ***************************
@@ -27,14 +24,6 @@ export default class List_Item extends Common {
   // ***************************
 
   get render(): HTMLLIElement {
-    return this.#render;
-  }
-
-  // ***************************
-  // Setters
-  // ***************************
-
-  setRender(render: HTMLLIElement) {
-    this.#render = render;
+    return this._render as HTMLLIElement;
   }
 }

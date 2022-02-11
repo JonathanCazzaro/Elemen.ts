@@ -8,7 +8,6 @@ import Common from "../Common";
 export default class Column_Group extends Common {
   #columnExtension?: number;
   #columns?: ColumnsConfig[];
-  #render: HTMLTableColElement;
 
   /**
    * Initiates a new Column Group (colgroup).
@@ -20,10 +19,10 @@ export default class Column_Group extends Common {
    */
   constructor({ id, classes, exclusionList, columnExtension, columns }: TableColGroupConstructor) {
     super({ id, classes, exclusionList });
-    const { setRender, setColumnExtension, setColumns, build } = this;
-    setRender(build("colgroup"));
-    if (columnExtension) setColumnExtension(columnExtension);
-    if (columns) setColumns(columns);
+    const element = this.build("colgroup");
+    this.setRender(element);  
+    if (columnExtension) this.setColumnExtension(columnExtension);
+    if (columns) this.setColumns(columns);
   }
 
   // ***************************
@@ -39,7 +38,7 @@ export default class Column_Group extends Common {
   }
 
   get render(): HTMLTableColElement {
-    return this.#render;
+    return this._render as HTMLTableColElement;
   }
 
   // ***************************
@@ -48,7 +47,7 @@ export default class Column_Group extends Common {
 
   setColumnExtension(extension: number) {
     if (this.#columns) throw new Error("Since the element has columns already defined, columnExtension cannot be used.");
-    if (extension > 0) this.#columnExtension = this.#render.span = extension;
+    if (extension > 0) this.#columnExtension = this.render.span = extension;
     else throw new Error(`The value of columnExtension cannot be negative.`);
   }
 
@@ -65,11 +64,7 @@ export default class Column_Group extends Common {
       const col = document.createElement("col");
       if (columnExtension) col.span = columnExtension;
       if (classes) classes.forEach((className) => col.classList.add(className));
-      this.#render.appendChild(col);
+      this.render.appendChild(col);
     });
-  }
-
-  setRender(render: HTMLTableColElement) {
-    this.#render = render;
   }
 }

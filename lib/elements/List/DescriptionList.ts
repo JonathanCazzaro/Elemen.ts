@@ -9,7 +9,6 @@ import Common from "../Common";
  */
 export default class Description_List extends Common {
   #children?: GenericElement[];
-  #render: HTMLDListElement;
 
   /**
    * Initiates a new Description List (dl).
@@ -20,9 +19,9 @@ export default class Description_List extends Common {
    */
   constructor({ id, classes, children, exclusionList }: CommonConstructor) {
     super({ id, classes, exclusionList });
-    const { setRender, setChildren, build } = this;
-    setRender(build("dl"));
-    if (children) setChildren(children);
+    const element = this.build("dl");
+    this.setRender(element);  
+    if (children) this.setChildren(children);
   }
 
   // ***************************
@@ -30,7 +29,7 @@ export default class Description_List extends Common {
   // ***************************
 
   get render(): HTMLDListElement {
-    return this.#render;
+    return this._render as HTMLDListElement;
   }
 
   // ***************************
@@ -50,9 +49,5 @@ export default class Description_List extends Common {
         this.#children.push(child);
       } else throw new Error("Description List can only take Description_Term, Term_Definition or Container elements as children.");
     });
-  }
-
-  setRender(render: HTMLDListElement) {
-    this.#render = render;
   }
 }

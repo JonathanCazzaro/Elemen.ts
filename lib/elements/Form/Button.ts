@@ -13,7 +13,6 @@ export default class Button extends Common {
   #name?: string;
   #value?: string;
   #disabled: boolean = false;
-  #render: HTMLButtonElement;
 
   /**
    * Initiates a new Button.
@@ -29,20 +28,19 @@ export default class Button extends Common {
    * @param {boolean} [disabled] - (optional) Boolean to specify whether the button should be disabled or not.
    */
   constructor({ id, classes, exclusionList, textContent, type, form, children, name, value, disabled }: ButtonConstructor) {
-    super({ id, classes, children, exclusionList });
-    const { setRender, setType, setForm, setName, setValue, setTextContent, setDisabled } = this;
-    setRender(this.build("button"));
-    setType(type);
-    if (form) setForm(form);
+    super({ id, classes, children, exclusionList, textContent });
+    const element = this.build("button");
+    this.setRender(element);
+    this.setType(type);
+    if (form) this.setForm(form);
     else if (this.type === ButtonTypeEnum.SUBMIT || this.type === ButtonTypeEnum.RESET) {
       throw new Error("The form attribute must be filled in when constructing a submit/reset button.");
     }
     if (name) {
-      setName(name);
-      if (value) setValue(value);
+      this.setName(name);
+      if (value) this.setValue(value);
     } else if (value) console.error("Button name attribute is missing but required to use the value attribute.");
-    if (disabled) setDisabled(true);
-    if (textContent) setTextContent(textContent);
+    if (disabled) this.setDisabled(true);
   }
 
   // ***************************
@@ -74,7 +72,7 @@ export default class Button extends Common {
   }
 
   get render(): HTMLButtonElement {
-    return this.#render;
+    return this._render as HTMLButtonElement;
   }
 
   // ***************************
@@ -82,33 +80,29 @@ export default class Button extends Common {
   // ***************************
 
   setType(type: ButtonTypeEnum) {
-    this.#type = this.#render.type = type;
+    this.#type = this.render.type = type;
   }
 
   setForm(form: FormType) {
     this.#form = form;
-    if (form.id) this.#render.setAttribute("form", form.id);
+    if (form.id) this.render.setAttribute("form", form.id);
     else throw new Error("The form you connected to the button must have an id.");
   }
 
   setTextContent(textContent: string) {
-    this.#textContent = this.#render.textContent = textContent;
+    this.#textContent = this.render.textContent = textContent;
   }
 
   setName(name: string) {
-    this.#name = this.#render.name = name;
+    this.#name = this.render.name = name;
   }
 
   setValue(value: string) {
-    this.#value = this.#render.value = value;
+    this.#value = this.render.value = value;
   }
 
   setDisabled(value: boolean) {
-    this.#disabled = this.#render.disabled = value;
-  }
-
-  setRender(render: HTMLButtonElement) {
-    this.#render = render;
+    this.#disabled = this.render.disabled = value;
   }
 
   mount(): void {

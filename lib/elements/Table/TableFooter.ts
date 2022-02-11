@@ -14,7 +14,7 @@ export default class Table_Footer extends Table_Section {
    */
   constructor({ id, classes, exclusionList, children }: TableSectionConstructor) {
     super({ id, classes, exclusionList, children });
-    const { setRender, build } = this;
-    setRender(build("tfoot"));
+    const element = this.build("tfoot");
+    this.setRender(element);
   }
 }

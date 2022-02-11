@@ -9,7 +9,6 @@ import Common from "../Common";
  */
 export default class Row extends Common {
   #children?: (TableCellType | TableCellHeaderType)[];
-  #render: HTMLTableRowElement;
 
   /**
    * Initiates a new Row (tr).
@@ -20,9 +19,9 @@ export default class Row extends Common {
    */
   constructor({ id, classes, children, exclusionList }: TableRowConstructor) {
     super({ id, classes, exclusionList });
-    const { setChildren, setRender, build } = this;
-    setRender(build("tr"));
-    if (children) setChildren(children);
+    const element = this.build("tr");
+    this.setRender(element);
+    if (children) this.setChildren(children);
   }
 
   // ***************************
@@ -34,7 +33,7 @@ export default class Row extends Common {
   }
 
   get render(): HTMLTableRowElement {
-    return this.#render;
+    return this._render as HTMLTableRowElement;
   }
 
   // ***************************
@@ -54,9 +53,5 @@ export default class Row extends Common {
         this.#children.push(child);
       } else throw new Error("Row can only take Cell or Cell_Header elements as children.");
     });
-  }
-
-  setRender(render: HTMLTableRowElement) {
-    this.#render = render;
   }
 }

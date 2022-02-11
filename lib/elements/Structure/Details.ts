@@ -6,7 +6,6 @@ import Common from "../Common";
  */
 export default class Details extends Common {
   #summary?: string;
-  #render: HTMLDetailsElement;
 
   /**
    * Initiates a new Details.
@@ -19,22 +18,22 @@ export default class Details extends Common {
    */
   constructor({ id, classes, exclusionList, textContent, summary, children }: DetailsConstructor) {
     super({ id, classes, children, exclusionList });
-    const { setRender, setSummary, setTextContent, build } = this;
-    setRender(build("details"));
-    if (summary) setSummary(summary);
-    if (textContent) setTextContent(textContent);
+    const element = this.build("details");
+    this.setRender(element);
+    if (summary) this.setSummary(summary);
+    if (textContent) this.setTextContent(textContent);
   }
 
   // ***************************
   // Getters
   // ***************************
 
-  get summary(): string {
-    return this.#summary;
+  get render(): HTMLDetailsElement {
+    return this._render as HTMLDetailsElement;
   }
 
-  get render(): HTMLDetailsElement {
-    return this.#render;
+  get summary(): string {
+    return this.#summary;
   }
 
   // ***************************
@@ -43,16 +42,12 @@ export default class Details extends Common {
 
   setSummary(summary: string) {
     this.#summary = summary;
-    const existingSummary = this.#render.getElementsByTagName("summary")[0];
+    const existingSummary = this.render.getElementsByTagName("summary")[0];
     if (existingSummary) existingSummary.textContent = summary;
     else {
       const summaryElement = document.createElement("summary");
       summaryElement.textContent = summary;
-      this.#render.prepend(summaryElement);
+      this.render.prepend(summaryElement);
     }
-  }
-
-  setRender(render: HTMLDetailsElement) {
-    this.#render = render;
   }
 }

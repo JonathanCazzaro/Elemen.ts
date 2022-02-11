@@ -9,7 +9,6 @@ import Common from "../Common";
 export default class Source extends Common {
   #mediaType: MediaTypeEnum;
   #options: SourceOptionsConfig;
-  #render: HTMLSourceElement;
 
   /**
    * Initiates a new Source.
@@ -21,10 +20,10 @@ export default class Source extends Common {
    */
   constructor({ id, classes, exclusionList, mediaType, options }: SourceConstructor) {
     super({ id, classes, exclusionList });
-    const { setRender, setMediaType, setOptions, build } = this;
-    setRender(build("source"));
-    setMediaType(mediaType);
-    setOptions(options);
+    const element = this.build("source");
+    this.setRender(element);
+    this.setMediaType(mediaType);
+    this.setOptions(options);
   }
 
   // ***************************
@@ -32,7 +31,7 @@ export default class Source extends Common {
   // ***************************
 
   get render(): HTMLSourceElement {
-    return this.#render;
+    return this._render as HTMLSourceElement;
   }
 
   get mediaType(): MediaTypeEnum {
@@ -46,10 +45,6 @@ export default class Source extends Common {
   // ***************************
   // Setters
   // ***************************
-
-  setRender(render: HTMLSourceElement) {
-    this.#render = render;
-  }
 
   setMediaType(mediaType: MediaTypeEnum) {
     this.#mediaType = mediaType;
@@ -70,14 +65,14 @@ export default class Source extends Common {
       case MediaTypeEnum.AUDIO:
       case MediaTypeEnum.VIDEO:
         const { source, type } = this.#options;
-        this.#render.src = source;
-        if (type) this.#render.type = type;
+        this.render.src = source;
+        if (type) this.render.type = type;
         break;
       case MediaTypeEnum.PICTURE:
         const { mediaQuery, sourceSet } = this.#options;
-        this.#render.media = mediaQuery;
-        this.#render.srcset = sourceSet;
-        this.#render.type = type;
+        this.render.media = mediaQuery;
+        this.render.srcset = sourceSet;
+        this.render.type = type;
         break;
     }
   }

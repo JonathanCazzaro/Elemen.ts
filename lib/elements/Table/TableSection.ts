@@ -4,7 +4,6 @@ import Common from "../Common";
 
 export default class Table_Section extends Common {
   #children?: TableRowType[];
-  #render: HTMLTableSectionElement;
 
   constructor({ id, classes, exclusionList, children }: TableSectionConstructor) {
     super({ id, classes, exclusionList });
@@ -20,7 +19,7 @@ export default class Table_Section extends Common {
   }
 
   get render(): HTMLTableSectionElement {
-    return this.#render;
+    return this._render as HTMLTableSectionElement;
   }
 
   // ***************************
@@ -39,9 +38,5 @@ export default class Table_Section extends Common {
         this.#children.push(child);
       } else throw new Error("Table section can only take Row elements as children.");
     });
-  }
-
-  setRender(render: HTMLTableSectionElement) {
-    this.#render = render;
   }
 }

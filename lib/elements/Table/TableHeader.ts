@@ -14,7 +14,7 @@ export default class Table_Header extends Table_Section {
    */
   constructor({ id, classes, exclusionList, children }: TableSectionConstructor) {
     super({ id, classes, exclusionList, children });
-    const { setRender, build } = this;
-    setRender(build("thead"));
+    const element = this.build("thead");
+    this.setRender(element);
   }
 }

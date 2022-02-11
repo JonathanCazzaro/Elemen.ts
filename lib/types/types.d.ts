@@ -48,7 +48,6 @@ export interface CommonElementType {
   exclusionList?: string[];
   setExclusionList(list: string[]): void;
   render: HTMLElement;
-  setRender(render: HTMLElement): void;
   isMounted: boolean;
   addClass(newClass: string): void;
   removeClass(oldClass: string): void;
@@ -59,6 +58,39 @@ export interface CommonElementType {
   click(configuration: OnClickConfig): void;
   hover(configuration: OnHoverConfig): void;
 }
+
+export type HTMLElementModel =
+  | HTMLElement
+  | HTMLDivElement
+  | HTMLSpanElement
+  | HTMLAnchorElement
+  | HTMLParagraphElement
+  | HTMLHeadingElement
+  | HTMLDetailsElement
+  | HTMLTableElement
+  | HTMLTableSectionElement
+  | HTMLTableColElement
+  | HTMLTableRowElement
+  | HTMLTableCellElement
+  | HTMLOListElement
+  | HTMLUListElement
+  | HTMLLIElement
+  | HTMLDListElement
+  | HTMLFormElement
+  | HTMLInputElement
+  | HTMLLabelElement
+  | HTMLButtonElement
+  | HTMLSelectElement
+  | HTMLOptionElement
+  | HTMLOptGroupElement
+  | HTMLTextAreaElement
+  | HTMLLegendElement
+  | HTMLFieldSetElement
+  | HTMLSourceElement
+  | HTMLAudioElement
+  | HTMLVideoElement
+  | HTMLImageElement
+  | HTMLPictureElement;
 
 export type GenericElement =
   | CommonElementType
@@ -96,12 +128,10 @@ export type GenericElement =
 
 export interface ContainerType extends CommonElementType {
   render: HTMLDivElement;
-  setRender(render: HTMLDivElement): void;
 }
 
 export interface InsertType extends CommonElementType {
   render: HTMLSpanElement;
-  setRender(render: HTMLSpanElement): void;
 }
 
 export interface CaptionType extends CommonElementType {
@@ -119,7 +149,6 @@ export interface LinkType extends CommonElementType {
   target?: string;
   setTarget(target: string): void;
   render: HTMLAnchorElement;
-  setRender(render: HTMLAnchorElement): void;
 }
 
 // ---------------- Type definitions for Text elements -----------------
@@ -127,13 +156,11 @@ export interface LinkType extends CommonElementType {
 
 export interface TextType extends CommonElementType {
   render: HTMLParagraphElement;
-  setRender(render: HTMLParagraphElement): void;
 }
 
 export interface TitleType extends CommonElementType {
   level: number;
   render: HTMLHeadingElement;
-  setRender(render: HTMLHeadingElement): void;
 }
 
 // ---------------- Type definitions for Structure elements -----------------
@@ -143,7 +170,6 @@ export interface DetailsType extends CommonElementType {
   summary?: string;
   setSummary(summary: string): void;
   render: HTMLDetailsElement;
-  setRender(render: HTMLDetailsElement): void;
 }
 
 // ---------------- Type definitions for Table elements ----------------
@@ -155,12 +181,10 @@ export interface TableType extends CommonElementType {
   caption?: string;
   setCaption(caption: string): void;
   render: HTMLTableElement;
-  setRender(render: HTMLTableElement): void;
 }
 
 export interface TableSectionType extends CommonElementType {
   render: HTMLTableSectionElement;
-  setRender(render: HTMLTableSectionElement): void;
 }
 
 export interface TableColumnGroupType extends CommonElementType {
@@ -169,12 +193,10 @@ export interface TableColumnGroupType extends CommonElementType {
   columns?: ColumnsConfig[];
   setColumns(columns: TableColConfigConstructor[]): void;
   render: HTMLTableColElement;
-  setRender(render: HTMLTableColElement): void;
 }
 
 export interface TableRowType extends CommonElementType {
   render: HTMLTableRowElement;
-  setRender(render: HTMLTableRowElement): void;
 }
 
 export interface TableCellType extends CommonElementType {
@@ -183,7 +205,6 @@ export interface TableCellType extends CommonElementType {
   columnExtension?: number;
   setColumnExtension(extension: number): void;
   render: HTMLTableCellElement;
-  setRender(render: HTMLTableCellElement): void;
 }
 
 export interface TableCellHeaderType extends TableCellType {
@@ -200,22 +221,18 @@ export interface OrderedListType extends CommonElementType {
   startFrom?: number;
   setStartFrom(value: number): void;
   render: HTMLOListElement;
-  setRender(render: HTMLOListElement): void;
 }
 
 export interface UnorderedListType extends CommonElementType {
   render: HTMLUListElement;
-  setRender(render: HTMLUListElement): void;
 }
 
 export interface ListItemType extends CommonElementType {
   render: HTMLLIElement;
-  setRender(render: HTMLLIElement): void;
 }
 
 export interface DescriptionListType extends CommonElementType {
   render: HTMLDListElement;
-  setRender(render: HTMLDListElement): void;
 }
 
 // ---------------- Type definitions for Form elements ----------------
@@ -232,7 +249,6 @@ export interface FormType extends CommonElementType {
   setNoValidation(value: boolean): void;
   onSubmit: (callback: (event: Event) => void) => void;
   render: HTMLFormElement;
-  setRender(render: HTMLFormElement): void;
 }
 
 export interface InputType extends CommonElementType {
@@ -261,14 +277,12 @@ export interface InputType extends CommonElementType {
   focus: (configuration: OnFocusConfig) => void;
   onChange(callback: (event?: Event) => void): void;
   render: HTMLInputElement;
-  setRender(render: HTMLInputElement): void;
 }
 
 export interface LabelType extends CommonElementType {
   formElementId?: string;
   setFormElementId(id: string): void;
   render: HTMLLabelElement;
-  setRender(render: HTMLLabelElement): void;
 }
 
 export interface ButtonType extends CommonElementType {
@@ -285,7 +299,6 @@ export interface ButtonType extends CommonElementType {
   disabled: boolean;
   setDisabled(value: boolean): void;
   render: HTMLButtonElement;
-  setRender(render: HTMLButtonElement): void;
 }
 
 export interface DropdownType extends CommonElementType {
@@ -308,7 +321,6 @@ export interface DropdownType extends CommonElementType {
   setMultiple(value: boolean): void;
   onChange(callback: (event?: Event) => void): void;
   render: HTMLSelectElement;
-  setRender(render: HTMLSelectElement): void;
 }
 
 export interface OptionType extends CommonElementType {
@@ -319,7 +331,6 @@ export interface OptionType extends CommonElementType {
   selected: boolean;
   setSelected(value: boolean): void;
   render: HTMLOptionElement;
-  setRender(render: HTMLOptionElement): void;
 }
 
 export interface OptionsGroupType extends CommonElementType {
@@ -328,7 +339,6 @@ export interface OptionsGroupType extends CommonElementType {
   disabled: boolean;
   setDisabled(value: boolean): void;
   render: HTMLOptGroupElement;
-  setRender(render: HTMLOptGroupElement): void;
 }
 
 export interface TextAreaType extends CommonElementType {
@@ -362,12 +372,10 @@ export interface TextAreaType extends CommonElementType {
   setValidationFailMessages(messages: FailMessagesConfig): void;
   onChange(callback: (event?: Event) => void): void;
   render: HTMLTextAreaElement;
-  setRender(render: HTMLTextAreaElement): void;
 }
 
 export interface LegendType extends CommonElementType {
   render: HTMLLegendElement;
-  setRender(render: HTMLLegendElement): void;
 }
 
 export interface FieldsetType extends CommonElementType {
@@ -380,7 +388,6 @@ export interface FieldsetType extends CommonElementType {
   disabled: boolean;
   setDisabled(value: boolean): void;
   render: HTMLFieldSetElement;
-  setRender(render: HTMLFieldSetElement): void;
 }
 
 // ---------------- Type definitions for Media elements ---------------
@@ -392,7 +399,6 @@ export interface SourceType extends CommonElementType {
   options: SourceOptionsConfig;
   setOptions(options: SourceOptionsConstructor): void;
   render: HTMLSourceElement;
-  setRender(render: HTMLSourceElement): void;
 }
 
 export interface CommonMediaType extends CommonElementType {
@@ -414,7 +420,6 @@ export interface CommonMediaType extends CommonElementType {
 
 export interface AudioType extends CommonMediaType {
   render: HTMLAudioElement;
-  setRender(render: HTMLAudioElement): void;
 }
 
 export interface VideoType extends CommonMediaType {
@@ -425,7 +430,6 @@ export interface VideoType extends CommonMediaType {
   posterFrame?: string;
   setPosterFrame(posterFrame: string): void;
   render: HTMLVideoElement;
-  setRender(render: HTMLVideoElement): void;
 }
 
 export interface ImageType extends CommonMediaType {
@@ -438,12 +442,10 @@ export interface ImageType extends CommonMediaType {
   mediaQueries?: string;
   setMediaQueries(queries: string[]): void;
   render: HTMLImageElement;
-  setRender(render: HTMLImageElement): void;
 }
 
 export interface PictureType extends CommonElementType {
   children: (SourceType | ImageType)[];
   setChildren(children: (SourceType | ImageType)[]): void;
   render: HTMLPictureElement;
-  setRender(render: HTMLPictureElement): void;
 }

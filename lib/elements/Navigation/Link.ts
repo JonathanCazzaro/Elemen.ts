@@ -6,7 +6,6 @@ import Common from "../Common";
  */
 export default class Link extends Common {
   #target?: string;
-  #render: HTMLAnchorElement;
 
   /**
    * Initiates a new Link (a).
@@ -18,11 +17,10 @@ export default class Link extends Common {
    * @param {string} [target] - (optional) Target of the link (url, local path, etc...).
    */
   constructor({ id, classes, exclusionList, textContent, children, target }: LinkConstructor) {
-    super({ id, classes, children, exclusionList });
-    const { setRender, setTarget, setTextContent, build } = this;
-    setRender(build("a"));
-    if (textContent) setTextContent(textContent);
-    if (target) setTarget(target);
+    super({ id, classes, children, exclusionList, textContent });
+    const element = this.build("a");
+    this.setRender(element);
+    if (target) this.setTarget(target);
   }
 
   // ***************************
@@ -34,7 +32,7 @@ export default class Link extends Common {
   }
 
   get render(): HTMLAnchorElement {
-    return this.#render;
+    return this._render as HTMLAnchorElement;
   }
 
   // ***************************
@@ -42,10 +40,6 @@ export default class Link extends Common {
   // ***************************
 
   setTarget(target: string) {
-    this.#target = this.#render.href = target;
-  }
-
-  setRender(render: HTMLAnchorElement) {
-    this.#render = render;
+    this.#target = this.render.href = target;
   }
 }

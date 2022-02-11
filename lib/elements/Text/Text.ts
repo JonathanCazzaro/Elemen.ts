@@ -1,12 +1,10 @@
-import { TextConstructor } from "../../types/constructors";
+import { CommonConstructor } from "../../types/constructors";
 import Common from "../Common";
 
 /**
  * Initiates a new Text (p).
  */
 export default class Text extends Common {
-  #render: HTMLParagraphElement;
-
   /**
    * Initiates a new Text (p).
    * @param {string} [id] - (optional)
@@ -15,11 +13,10 @@ export default class Text extends Common {
    * @param {string} [textContent] - (optional) Text to be displayed inside the element.
    * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any.
    */
-  constructor({ id, classes, exclusionList, textContent, children }: TextConstructor) {
-    super({ id, classes, children, exclusionList });
-    const { setRender, setTextContent, build } = this;
-    setRender(build("p"));
-    if (textContent) setTextContent(textContent);
+  constructor({ id, classes, exclusionList, textContent, children }: CommonConstructor) {
+    super({ id, classes, children, exclusionList, textContent });
+    const element = this.build("p");
+    this.setRender(element);
   }
 
   // ***************************
@@ -27,14 +24,6 @@ export default class Text extends Common {
   // ***************************
 
   get render(): HTMLParagraphElement {
-    return this.#render;
-  }
-
-  // ***************************
-  // Setters
-  // ***************************
-
-  setRender(render: HTMLParagraphElement) {
-    this.#render = render;
+    return this._render as HTMLParagraphElement;
   }
 }

@@ -17,7 +17,6 @@ export default class Dropdown extends Common {
   #disabled: boolean = false;
   #required: boolean = false;
   #multiple: boolean = false;
-  #render: HTMLSelectElement;
 
   /**
    * Initiates a new Dropdown (select).
@@ -34,16 +33,16 @@ export default class Dropdown extends Common {
    */
   constructor({ id, classes, exclusionList, form, children, name, disabled, autofocus, required, multiple }: DropdownConstructor) {
     super({ id, classes, exclusionList });
-    const { setRender, setChildren, setForm, setName, setDisabled, setAutofocus, setRequired, setMultiple, build } = this;
-    setRender(build("select"));
-    if (children) setChildren(children);
-    if (form) setForm(form);
-    if (name) setName(name);
-    if (autofocus) setAutofocus(true);
-    if (disabled) setDisabled(true);
-    if (required) setRequired(true);
-    if (multiple) setMultiple(true);
-    this.#render.addEventListener("change", () => this.setValue(this.#render.value));
+    const element = this.build("select");
+    this.setRender(element);
+    if (children) this.setChildren(children);
+    if (form) this.setForm(form);
+    if (name) this.setName(name);
+    if (autofocus) this.setAutofocus(true);
+    if (disabled) this.setDisabled(true);
+    if (required) this.setRequired(true);
+    if (multiple) this.setMultiple(true);
+    this.render.addEventListener("change", () => this.setValue(this.render.value));
   }
 
   // ***************************
@@ -83,7 +82,7 @@ export default class Dropdown extends Common {
   }
 
   get render(): HTMLSelectElement {
-    return this.#render;
+    return this._render as HTMLSelectElement;
   }
 
   // ***************************
@@ -107,36 +106,32 @@ export default class Dropdown extends Common {
 
   setForm(form: FormType) {
     this.#form = form;
-    if (form.id) this.#render.setAttribute("form", form.id);
+    if (form.id) this.render.setAttribute("form", form.id);
     else throw new Error("The form you connected to the select must have an id.");
   }
 
   setName(name: string) {
-    this.#name = this.#render.name = name;
+    this.#name = this.render.name = name;
   }
 
   setValue(value: string) {
-    this.#value = this.#render.value = value;
+    this.#value = this.render.value = value;
   }
 
   setAutofocus(value: boolean) {
-    this.#autofocus = this.#render.autofocus = value;
+    this.#autofocus = this.render.autofocus = value;
   }
 
   setDisabled(value: boolean) {
-    this.#disabled = this.#render.disabled = value;
+    this.#disabled = this.render.disabled = value;
   }
 
   setRequired(value: boolean) {
-    this.#required = this.#render.required = value;
+    this.#required = this.render.required = value;
   }
 
   setMultiple(value: boolean) {
-    this.#multiple = this.#render.multiple = value;
-  }
-
-  setRender(render: HTMLSelectElement) {
-    this.#render = render;
+    this.#multiple = this.render.multiple = value;
   }
 
   /**
