@@ -28,15 +28,7 @@ export default class Page {
    * @param {RoleEnum} [accessLevel] - (optional) Define the access level of the page using enum RoleEnum. If not set, default will be VISITOR.
    * @param {function} [denyAccess] - (optional) Behaviour of the application when the access to the page is not granted.
    */
-  constructor({
-    title,
-    description,
-    path,
-    cssFiles,
-    jsFiles,
-    accessLevel,
-    denyAccess,
-  }: PageConstructor) {
+  constructor({ title, description, path, cssFiles, jsFiles, accessLevel, denyAccess }: PageConstructor) {
     this.path = path.startsWith("/") ? path : `/${path}`;
 
     if (title) {
@@ -63,9 +55,7 @@ export default class Page {
 
   private setDescriptionTag(): void {
     if (this.description) {
-      const descriptionTag: HTMLMetaElement = document.querySelector(
-        'meta[name="description"]'
-      );
+      const descriptionTag: HTMLMetaElement = document.querySelector('meta[name="description"]');
       if (!descriptionTag) {
         const titleTag = document.querySelector("title");
         const newDescriptionTag = document.createElement("meta");
@@ -89,9 +79,7 @@ export default class Page {
   reach(): void {
     if (this.title) document.title = this.title;
     else if (!document.title)
-      throw new Error(
-        `A title for the page must be defined, either in the HTML template or with the Page API in the frontend library.`
-      );
+      throw new Error(`A title for the page must be defined, either in the HTML template or with the Page API in the frontend library.`);
     this.setDescriptionTag();
 
     if (this.cssFiles) load(FileEnum.CSS, this.cssFiles);
@@ -99,6 +87,7 @@ export default class Page {
 
     this.isActive = true;
     if (this.content) this.content.forEach((element) => element.mount());
+    document.dispatchEvent(new Event("reached"));
   }
 
   /**
@@ -110,5 +99,14 @@ export default class Page {
 
     this.isActive = false;
     if (this.content) this.content.forEach((element) => element.unmount());
+  }
+
+  /** Specifies a behaviour when the page has been reached.
+   * @param {object} callback - Callback to describe actions.
+   */
+  onReach(callback: () => void): void {
+    document.addEventListener("reached", () => {
+      if (this.isActive) callback();
+    });
   }
 }

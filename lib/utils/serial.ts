@@ -9,7 +9,7 @@ export default class Serial {
    */
   static generate(digitsAmount: number): string {
     let serial = "";
-    const letters = "abcdefghijklmnopqrstuvwxyz";
+    const letters = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ";
     for (let digit = 0; digit < digitsAmount; digit++) {
       const numberOrLetter = Math.round(Math.random());
       if (numberOrLetter) serial = serial + Math.round(Math.random() * 10);

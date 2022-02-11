@@ -1,10 +1,14 @@
+import { ProduceSettingsConfig } from "../../types/configObjects";
 import { CommonConstructor } from "../../types/constructors";
+import { ListItemType } from "../../types/types";
 import Common from "../Common";
 
 /**
  * Initiates a new List Item (li).
  */
 export default class List_Item extends Common {
+  static _class = List_Item;
+
   /**
    * Initiates a new List Item (li).
    * @param {string} [id] - (optional)
@@ -25,5 +29,9 @@ export default class List_Item extends Common {
 
   get render(): HTMLLIElement {
     return this._render as HTMLLIElement;
+  }
+
+  static produce(settings: ProduceSettingsConfig): ListItemType[] {
+    return super.produce(settings) as ListItemType[];
   }
 }

@@ -21,6 +21,7 @@ export interface PageType {
   setContent(elements: GenericElement[]): void;
   reach(user?: UserType): void;
   leave(): void;
+  onReach(callback: () => void): void;
   denyAccess(): void | null;
 }
 
@@ -55,8 +56,8 @@ export interface CommonElementType {
   getElementBySerial(serial: string): HTMLElement | undefined;
   mount(): void;
   unmount(): void;
-  click(configuration: OnClickConfig): void;
-  hover(configuration: OnHoverConfig): void;
+  onClick(configuration: OnClickConfig): void;
+  onHover(configuration: OnHoverConfig): void;
 }
 
 export type HTMLElementModel =

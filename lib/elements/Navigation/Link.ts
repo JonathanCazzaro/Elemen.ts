@@ -1,4 +1,6 @@
+import { ProduceSettingsConfig } from "../../types/configObjects";
 import { LinkConstructor } from "../../types/constructors";
+import { LinkType } from "../../types/types";
 import Common from "../Common";
 
 /**
@@ -6,6 +8,7 @@ import Common from "../Common";
  */
 export default class Link extends Common {
   #target?: string;
+  static _class = Link;
 
   /**
    * Initiates a new Link (a).
@@ -17,7 +20,7 @@ export default class Link extends Common {
    * @param {string} [target] - (optional) Target of the link (url, local path, etc...).
    */
   constructor({ id, classes, exclusionList, textContent, children, target }: LinkConstructor) {
-    super({ id, classes, children, exclusionList, textContent });
+    super({ id, classes, children, exclusionList, textContent });  
     const element = this.build("a");
     this.setRender(element);
     if (target) this.setTarget(target);
@@ -41,5 +44,9 @@ export default class Link extends Common {
 
   setTarget(target: string) {
     this.#target = this.render.href = target;
+  }
+
+  static produce(settings: ProduceSettingsConfig): LinkType[] {
+    return super.produce(settings) as LinkType[];
   }
 }

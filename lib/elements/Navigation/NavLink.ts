@@ -1,5 +1,7 @@
 import Application from "../../structure/application";
+import { ProduceSettingsConfig } from "../../types/configObjects";
 import { LinkConstructor } from "../../types/constructors";
+import { LinkType } from "../../types/types";
 const { goTo } = Application;
 import Link from "./Link";
 
@@ -22,5 +24,16 @@ export default class NavLink extends Link {
       e.preventDefault();
       goTo(this.target);
     });
+  }
+
+  static produce(settings: ProduceSettingsConfig): LinkType[] {
+    const production = super.produce(settings);
+    production.forEach((instance) => {
+      instance.render.addEventListener("click", (e) => {
+        e.preventDefault();
+        goTo(instance.target);
+      });
+    });
+    return production;
   }
 }

@@ -3,7 +3,7 @@ import { CommonConstructor } from "../types/constructors";
 import ArrayExt from "../utils/arrayExt";
 const { remove, toggle } = ArrayExt;
 import Serial from "../utils/serial";
-import { CloneModifsConfig, OnClickConfig, OnHoverConfig } from "../types/configObjects";
+import { ProduceSettingsConfig, OnClickConfig, OnHoverConfig } from "../types/configObjects";
 
 export default class Common {
   readonly #serial: string;
@@ -15,6 +15,7 @@ export default class Common {
   #exclusionList?: string[];
   #isMounted: boolean = false;
   protected _render: HTMLElementModel;
+  static _class = Common;
 
   constructor({ id, classes, children, exclusionList, textContent }: CommonConstructor) {
     this.#serial = Serial.generate(6);
@@ -133,7 +134,7 @@ export default class Common {
     if (!this.classes) this.setClasses([]);
     const parsedClass = oldClass.split(" ");
     parsedClass.forEach((className) => {
-      this.setClasses(remove(this.classes, className));
+      this.#classes = remove(this.classes, className);
       this.render.classList.remove(className);
     });
   }
@@ -146,14 +147,14 @@ export default class Common {
     if (!this.classes) this.setClasses([]);
     const parsedClass = className.split(" ");
     parsedClass.forEach((name) => {
-      this.setClasses(toggle(this.classes, name));
+      this.#classes = toggle(this.classes, name);
       this.render.classList.toggle(name);
     });
   }
 
   /**
-   * Returns an HTMLElement from the DOM with its serial.
-   * @returns {HTMLElement | undefined} The HTMLElement or undefined in not found.
+   * Returns an Element from the DOM from its serial.
+   * @returns {Element | undefined} The HTMLElement or undefined in not found.
    */
   getElementBySerial(serial: string): HTMLElement | undefined {
     const foundElement = document.querySelector(`[data-serial="${serial}"`) as HTMLElement;
@@ -172,7 +173,8 @@ export default class Common {
   /**
    * Mounts the element into the DOM.
    */
-  mount(): void {    
+  mount(): void {
+    this.render.dispatchEvent(new Event("mount"));
     if (this.#exclusionList) {
       for (const item of this.#exclusionList) {
         if (window.location.pathname === item) {
@@ -181,7 +183,7 @@ export default class Common {
         }
       }
     }
-    if (this.children) this.children.forEach((child) => child.setParentSerial(this.serial));    
+    if (this.children) this.children.forEach((child) => child.setParentSerial(this.serial));
     if (!this.parentSerial) document.querySelector("body").appendChild(this.render);
     else this.getElementBySerial(this.parentSerial).appendChild(this.render);
     if (this.children) {
@@ -197,15 +199,16 @@ export default class Common {
    * Unmounts the element from the DOM.
    */
   unmount(): void {
-    this.getElementBySerial(this.serial).remove();
+    if (this.children) this.children.forEach((child) => child.unmount());
+    this.render.remove();
     this.setParentSerial("");
     this.#isMounted = false;
   }
 
   /** Specifies a behaviour when the element is clicked.
-   * @param {function} configuration - Config object to handle click on element and/or outside element.
+   * @param {object} configuration - Config object to handle click on element and/or outside element.
    */
-  click(configuration: OnClickConfig): void {
+  onClick(configuration: OnClickConfig): void {
     const { onElement, outsideElement } = configuration;
     if (onElement) this.render.addEventListener("click", onElement);
     if (outsideElement) {
@@ -217,34 +220,39 @@ export default class Common {
     }
   }
 
-  /**
-   * Produces a given number of instances based upon the current instance.
-   * @param {number} amount - The quantity of new instances.
-   * @param {FactoryModifsConfig} modifications - Configuration object : "properties" takes a string with the properties to alter separated with a space, and "values" takes an array of arrays, each one containing the values for each new instance, in the same order you declared the properties right above.
-   */
-  clone(amount: number, modifications: CloneModifsConfig): GenericElement[] {
-    let production = [];
-    const { properties, values } = modifications;
-    const parsedProps = properties.split(" ");
-    for (let index = 0; index < amount; index++) {
-      let newInstance = Object.assign({}, this);
-      Object.defineProperty(newInstance, "serial", {
-        value: Serial.generate(6),
-        writable: false,
-      });
-      newInstance.render.dataset.serial = newInstance.serial;
-
-      production.push(newInstance);
-    }
-    return production;
-  }
-
   /** Specifies a behaviour when the element is hovered.
-   * @param {function} configuration - Config object to handle hovering in and out.
+   * @param {object} configuration - Config object to handle hovering in and out.
    */
-  hover(configuration: OnHoverConfig): void {
+  onHover(configuration: OnHoverConfig): void {
     const { onElement, onMouseLeave } = configuration;
     if (onElement) this.render.addEventListener("mouseover", onElement);
     if (onMouseLeave) this.render.addEventListener("mouseout", onMouseLeave);
+  }
+
+  /**
+   * Produces a given number of instances based upon the current instance.
+   * @param {ProduceSettingsConfig} settings - Configuration object with dynamicProps and staticProps as subobjects, each one with "props" and "values". Static will define a recurrent pattern whereas dynamic will allow to set specific values for each instance.
+   */
+  static produce({ dynamicProps, staticProps }: ProduceSettingsConfig): GenericElement[] {
+    let production = [];
+    let constructor = {};
+    if (staticProps) {
+      const parsedStaticProps = staticProps.props.split(" ");
+      parsedStaticProps.forEach((prop, index) => {
+        constructor[prop] = staticProps.values[index];
+      });
+    }
+    const parsedDynamicProps = dynamicProps.props.split(" ");
+    for (let instanceIndex = 0; instanceIndex < dynamicProps.values.length; instanceIndex++) {
+      let dynamicConstructor = { ...constructor };
+      parsedDynamicProps.forEach((prop, index) => {
+        const value = parsedDynamicProps.length > 1 ? dynamicProps.values[instanceIndex][index] : dynamicProps.values[instanceIndex];
+        if (prop === "classes" && prop in dynamicConstructor) dynamicConstructor[prop] += ` ${value}`;
+        else dynamicConstructor[prop] = value;
+      });
+      let newInstance = new this._class(dynamicConstructor);
+      production.push(newInstance);
+    }
+    return production;
   }
 }

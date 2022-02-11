@@ -28,13 +28,33 @@ export type OnHoverConfig = OnEventConfig & {
   onMouseLeave?: (event?: Event) => void;
 };
 
-export type CloneModifsConfig = {
+export type ProduceSettingsConfig = {
   /**
-   * @param {string} properties - The properties that will be modified on the new instances, each one separated with a space from the other.
-   * @param {Array.Array.any} values - An array of arrays, each one containing the values for each new instance, in the same order you declared the properties right above.
+   * @param {object} dynamicProps - Properties of the constructor that should be different for each instance.
    */
-  properties: string;
-  values: any[][];
+  dynamicProps: {
+    /**
+     * @param {string} props - The properties that will be modified on the new instances, each one separated with a space from the other.
+     */
+    props: string;
+    /**
+     * @param {Array.any} values - An array of arrays, each one containing the values for each new instance, in the same order you declared the properties right above. If there is only one property, values should be then an array of values.
+     */
+    values: any[];
+  };
+  /**
+   * @param {object} [staticProps] - (optional) Properties of the constructor that should be the same for every instance.
+   */
+  staticProps?: {
+    /**
+     * @param {string} props - The properties that will be modified on the new instances, each one separated with a space from the other.
+     */
+    props: string;
+    /**
+     * @param {Array.any} values - An array of values, in the same order you declared the properties right above.
+     */
+    values: any[];
+  };
 };
 
 export type AuthorizationConfig = {
