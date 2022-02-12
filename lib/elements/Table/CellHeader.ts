@@ -1,5 +1,7 @@
+import { ProduceSettingsConfig } from "../../types/configObjects";
 import { TableCellHeaderConstructor } from "../../types/constructors";
 import { ScopeEnum } from "../../types/enum";
+import { TableCellHeaderType } from "../../types/types";
 import Common from "../Common";
 
 /**
@@ -9,6 +11,7 @@ export default class Cell_Header extends Common {
   #rowExtension?: number;
   #columnExtension?: number;
   #scope?: ScopeEnum;
+  static _class = Cell_Header;
 
   /**
    * Initiates a new Cell Header (th).
@@ -66,5 +69,9 @@ export default class Cell_Header extends Common {
 
   setScope(scope: ScopeEnum) {
     this.#scope = this.render.scope = scope;
+  }
+
+  static produce(settings: ProduceSettingsConfig): TableCellHeaderType[] {
+    return super.produce(settings) as TableCellHeaderType[];
   }
 }

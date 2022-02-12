@@ -1,4 +1,6 @@
+import { ProduceSettingsConfig } from "../../types/configObjects";
 import { ImageConstructor } from "../../types/constructors";
+import { ImageType } from "../../types/types";
 import Str from "../../utils/str";
 const { checkSourceSet, checkMediaQueries } = Str;
 import Common from "../Common";
@@ -11,6 +13,7 @@ export default class Image extends Common {
   #description: string;
   #sourceSet?: string;
   #mediaQueries?: string;
+  static _class = Image;
 
   /**
    * Initiates a new Image (img).
@@ -81,5 +84,9 @@ export default class Image extends Common {
         `The mediaQueries argument is invalid. Format must be : "(mediaquery) resolution" or just "resolution. Example : "(max-width: 1024px) 768px/vw/em" or just "768px/vw/em`
       );
     this.#mediaQueries = this.render.sizes = queries.join(",");
+  }
+
+  static produce(settings: ProduceSettingsConfig): ImageType[] {
+    return super.produce(settings) as ImageType[];
   }
 }

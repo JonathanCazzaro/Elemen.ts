@@ -1,5 +1,6 @@
+import { ProduceSettingsConfig } from "../../types/configObjects";
 import { OptionsGroupConstructor } from "../../types/constructors";
-import { OptionType } from "../../types/types";
+import { OptionsGroupType, OptionType } from "../../types/types";
 import Common from "../Common";
 
 /**
@@ -9,6 +10,7 @@ export default class Options_Group extends Common {
   #children?: OptionType[];
   #label: string;
   #disabled: boolean = false;
+  static _class = Options_Group;
 
   /**
    * Initiates a new Options Group (optgroup).
@@ -72,5 +74,9 @@ export default class Options_Group extends Common {
 
   setDisabled(value: boolean) {
     this.#disabled = this.render.disabled = value;
+  }
+
+  static produce(settings: ProduceSettingsConfig): OptionsGroupType[] {
+    return super.produce(settings) as OptionsGroupType[];
   }
 }

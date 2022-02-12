@@ -1,4 +1,6 @@
+import { ProduceSettingsConfig } from "../../types/configObjects";
 import { LabelConstructor } from "../../types/constructors";
+import { LabelType } from "../../types/types";
 import Common from "../Common";
 
 /**
@@ -6,6 +8,8 @@ import Common from "../Common";
  */
 export default class Label extends Common {
   #formElementId?: string;
+  static _class = Label;
+
 
   /**
    * Initiates a new Label.
@@ -41,5 +45,9 @@ export default class Label extends Common {
 
   setFormElementId(id: string) {
     this.#formElementId = this.render.htmlFor = id;
+  }
+
+  static produce(settings: ProduceSettingsConfig): LabelType[] {
+    return super.produce(settings) as LabelType[];
   }
 }

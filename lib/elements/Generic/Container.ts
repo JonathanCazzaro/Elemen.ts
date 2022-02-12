@@ -1,10 +1,14 @@
+import { ProduceSettingsConfig } from "../../types/configObjects";
 import { CommonConstructor } from "../../types/constructors";
+import { ContainerType } from "../../types/types";
 import Common from "../Common";
 
 /**
  * Initiates a new Container (div).
  */
 export default class Container extends Common {
+  static _class = Container;
+
   /**
    * Initiates a new Container (div).
    * @param {string} [id] - (optional)
@@ -25,5 +29,9 @@ export default class Container extends Common {
 
   get render(): HTMLDivElement {
     return this._render as HTMLDivElement;
+  }
+
+  static produce(settings: ProduceSettingsConfig): ContainerType[] {
+    return super.produce(settings) as ContainerType[];
   }
 }

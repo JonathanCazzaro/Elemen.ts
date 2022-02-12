@@ -5,6 +5,8 @@ import Common from "../Common";
  * Initiates a new Nav.
  */
 export default class Nav extends Common {
+  static _class = Nav;
+
   /**
    * Initiates a new Nav.
    * @param {string} [id] - (optional)

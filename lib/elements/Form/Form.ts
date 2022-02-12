@@ -1,5 +1,7 @@
+import { ProduceSettingsConfig } from "../../types/configObjects";
 import { FormConstructor } from "../../types/constructors";
 import { FormMethodEnum } from "../../types/enum";
+import { FormType } from "../../types/types";
 import Common from "../Common";
 
 /**
@@ -10,6 +12,8 @@ export default class Form extends Common {
   #method?: FormMethodEnum;
   #name?: string;
   #noValidation: boolean = false;
+  static _class = Form;
+
 
   /**
    * Initiates a new Form.
@@ -102,5 +106,9 @@ export default class Form extends Common {
       }
       callback(event);
     });
+  }
+
+  static produce(settings: ProduceSettingsConfig): FormType[] {
+    return super.produce(settings) as FormType[];
   }
 }

@@ -1,5 +1,6 @@
+import { ProduceSettingsConfig } from "../../types/configObjects";
 import { TableConstructor } from "../../types/constructors";
-import { TableColumnGroupType, TableRowType, TableSectionType } from "../../types/types";
+import { TableColumnGroupType, TableRowType, TableSectionType, TableType } from "../../types/types";
 import Str from "../../utils/str";
 const { matchValue } = Str;
 import Common from "../Common";
@@ -10,6 +11,7 @@ import Common from "../Common";
 export default class Table extends Common {
   #children?: (TableRowType | TableColumnGroupType | TableSectionType)[];
   #caption?: string;
+  static _class = Table;
 
   /**
    * Initiates a new Table.
@@ -71,5 +73,9 @@ export default class Table extends Common {
       captionElement.textContent = caption;
       this.render.prepend(captionElement);
     }
+  }
+
+  static produce(settings: ProduceSettingsConfig): TableType[] {
+    return super.produce(settings) as TableType[];
   }
 }

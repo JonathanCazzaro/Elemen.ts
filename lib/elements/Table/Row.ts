@@ -1,5 +1,6 @@
+import { ProduceSettingsConfig } from "../../types/configObjects";
 import { TableRowConstructor } from "../../types/constructors";
-import { TableCellHeaderType, TableCellType } from "../../types/types";
+import { TableCellHeaderType, TableCellType, TableRowType } from "../../types/types";
 import Str from "../../utils/str";
 const { matchValue } = Str;
 import Common from "../Common";
@@ -9,6 +10,7 @@ import Common from "../Common";
  */
 export default class Row extends Common {
   #children?: (TableCellType | TableCellHeaderType)[];
+  static _class = Row;
 
   /**
    * Initiates a new Row (tr).
@@ -53,5 +55,9 @@ export default class Row extends Common {
         this.#children.push(child);
       } else throw new Error("Row can only take Cell or Cell_Header elements as children.");
     });
+  }
+
+  static produce(settings: ProduceSettingsConfig): TableRowType[] {
+    return super.produce(settings) as TableRowType[];
   }
 }

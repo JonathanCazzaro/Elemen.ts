@@ -1,5 +1,6 @@
+import { ProduceSettingsConfig } from "../../types/configObjects";
 import { OrderedListConstructor } from "../../types/constructors";
-import { ListItemType } from "../../types/types";
+import { ListItemType, OrderedListType } from "../../types/types";
 import Common from "../Common";
 
 /**
@@ -9,6 +10,7 @@ export default class Ordered_List extends Common {
   #children?: ListItemType[];
   #reversed: boolean = false;
   #startFrom?: number;
+  static _class = Ordered_List;
 
   /**
    * Initiates a new Ordered List (ol).
@@ -72,5 +74,9 @@ export default class Ordered_List extends Common {
 
   setStartFrom(value: number) {
     this.#startFrom = this.render.start = value;
+  }
+
+  static produce(settings: ProduceSettingsConfig): OrderedListType[] {
+    return super.produce(settings) as OrderedListType[];
   }
 }

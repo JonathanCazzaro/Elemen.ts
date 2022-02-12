@@ -1,8 +1,8 @@
-import { FailMessagesConfig, InputOptionsConfig, OnFocusConfig } from "../../types/configObjects";
+import { FailMessagesConfig, InputOptionsConfig, OnFocusConfig, ProduceSettingsConfig } from "../../types/configObjects";
 import { InputConstructor, InputOptionsConstructor } from "../../types/constructors";
 import { InputTypeEnum } from "../../types/enum";
 const { SUBMIT, RESET, PASSWORD, TEXT } = InputTypeEnum;
-import { FormType } from "../../types/types";
+import { FormType, InputType } from "../../types/types";
 import Common from "../Common";
 import { setInputOptions, setValidationMessages } from "./inputConfigurator";
 
@@ -21,6 +21,8 @@ export default class Input extends Common {
   #readonly: boolean = false;
   #options?: InputOptionsConfig;
   #validationFailMessages?: FailMessagesConfig;
+  static _class = Input;
+
 
   /**
    * Initiates a new Input.
@@ -223,5 +225,9 @@ export default class Input extends Common {
         this.#form.render.dispatchEvent(new Event(this.form.noValidation ? "submit" : "trysubmit"));
       });
     }
+  }
+
+  static produce(settings: ProduceSettingsConfig): InputType[] {
+    return super.produce(settings) as InputType[];
   }
 }

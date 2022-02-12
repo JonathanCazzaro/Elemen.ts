@@ -1,5 +1,6 @@
+import { ProduceSettingsConfig } from "../../types/configObjects";
 import { TableSectionConstructor } from "../../types/constructors";
-import { TableRowType } from "../../types/types";
+import { TableRowType, TableSectionType } from "../../types/types";
 import Common from "../Common";
 
 export default class Table_Section extends Common {
@@ -38,5 +39,9 @@ export default class Table_Section extends Common {
         this.#children.push(child);
       } else throw new Error("Table section can only take Row elements as children.");
     });
+  }
+
+  static produce(settings: ProduceSettingsConfig): TableSectionType[] {
+    return super.produce(settings) as TableSectionType[];
   }
 }

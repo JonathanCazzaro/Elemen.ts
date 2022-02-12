@@ -1,10 +1,14 @@
+import { ProduceSettingsConfig } from "../../types/configObjects";
 import { CommonConstructor } from "../../types/constructors";
+import { LegendType } from "../../types/types";
 import Common from "../Common";
 
 /**
  * Initiates a new Legend.
  */
 export default class Legend extends Common {
+  static _class = Legend;
+
   /**
    * Initiates a new Legend.
    * @param {string} [id] - (optional)
@@ -40,5 +44,9 @@ export default class Legend extends Common {
     console.error(
       "The mount and unmount methods do not apply on Label elements. To use such an element, you need to pass it to the legend property of the element it has been designed for."
     );
+  }
+
+  static produce(settings: ProduceSettingsConfig): LegendType[] {
+    return super.produce(settings) as LegendType[];
   }
 }

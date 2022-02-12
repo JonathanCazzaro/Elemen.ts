@@ -1,7 +1,8 @@
 import { PictureConstructor } from "../../types/constructors";
-import { ImageType, SourceType } from "../../types/types";
+import { ImageType, PictureType, SourceType } from "../../types/types";
 import Common from "../Common";
 import Str from "../../utils/str";
+import { ProduceSettingsConfig } from "../../types/configObjects";
 const { matchValue } = Str;
 
 /**
@@ -9,6 +10,7 @@ const { matchValue } = Str;
  */
 export default class Picture extends Common {
   #children?: (SourceType | ImageType)[];
+  static _class = Picture;
 
   /**
    * Initiates a new Picture.
@@ -53,5 +55,9 @@ export default class Picture extends Common {
         this.#children.push(child);
       } else throw new Error("Picture can only take Source or Image elements as children.");
     });
+  }
+
+  static produce(settings: ProduceSettingsConfig): PictureType[] {
+    return super.produce(settings) as PictureType[];
   }
 }

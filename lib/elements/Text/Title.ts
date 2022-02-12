@@ -1,4 +1,6 @@
+import { ProduceSettingsConfig } from "../../types/configObjects";
 import { TitleConstructor } from "../../types/constructors";
+import { TitleType } from "../../types/types";
 import Common from "../Common";
 
 /**
@@ -6,6 +8,7 @@ import Common from "../Common";
  */
 export default class Title extends Common {
   #level: number;
+  static _class = Title;
 
   /**
    * Initiates a new Title (h*).
@@ -34,5 +37,9 @@ export default class Title extends Common {
 
   get level(): number {
     return this.#level;
+  }
+
+  static produce(settings: ProduceSettingsConfig): TitleType[] {
+    return super.produce(settings) as TitleType[];
   }
 }

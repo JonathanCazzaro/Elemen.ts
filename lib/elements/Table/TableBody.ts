@@ -5,6 +5,8 @@ import Table_Section from "./TableSection";
  * Initiates a new Table Body (tbody).
  */
 export default class Table_Body extends Table_Section {
+  static _class = Table_Body;
+
   /**
    * Initiates a new Table Body (tbody).
    * @param {string} [id] - (optional)

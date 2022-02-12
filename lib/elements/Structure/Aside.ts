@@ -5,6 +5,8 @@ import Common from "../Common";
  * Initiates a new Aside.
  */
 export default class Aside extends Common {
+  static _class = Aside;
+
   /**
    * Initiates a new Aside.
    * @param {string} [id] - (optional)

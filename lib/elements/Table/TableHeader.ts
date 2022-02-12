@@ -5,6 +5,8 @@ import Table_Section from "./TableSection";
  * Initiates a new Table Header (thead).
  */
 export default class Table_Header extends Table_Section {
+  static _class = Table_Header;
+
   /**
    * Initiates a new Table Header (thead).
    * @param {string} [id] - (optional)

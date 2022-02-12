@@ -1,6 +1,6 @@
-import { FailMessagesConfig } from "../../types/configObjects";
+import { FailMessagesConfig, ProduceSettingsConfig } from "../../types/configObjects";
 import { TextAreaConstructor } from "../../types/constructors";
-import { FormType } from "../../types/types";
+import { FormType, TextAreaType } from "../../types/types";
 import Common from "../Common";
 import { setValidationMessages } from "./inputConfigurator";
 
@@ -23,6 +23,7 @@ export default class Text_Area extends Common {
   #readonly: boolean = false;
   #spellcheck: boolean = false;
   #validationFailMessages?: FailMessagesConfig;
+  static _class = Text_Area;
 
   /**
    * Initiates a new Text Area (textarea).
@@ -215,5 +216,9 @@ export default class Text_Area extends Common {
    */
   onChange(callback: (event?: Event) => void): void {
     this.render.addEventListener("change", callback);
+  }
+
+  static produce(settings: ProduceSettingsConfig): TextAreaType[] {
+    return super.produce(settings) as TextAreaType[];
   }
 }

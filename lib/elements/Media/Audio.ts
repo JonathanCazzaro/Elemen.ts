@@ -1,10 +1,14 @@
+import { ProduceSettingsConfig } from "../../types/configObjects";
 import { AudioConstructor } from "../../types/constructors";
+import { AudioType } from "../../types/types";
 import CommonMedia from "./Common";
 
 /**
  * Initiates a new Audio.
  */
 export default class Audio extends CommonMedia {
+  static _class = Audio;
+
   /**
    * Initiates a new Audio.
    * @param {string} [id] - (optional)
@@ -41,5 +45,9 @@ export default class Audio extends CommonMedia {
 
   get render(): HTMLAudioElement {
     return this._render as HTMLAudioElement;
+  }
+
+  static produce(settings: ProduceSettingsConfig): AudioType[] {
+    return super.produce(settings) as AudioType[];
   }
 }

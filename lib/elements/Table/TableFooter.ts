@@ -5,6 +5,8 @@ import Table_Section from "./TableSection";
  * Initiates a new Table Footer (tfoot).
  */
 export default class Table_Footer extends Table_Section {
+  static _class = Table_Footer;
+
   /**
    * Initiates a new Table Footer (tfoot).
    * @param {string} [id] - (optional)

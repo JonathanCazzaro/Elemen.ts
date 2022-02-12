@@ -5,6 +5,8 @@ import Common from "../Common";
  * Initiates a new Section.
  */
 export default class Section extends Common {
+  static _class = Section;
+
   /**
    * Initiates a new Section.
    * @param {string} [id] - (optional)

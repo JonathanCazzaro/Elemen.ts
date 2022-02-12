@@ -1,4 +1,4 @@
-import { GenericElement, HTMLElementModel } from "../types/types";
+import { CommonElementType, GenericElement, HTMLElementModel } from "../types/types";
 import { CommonConstructor } from "../types/constructors";
 import ArrayExt from "../utils/arrayExt";
 const { remove, toggle } = ArrayExt;
@@ -233,7 +233,7 @@ export default class Common {
    * Produces a given number of instances based upon the current instance.
    * @param {ProduceSettingsConfig} settings - Configuration object with dynamicProps and staticProps as subobjects, each one with "props" and "values". Static will define a recurrent pattern whereas dynamic will allow to set specific values for each instance.
    */
-  static produce({ dynamicProps, staticProps }: ProduceSettingsConfig): GenericElement[] {
+  static produce({ dynamicProps, staticProps }: ProduceSettingsConfig): CommonElementType[] {
     let production = [];
     let constructor = {};
     if (staticProps) {
@@ -253,6 +253,6 @@ export default class Common {
       let newInstance = new this._class(dynamicConstructor);
       production.push(newInstance);
     }
-    return production;
+    return production as CommonElementType[];
   }
 }

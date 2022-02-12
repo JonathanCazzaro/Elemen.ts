@@ -1,4 +1,6 @@
+import { ProduceSettingsConfig } from "../../types/configObjects";
 import { TableCellConstructor } from "../../types/constructors";
+import { TableCellType } from "../../types/types";
 import Common from "../Common";
 
 /**
@@ -7,6 +9,7 @@ import Common from "../Common";
 export default class Cell extends Common {
   #rowExtension?: number;
   #columnExtension?: number;
+  static _class = Cell;
 
   /**
    * Initiates a new Cell (td).
@@ -55,5 +58,9 @@ export default class Cell extends Common {
   setRowExtension(extension: number) {
     if (extension > 0) this.#rowExtension = this.render.rowSpan = extension;
     else throw new Error(`The value of rowExtension cannot be negative.`);
+  }
+
+  static produce(settings: ProduceSettingsConfig): TableCellType[] {
+    return super.produce(settings) as TableCellType[];
   }
 }

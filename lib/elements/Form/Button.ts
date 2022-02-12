@@ -1,6 +1,7 @@
+import { ProduceSettingsConfig } from "../../types/configObjects";
 import { ButtonConstructor } from "../../types/constructors";
 import { ButtonTypeEnum } from "../../types/enum";
-import { FormType } from "../../types/types";
+import { ButtonType, FormType } from "../../types/types";
 import Common from "../Common";
 
 /**
@@ -13,6 +14,7 @@ export default class Button extends Common {
   #name?: string;
   #value?: string;
   #disabled: boolean = false;
+  static _class = Button;
 
   /**
    * Initiates a new Button.
@@ -113,5 +115,9 @@ export default class Button extends Common {
         this.form.render.dispatchEvent(new Event(this.form.noValidation ? "submit" : "trysubmit"));
       });
     }
+  }
+
+  static produce(settings: ProduceSettingsConfig): ButtonType[] {
+    return super.produce(settings) as ButtonType[];
   }
 }

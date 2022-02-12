@@ -1,6 +1,7 @@
 import { TableColConfigConstructor, TableColGroupConstructor } from "../../types/constructors";
-import { ColumnsConfig } from "../../types/configObjects";
+import { ColumnsConfig, ProduceSettingsConfig } from "../../types/configObjects";
 import Common from "../Common";
+import { TableColumnGroupType } from "../../types/types";
 
 /**
  * Initiates a new Column Group (colgroup).
@@ -8,6 +9,7 @@ import Common from "../Common";
 export default class Column_Group extends Common {
   #columnExtension?: number;
   #columns?: ColumnsConfig[];
+  static _class = Column_Group;
 
   /**
    * Initiates a new Column Group (colgroup).
@@ -66,5 +68,9 @@ export default class Column_Group extends Common {
       if (classes) classes.forEach((className) => col.classList.add(className));
       this.render.appendChild(col);
     });
+  }
+
+  static produce(settings: ProduceSettingsConfig): TableColumnGroupType[] {
+    return super.produce(settings) as TableColumnGroupType[];
   }
 }

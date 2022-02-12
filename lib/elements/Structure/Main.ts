@@ -5,6 +5,8 @@ import Common from "../Common";
  * Initiates a new Main.
  */
 export default class Main extends Common {
+  static _class = Main;
+
   /**
    * Initiates a new Main.
    * @param {string} [id] - (optional)

@@ -1,5 +1,6 @@
+import { ProduceSettingsConfig } from "../../types/configObjects";
 import { CommonConstructor } from "../../types/constructors";
-import { GenericElement } from "../../types/types";
+import { DescriptionListType, GenericElement } from "../../types/types";
 import Str from "../../utils/str";
 const { matchValue } = Str;
 import Common from "../Common";
@@ -9,6 +10,7 @@ import Common from "../Common";
  */
 export default class Description_List extends Common {
   #children?: GenericElement[];
+  static _class = Description_List;
 
   /**
    * Initiates a new Description List (dl).
@@ -49,5 +51,9 @@ export default class Description_List extends Common {
         this.#children.push(child);
       } else throw new Error("Description List can only take Description_Term, Term_Definition or Container elements as children.");
     });
+  }
+
+  static produce(settings: ProduceSettingsConfig): DescriptionListType[] {
+    return super.produce(settings) as DescriptionListType[];
   }
 }

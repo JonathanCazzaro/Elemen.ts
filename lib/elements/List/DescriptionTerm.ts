@@ -1,3 +1,4 @@
+import { ProduceSettingsConfig } from "../../types/configObjects";
 import { CommonConstructor } from "../../types/constructors";
 import Common from "../Common";
 
@@ -5,6 +6,8 @@ import Common from "../Common";
  * Initiates a new Description Term (dt).
  */
 export default class Description_Term extends Common {
+  static _class = Description_Term;
+
   /**
    * Initiates a new Description Term (dt).
    * @param {string} [id] - (optional)

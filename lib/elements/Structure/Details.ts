@@ -1,4 +1,6 @@
+import { ProduceSettingsConfig } from "../../types/configObjects";
 import { DetailsConstructor } from "../../types/constructors";
+import { DetailsType } from "../../types/types";
 import Common from "../Common";
 
 /**
@@ -6,6 +8,7 @@ import Common from "../Common";
  */
 export default class Details extends Common {
   #summary?: string;
+  static _class = Details;
 
   /**
    * Initiates a new Details.
@@ -49,5 +52,9 @@ export default class Details extends Common {
       summaryElement.textContent = summary;
       this.render.prepend(summaryElement);
     }
+  }
+
+  static produce(settings: ProduceSettingsConfig): DetailsType[] {
+    return super.produce(settings) as DetailsType[];
   }
 }

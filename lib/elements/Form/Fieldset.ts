@@ -1,5 +1,6 @@
+import { ProduceSettingsConfig } from "../../types/configObjects";
 import { FieldsetConstructor } from "../../types/constructors";
-import { FormType, LegendType } from "../../types/types";
+import { FieldsetType, FormType, LegendType } from "../../types/types";
 import Common from "../Common";
 
 /**
@@ -10,6 +11,8 @@ export default class Fieldset extends Common {
   #form?: FormType;
   #legend?: LegendType;
   #disabled: boolean = false;
+  static _class = Fieldset;
+
 
   /**
    * Initiates a new Fieldset.
@@ -83,5 +86,9 @@ export default class Fieldset extends Common {
 
   setDisabled(value: boolean) {
     this.#disabled = this.render.disabled = value;
+  }
+
+  static produce(settings: ProduceSettingsConfig): FieldsetType[] {
+    return super.produce(settings) as FieldsetType[];
   }
 }

@@ -5,6 +5,8 @@ import Common from "../Common";
  * Initiates a new Footer.
  */
 export default class Footer extends Common {
+  static _class = Footer;
+
   /**
    * Initiates a new Footer.
    * @param {string} [id] - (optional)

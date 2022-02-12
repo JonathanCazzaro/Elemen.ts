@@ -1,6 +1,7 @@
-import { SourceOptionsConfig } from "../../types/configObjects";
+import { ProduceSettingsConfig, SourceOptionsConfig } from "../../types/configObjects";
 import { SourceConstructor, SourceOptionsConstructor } from "../../types/constructors";
 import { MediaTypeEnum } from "../../types/enum";
+import { SourceType } from "../../types/types";
 import Common from "../Common";
 
 /**
@@ -9,6 +10,7 @@ import Common from "../Common";
 export default class Source extends Common {
   #mediaType: MediaTypeEnum;
   #options: SourceOptionsConfig;
+  static _class = Source;
 
   /**
    * Initiates a new Source.
@@ -75,5 +77,8 @@ export default class Source extends Common {
         this.render.type = type;
         break;
     }
+  }
+  static produce(settings: ProduceSettingsConfig): SourceType[] {
+    return super.produce(settings) as SourceType[];
   }
 }

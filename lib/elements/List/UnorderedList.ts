@@ -1,5 +1,6 @@
+import { ProduceSettingsConfig } from "../../types/configObjects";
 import { UnorderedListConstructor } from "../../types/constructors";
-import { ListItemType } from "../../types/types";
+import { ListItemType, UnorderedListType } from "../../types/types";
 import Common from "../Common";
 
 /**
@@ -7,6 +8,7 @@ import Common from "../Common";
  */
 export default class Unordered_List extends Common {
   #children?: ListItemType[];
+  static _class = Unordered_List;
 
   /**
    * Initiates a new Unordered List (ul).
@@ -50,5 +52,9 @@ export default class Unordered_List extends Common {
         this.#children.push(child);
       } else throw new Error("List can only take List_Item elements as children.");
     });
+  }
+
+  static produce(settings: ProduceSettingsConfig): UnorderedListType[] {
+    return super.produce(settings) as UnorderedListType[];
   }
 }

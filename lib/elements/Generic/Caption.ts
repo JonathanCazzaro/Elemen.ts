@@ -1,5 +1,7 @@
+import { ProduceSettingsConfig } from "../../types/configObjects";
 import { CaptionConstructor } from "../../types/constructors";
 import { ElementPositionEnum } from "../../types/enum";
+import { CaptionType } from "../../types/types";
 import Common from "../Common";
 
 /**
@@ -7,6 +9,7 @@ import Common from "../Common";
  */
 export default class Caption extends Common {
   #position: ElementPositionEnum;
+  static _class = Caption;
 
   /**
    * Initiates a new Caption (figcaption).
@@ -42,5 +45,9 @@ export default class Caption extends Common {
     console.error(
       "The mount and unmount methods do not apply on Caption elements. To use such an element, you need to pass it to the caption argument of the element it has been designed for."
     );
+  }
+
+  static produce(settings: ProduceSettingsConfig): CaptionType[] {
+    return super.produce(settings) as CaptionType[];
   }
 }

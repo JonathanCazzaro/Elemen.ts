@@ -1,4 +1,6 @@
+import { ProduceSettingsConfig } from "../../types/configObjects";
 import { VideoConstructor } from "../../types/constructors";
+import { VideoType } from "../../types/types";
 import CommonMedia from "./Common";
 
 /**
@@ -8,6 +10,7 @@ export default class Video extends CommonMedia {
   #height?: number;
   #width?: number;
   #posterFrame?: string;
+  static _class = Video;
 
   /**
    * Initiates a new Video.
@@ -93,5 +96,9 @@ export default class Video extends CommonMedia {
 
   setPosterFrame(posterFrame: string) {
     this.#posterFrame = this.render.poster = posterFrame;
+  }
+
+  static produce(settings: ProduceSettingsConfig): VideoType[] {
+    return super.produce(settings) as VideoType[];
   }
 }

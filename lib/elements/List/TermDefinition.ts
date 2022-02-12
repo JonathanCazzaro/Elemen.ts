@@ -5,6 +5,8 @@ import Common from "../Common";
  * Initiates a new Term Definition (dd).
  */
 export default class Term_Definition extends Common {
+  static _class = Term_Definition;
+
   /**
    * Initiates a new Term Definition (dd).
    * @param {string} [id] - (optional)

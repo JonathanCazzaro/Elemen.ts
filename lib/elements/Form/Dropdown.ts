@@ -1,5 +1,6 @@
+import { ProduceSettingsConfig } from "../../types/configObjects";
 import { DropdownConstructor } from "../../types/constructors";
-import { FormType, OptionsGroupType, OptionType } from "../../types/types";
+import { DropdownType, FormType, OptionsGroupType, OptionType } from "../../types/types";
 import Str from "../../utils/str";
 const { matchValue } = Str;
 import Common from "../Common";
@@ -17,6 +18,7 @@ export default class Dropdown extends Common {
   #disabled: boolean = false;
   #required: boolean = false;
   #multiple: boolean = false;
+  static _class = Dropdown;
 
   /**
    * Initiates a new Dropdown (select).
@@ -140,5 +142,9 @@ export default class Dropdown extends Common {
    */
   onChange(callback: (event?: Event) => void): void {
     this.render.addEventListener("change", callback);
+  }
+
+  static produce(settings: ProduceSettingsConfig): DropdownType[] {
+    return super.produce(settings) as DropdownType[];
   }
 }

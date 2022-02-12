@@ -1,10 +1,14 @@
+import { ProduceSettingsConfig } from "../../types/configObjects";
 import { CommonConstructor } from "../../types/constructors";
+import { InsertType } from "../../types/types";
 import Common from "../Common";
 
 /**
  * Initiates a new Insert (span).
  */
 export default class Insert extends Common {
+  static _class = Insert;
+
   /**
    * Initiates a new Insert (span).
    * @param {string} [id] - (optional)
@@ -25,5 +29,9 @@ export default class Insert extends Common {
 
   get render(): HTMLSpanElement {
     return this._render as HTMLSpanElement;
+  }
+
+  static produce(settings: ProduceSettingsConfig): InsertType[] {
+    return super.produce(settings) as InsertType[];
   }
 }

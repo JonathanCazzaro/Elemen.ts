@@ -5,6 +5,8 @@ import Common from "../Common";
  * Initiates a new Header.
  */
 export default class Header extends Common {
+  static _class = Header;
+
   /**
    * Initiates a new Header.
    * @param {string} [id] - (optional)

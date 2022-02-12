@@ -1,4 +1,6 @@
+import { ProduceSettingsConfig } from "../../types/configObjects";
 import { OptionConstructor } from "../../types/constructors";
+import { OptionType } from "../../types/types";
 import Common from "../Common";
 
 /**
@@ -8,6 +10,7 @@ export default class Option extends Common {
   #value?: string;
   #disabled: boolean = false;
   #selected: boolean = false;
+  static _class = Option;
 
   /**
    * Initiates a new Option.
@@ -63,5 +66,9 @@ export default class Option extends Common {
 
   setSelected(value: boolean) {
     this.#selected = this.render.selected = value;
+  }
+
+  static produce(settings: ProduceSettingsConfig): OptionType[] {
+    return super.produce(settings) as OptionType[];
   }
 }

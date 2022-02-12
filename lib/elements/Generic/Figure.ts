@@ -1,6 +1,7 @@
+import { ProduceSettingsConfig } from "../../types/configObjects";
 import { FigureConstructor } from "../../types/constructors";
 import { ElementPositionEnum } from "../../types/enum";
-import { CaptionType } from "../../types/types";
+import { CaptionType, FigureType } from "../../types/types";
 import Common from "../Common";
 
 /**
@@ -8,6 +9,7 @@ import Common from "../Common";
  */
 export default class Figure extends Common {
   #caption?: CaptionType;
+  static _class = Figure;
 
   /**
    * Initiates a new Figure.
@@ -47,5 +49,9 @@ export default class Figure extends Common {
           break;
       }
     }
+  }
+
+  static produce(settings: ProduceSettingsConfig): FigureType[] {
+    return super.produce(settings) as FigureType[];
   }
 }

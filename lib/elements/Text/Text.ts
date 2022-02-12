@@ -1,10 +1,14 @@
+import { ProduceSettingsConfig } from "../../types/configObjects";
 import { CommonConstructor } from "../../types/constructors";
+import { TextType } from "../../types/types";
 import Common from "../Common";
 
 /**
  * Initiates a new Text (p).
  */
 export default class Text extends Common {
+  static _class = Text;
+
   /**
    * Initiates a new Text (p).
    * @param {string} [id] - (optional)
@@ -25,5 +29,9 @@ export default class Text extends Common {
 
   get render(): HTMLParagraphElement {
     return this._render as HTMLParagraphElement;
+  }
+
+  static produce(settings: ProduceSettingsConfig): TextType[] {
+    return super.produce(settings) as TextType[];
   }
 }

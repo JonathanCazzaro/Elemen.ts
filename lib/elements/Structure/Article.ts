@@ -5,6 +5,8 @@ import Common from "../Common";
  * Initiates a new Article.
  */
 export default class Article extends Common {
+  static _class = Article;
+
   /**
    * Initiates a new Article.
    * @param {string} [id] - (optional)
