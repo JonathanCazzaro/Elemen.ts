@@ -15,6 +15,7 @@ export default class Video extends CommonMedia {
   /**
    * Initiates a new Video.
    * @param {string} [id] - (optional)
+   * @param {string} [data_id] - (optional) The identifier of the record if it comes from a database.
    * @param {string} [classes] - (optional) A space is needed between each class.
    * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {Array.SourceType} [children] - (optional) An array containing the children Source elements is any.
@@ -30,6 +31,7 @@ export default class Video extends CommonMedia {
    */
   constructor({
     id,
+    data_id,
     classes,
     exclusionList,
     source,
@@ -45,6 +47,7 @@ export default class Video extends CommonMedia {
   }: VideoConstructor) {
     super({
       id,
+      data_id,
       classes,
       exclusionList,
       children,
@@ -56,7 +59,7 @@ export default class Video extends CommonMedia {
       muted,
     });
     const element = this.build("video");
-    this.setRender(element);  
+    this.setRender(element);
     if (height) this.setHeight(height);
     if (width) this.setWidth(width);
     if (posterFrame) this.setPosterFrame(posterFrame);

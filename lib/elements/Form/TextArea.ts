@@ -28,6 +28,7 @@ export default class Text_Area extends Common {
   /**
    * Initiates a new Text Area (textarea).
    * @param {string} id Required.
+   * @param {string} [data_id] - (optional) The identifier of the record if it comes from a database.
    * @param {string} [classes] - (optional) A space is needed between each class.
    * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {string} [name] - (optional) Name of the text area (identification for data submitting).
@@ -47,6 +48,7 @@ export default class Text_Area extends Common {
    */
   constructor({
     id,
+    data_id,
     classes,
     exclusionList,
     name,
@@ -64,7 +66,7 @@ export default class Text_Area extends Common {
     height,
     validationFailMessages,
   }: TextAreaConstructor) {
-    super({ id, classes, exclusionList });
+    super({ id, data_id, classes, exclusionList });
     const element = this.build("textarea");
     this.setRender(element);
     if (name) this.setName(name);

@@ -13,14 +13,15 @@ export default class Details extends Common {
   /**
    * Initiates a new Details.
    * @param {string} [id] - (optional)
+   * @param {string} [data_id] - (optional) The identifier of the record if it comes from a database.
    * @param {string} [classes] - (optional) A space is needed between each class.
    * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {string} [textContent] - (optional) Text to be displayed inside the element.
    * @param {string} [summary] - (optional) Caption intented to give information about the hidden content.
    * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any.
    */
-  constructor({ id, classes, exclusionList, textContent, summary, children }: DetailsConstructor) {
-    super({ id, classes, children, exclusionList });
+  constructor({ id, data_id, classes, exclusionList, textContent, summary, children }: DetailsConstructor) {
+    super({ id, data_id, classes, children, exclusionList });
     const element = this.build("details");
     this.setRender(element);
     if (summary) this.setSummary(summary);

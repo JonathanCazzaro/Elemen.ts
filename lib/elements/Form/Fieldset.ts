@@ -17,6 +17,7 @@ export default class Fieldset extends Common {
   /**
    * Initiates a new Fieldset.
    * @param {string} [id] - (optional)
+   * @param {string} [data_id] - (optional) The identifier of the record if it comes from a database.
    * @param {string} [classes] - (optional) A space is needed between each class.
    * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any.
@@ -25,8 +26,8 @@ export default class Fieldset extends Common {
    * @param {string} [legend] - (optional) A Legend element instance to act as a caption for the fieldset.
    * @param {boolean} [disabled] - (optional) Boolean to specify whether the element should be disabled or not.
    */
-  constructor({ id, classes, children, exclusionList, form, legend, disabled }: FieldsetConstructor) {
-    super({ id, classes, children, exclusionList });
+  constructor({ id, data_id, classes, children, exclusionList, form, legend, disabled }: FieldsetConstructor) {
+    super({ id, data_id, classes, children, exclusionList });
     const element = this.build("fieldset");
     this.setRender(element);
     if (disabled) this.setDisabled(true);

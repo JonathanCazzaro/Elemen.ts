@@ -15,12 +15,13 @@ export default class Picture extends Common {
   /**
    * Initiates a new Picture.
    * @param {string} [id] - (optional)
+   * @param {string} [data_id] - (optional) The identifier of the record if it comes from a database.
    * @param {string} [classes] - (optional) A space is needed between each class.
    * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {Array.SourceType} [children] - (optional) An array containing the children Source elements and a required Image element in last index.
    */
-  constructor({ id, classes, exclusionList, children }: PictureConstructor) {
-    super({ id, classes, children, exclusionList });
+  constructor({ id, data_id, classes, exclusionList, children }: PictureConstructor) {
+    super({ id, data_id, classes, children, exclusionList });
     const element = this.build("picture");
     this.setRender(element);  
     if (children) this.setChildren(children);

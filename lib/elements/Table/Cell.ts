@@ -14,6 +14,7 @@ export default class Cell extends Common {
   /**
    * Initiates a new Cell (td).
    * @param {string} [id] - (optional)
+   * @param {string} [data_id] - (optional) The identifier of the record if it comes from a database.
    * @param {string} [classes] - (optional) A space is needed between each class.
    * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {string} [textContent] - (optional) Text to be displayed inside the element.
@@ -21,8 +22,8 @@ export default class Cell extends Common {
    * @param {number} [rowExtension] - (optional) Defines the quantity of rows upon which the cell is extending. Must be strictly superior to 0.
    * @param {number} [columnExtension] - (optional) Defines the quantity of columns upon which the cell is extending. Must be strictly superior to 0.
    */
-  constructor({ id, classes, exclusionList, children, textContent, rowExtension, columnExtension }: TableCellConstructor) {
-    super({ id, classes, children, exclusionList });
+  constructor({ id, data_id, classes, exclusionList, children, textContent, rowExtension, columnExtension }: TableCellConstructor) {
+    super({ id, data_id, classes, children, exclusionList });
     const element = this.build("td");
     this.setRender(element);
     if (rowExtension) this.setRowExtension(rowExtension);

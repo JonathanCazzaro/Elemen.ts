@@ -14,14 +14,15 @@ export default class Caption extends Common {
   /**
    * Initiates a new Caption (figcaption).
    * @param {string} [id] - (optional)
+   * @param {string} [data_id] - (optional) The identifier of the record if it comes from a database.
    * @param {string} [classes] - (optional) A space is needed between each class.
    * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any.
    * @param {ElementPositionEnum} position - Defines whether the caption should be placed before or after the related element. Use enum ElementPositionEnum.
    * @param {string} [textContent] - (optional) Text to be displayed inside the element.
    */
-  constructor({ id, classes, exclusionList, textContent, position, children }: CaptionConstructor) {
-    super({ id, classes, children, exclusionList, textContent });
+  constructor({ id, data_id, classes, exclusionList, textContent, position, children }: CaptionConstructor) {
+    super({ id, data_id, classes, children, exclusionList, textContent });
     const element= this.build("figcaption");
     this.setRender(element);
     this.#position = position;

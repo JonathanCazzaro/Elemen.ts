@@ -23,6 +23,7 @@ export default class Dropdown extends Common {
   /**
    * Initiates a new Dropdown (select).
    * @param {string} id Required.
+   * @param {string} [data_id] - (optional) The identifier of the record if it comes from a database.
    * @param {string} [classes] - (optional) A space is needed between each class.
    * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {Array.(OptionsGroupType|OptionType)} [children] - (optional) An array containing the children elements if any (Options Group or Option elements).
@@ -33,8 +34,8 @@ export default class Dropdown extends Common {
    * @param {boolean} [required] - (optional) Boolean to specify whether the dropdown should be set on required or not.
    * @param {boolean} [multiple] - (optional) Boolean to specify whether the dropdown should be set on multiple or not.
    */
-  constructor({ id, classes, exclusionList, form, children, name, disabled, autofocus, required, multiple }: DropdownConstructor) {
-    super({ id, classes, exclusionList });
+  constructor({ id, data_id, classes, exclusionList, form, children, name, disabled, autofocus, required, multiple }: DropdownConstructor) {
+    super({ id, data_id, classes, exclusionList });
     const element = this.build("select");
     this.setRender(element);
     if (children) this.setChildren(children);

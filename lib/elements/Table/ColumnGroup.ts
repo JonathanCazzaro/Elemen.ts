@@ -14,13 +14,14 @@ export default class Column_Group extends Common {
   /**
    * Initiates a new Column Group (colgroup).
    * @param {string} [id] - (optional)
+   * @param {string} [data_id] - (optional) The identifier of the record if it comes from a database.
    * @param {string} [classes] - (optional) A space is needed between each class.
    * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {number} [columnExtension] - (optional) Defines the quantity of columns upon which the element is extending. Must be strictly superior to 0.
    * @param {Array.ColumnsConfig} [columns] - (optional) Details of the columns (columnExtension, classes). If columns are provided, columnExtension should not be set as parent element.
    */
-  constructor({ id, classes, exclusionList, columnExtension, columns }: TableColGroupConstructor) {
-    super({ id, classes, exclusionList });
+  constructor({ id, data_id, classes, exclusionList, columnExtension, columns }: TableColGroupConstructor) {
+    super({ id, data_id, classes, exclusionList });
     const element = this.build("colgroup");
     this.setRender(element);  
     if (columnExtension) this.setColumnExtension(columnExtension);

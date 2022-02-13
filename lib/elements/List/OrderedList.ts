@@ -15,14 +15,15 @@ export default class Ordered_List extends Common {
   /**
    * Initiates a new Ordered List (ol).
    * @param {string} [id] - (optional)
+   * @param {string} [data_id] - (optional) The identifier of the record if it comes from a database.
    * @param {string} [classes] - (optional) A space is needed between each class.
    * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {Array.ListItemType} [children] - (optional) An array containing the children elements if any.
    * @param {boolean} [reversed] - (optional) If true, items will be listed in descending order.
    * @param {number} [startFrom] - (optional) The number the list should start from.
    */
-  constructor({ id, classes, exclusionList, children, reversed, startFrom }: OrderedListConstructor) {
-    super({ id, classes, exclusionList });
+  constructor({ id, data_id, classes, exclusionList, children, reversed, startFrom }: OrderedListConstructor) {
+    super({ id, data_id, classes, exclusionList });
     const element = this.build("ol");
     this.setRender(element);
     if (children) this.setChildren(children);

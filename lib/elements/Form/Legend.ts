@@ -12,12 +12,13 @@ export default class Legend extends Common {
   /**
    * Initiates a new Legend.
    * @param {string} [id] - (optional)
+   * @param {string} [data_id] - (optional) The identifier of the record if it comes from a database.
    * @param {string} [classes] - (optional) A space is needed between each class.
    * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {string} [textContent] - (optional) Text to be displayed inside the element.
    */
-  constructor({ id, classes, textContent, exclusionList }: CommonConstructor) {
-    super({ id, classes, exclusionList, textContent });
+  constructor({ id, data_id, classes, textContent, exclusionList }: CommonConstructor) {
+    super({ id, data_id, classes, exclusionList, textContent });
     const element = this.build("legend");
     this.setRender(element);
   }

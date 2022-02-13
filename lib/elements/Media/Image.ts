@@ -18,6 +18,7 @@ export default class Image extends Common {
   /**
    * Initiates a new Image (img).
    * @param {string} [id] - (optional)
+   * @param {string} [data_id] - (optional) The identifier of the record if it comes from a database.
    * @param {string} [classes] - (optional) A space is needed between each class.
    * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {string} source - URL/path of the image file.
@@ -25,8 +26,8 @@ export default class Image extends Common {
    * @param {string} [sourceSet] - (optional) An array of alternative sources matching the following pattern : "filepath width" (example: "mysource.png 480w")
    * @param {string} [mediaQueries] - (optional) An array containing either a mediaquery associated to a width (example: "(min-width: 720px) 540px"), or only a width that will be used if no mediaquery has matched.
    */
-  constructor({ id, classes, exclusionList, source, description, sourceSet, mediaQueries }: ImageConstructor) {
-    super({ id, classes, exclusionList });
+  constructor({ id, data_id, classes, exclusionList, source, description, sourceSet, mediaQueries }: ImageConstructor) {
+    super({ id, data_id, classes, exclusionList });
     const element = this.build("img");
     this.setRender(element);  
     this.setSource(source);

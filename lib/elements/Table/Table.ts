@@ -16,13 +16,14 @@ export default class Table extends Common {
   /**
    * Initiates a new Table.
    * @param {string} [id] - (optional)
+   * @param {string} [data_id] - (optional) The identifier of the record if it comes from a database.
    * @param {string} [classes] - (optional) A space is needed between each class.
    * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {string} [caption] - (optional) Caption placed at the top of the table.
    * @param {Array.(TableRowType|TableColumnGroupType|TableSectionType)} [children] - (optional) An array containing the children elements if any.
    */
-  constructor({ id, classes, exclusionList, children, caption }: TableConstructor) {
-    super({ id, classes, exclusionList });
+  constructor({ id, data_id, classes, exclusionList, children, caption }: TableConstructor) {
+    super({ id, data_id, classes, exclusionList });
     const element = this.build("table");
     this.setRender(element);
     if (caption) this.setCaption(caption);

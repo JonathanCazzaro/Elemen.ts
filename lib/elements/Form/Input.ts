@@ -23,10 +23,10 @@ export default class Input extends Common {
   #validationFailMessages?: FailMessagesConfig;
   static _class = Input;
 
-
   /**
    * Initiates a new Input.
    * @param {string} id Required.
+   * @param {string} [data_id] - (optional) The identifier of the record if it comes from a database.
    * @param {string} [classes] - (optional) A space is needed between each class.
    * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any.
@@ -42,6 +42,7 @@ export default class Input extends Common {
    */
   constructor({
     id,
+    data_id,
     classes,
     children,
     exclusionList,
@@ -55,7 +56,7 @@ export default class Input extends Common {
     options,
     validationFailMessages,
   }: InputConstructor) {
-    super({ id, classes, children, exclusionList });
+    super({ id, data_id, classes, children, exclusionList });
     const element = this.build("input");
     this.setRender(element);
     this.setType(type);
@@ -77,7 +78,7 @@ export default class Input extends Common {
   // ***************************
 
   get render(): HTMLInputElement {
-    return this._render as HTMLInputElement; 
+    return this._render as HTMLInputElement;
   }
 
   get type(): InputTypeEnum {

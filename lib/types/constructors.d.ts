@@ -92,6 +92,10 @@ export interface CommonConstructor {
    */
   id?: string;
   /**
+   * @param {string} [data_id] - (optional) The identifier of the record if it comes from a database.
+   */
+  data_id?: string;
+  /**
    * @param {string} [classes] - (optional) A space is needed between each class.
    */
   classes?: string;
@@ -224,6 +228,10 @@ export interface TableColGroupConstructor {
    */
   id?: string;
   /**
+   * @param {string} [data_id] - (optional) The identifier of the record if it comes from a database.
+   */
+  data_id?: string;
+  /**
    * @param {string} [classes] - (optional) A space is needed between each class.
    */
   classes?: string;
@@ -283,6 +291,10 @@ export interface FormConstructor {
    * @param {string} [id] - (optional)
    */
   id?: string;
+  /**
+   * @param {string} [data_id] - (optional) The identifier of the record if it comes from a database.
+   */
+  data_id?: string;
   /**
    * @param {string} [classes] - (optional) A space is needed between each class.
    */

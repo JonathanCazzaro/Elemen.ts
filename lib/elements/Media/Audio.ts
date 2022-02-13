@@ -12,6 +12,7 @@ export default class Audio extends CommonMedia {
   /**
    * Initiates a new Audio.
    * @param {string} [id] - (optional)
+   * @param {string} [data_id] - (optional) The identifier of the record if it comes from a database.
    * @param {string} [classes] - (optional) A space is needed between each class.
    * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {Array.SourceType} [children] - (optional) An array containing the children Source elements is any.
@@ -22,9 +23,10 @@ export default class Audio extends CommonMedia {
    * @param {boolean} [loop] - (optional) Boolean to specify whether the element should be set on loop or not.
    * @param {boolean} [muted] - (optional) Boolean to specify whether the element should be muted or not.
    */
-  constructor({ id, classes, exclusionList, source, children, noSupportMessage, autoplay, showControls, loop, muted }: AudioConstructor) {
+  constructor({ id, data_id, classes, exclusionList, source, children, noSupportMessage, autoplay, showControls, loop, muted }: AudioConstructor) {
     super({
       id,
+      data_id,
       classes,
       exclusionList,
       children,
@@ -36,7 +38,7 @@ export default class Audio extends CommonMedia {
       muted,
     });
     const element = this.build("audio");
-    this.setRender(element);  
+    this.setRender(element);
   }
 
   // ***************************

@@ -19,6 +19,7 @@ export default class Button extends Common {
   /**
    * Initiates a new Button.
    * @param {string} [id] - (optional)
+   * @param {string} [data_id] - (optional) The identifier of the record if it comes from a database.
    * @param {string} [classes] - (optional) A space is needed between each class.
    * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any.
@@ -29,8 +30,8 @@ export default class Button extends Common {
    * @param {string} [value] - (optional) Additional data sent with the form. Useless if name not defined.
    * @param {boolean} [disabled] - (optional) Boolean to specify whether the button should be disabled or not.
    */
-  constructor({ id, classes, exclusionList, textContent, type, form, children, name, value, disabled }: ButtonConstructor) {
-    super({ id, classes, children, exclusionList, textContent });
+  constructor({ id, data_id, classes, exclusionList, textContent, type, form, children, name, value, disabled }: ButtonConstructor) {
+    super({ id, data_id, classes, children, exclusionList, textContent });
     const element = this.build("button");
     this.setRender(element);
     this.setType(type);

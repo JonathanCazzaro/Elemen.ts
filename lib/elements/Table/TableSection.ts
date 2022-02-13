@@ -6,8 +6,8 @@ import Common from "../Common";
 export default class Table_Section extends Common {
   #children?: TableRowType[];
 
-  constructor({ id, classes, exclusionList, children }: TableSectionConstructor) {
-    super({ id, classes, exclusionList });
+  constructor({ id, data_id, classes, exclusionList, children }: TableSectionConstructor) {
+    super({ id, data_id, classes, exclusionList });
     if (children) this.setChildren(children);
   }
 

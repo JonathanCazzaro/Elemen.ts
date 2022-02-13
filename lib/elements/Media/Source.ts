@@ -15,13 +15,14 @@ export default class Source extends Common {
   /**
    * Initiates a new Source.
    * @param {string} [id] - (optional)
+   * @param {string} [data_id] - (optional) The identifier of the record if it comes from a database.
    * @param {string} [classes] - (optional) A space is needed between each class.
    * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {string} mediaType - Type of the source. Use enum MediaTypeEnum to define.
    * @param {SourceOptions} options - Specific options for the related media type.
    */
-  constructor({ id, classes, exclusionList, mediaType, options }: SourceConstructor) {
-    super({ id, classes, exclusionList });
+  constructor({ id, data_id, classes, exclusionList, mediaType, options }: SourceConstructor) {
+    super({ id, data_id, classes, exclusionList });
     const element = this.build("source");
     this.setRender(element);
     this.setMediaType(mediaType);

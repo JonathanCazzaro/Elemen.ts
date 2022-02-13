@@ -10,6 +10,7 @@ export default class Common {
   #parentSerial?: string;
   #children?: GenericElement[];
   #id?: string;
+  #data_id?: string;
   #classes?: string[];
   #textContent?: string;
   #exclusionList?: string[];
@@ -17,9 +18,10 @@ export default class Common {
   protected _render: HTMLElementModel;
   static _class = Common;
 
-  constructor({ id, classes, children, exclusionList, textContent }: CommonConstructor) {
+  constructor({ id, data_id, classes, children, exclusionList, textContent }: CommonConstructor) {
     this.#serial = Serial.generate(6);
     if (id) this.#id = id;
+    if (data_id) this.#data_id = data_id;
     if (classes) this.#classes = typeof classes === "string" ? classes.split(" ") : classes;
     if (children) this.setChildren(children);
     if (exclusionList) this.setExclusionList(exclusionList);
@@ -29,6 +31,10 @@ export default class Common {
   // ***************************
   // Getters
   // ***************************
+
+  get data_id(): string {
+    return this.#data_id;
+  }
 
   get serial(): string {
     return this.#serial;
