@@ -1,8 +1,9 @@
 import Application from "./structure/application";
 import Page from "./structure/page";
 import User from "./roles/user";
+import DataManager from "./structure/dataManager";
 
-export { Application, Page, User };
+export { Application, Page, User, DataManager };
 
 // Generic Elements
 import Container from "./elements/Generic/Container";

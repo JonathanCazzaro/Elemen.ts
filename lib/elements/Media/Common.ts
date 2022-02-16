@@ -12,8 +12,8 @@ export default class CommonMedia extends Common {
   #loop: boolean = false;
   #muted: boolean = false;
 
-  constructor({ id, data_id, classes, exclusionList, source, children, noSupportMessage, autoplay, showControls, loop, muted }: CommonMediaConstructor) {
-    super({ id, data_id, classes, exclusionList });
+  constructor({ id, data_id, classes, exclusionList, source, children, noSupportMessage, autoplay, showControls, loop, muted, displayMode }: CommonMediaConstructor) {
+    super({ id, data_id, classes, exclusionList, displayMode });
     if (source) this.#source = source;
     if (children) this.setChildren(children);
     if (noSupportMessage) this.#noSupportMessage = noSupportMessage;

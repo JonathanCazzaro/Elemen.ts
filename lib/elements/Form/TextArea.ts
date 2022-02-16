@@ -9,7 +9,7 @@ import { setValidationMessages } from "./inputConfigurator";
  */
 export default class Text_Area extends Common {
   #id: string;
-  #value?: string;
+  #value: string = "";
   #name?: string;
   #form?: FormType;
   #width?: number;
@@ -30,6 +30,7 @@ export default class Text_Area extends Common {
    * @param {string} id Required.
    * @param {string} [data_id] - (optional) The identifier of the record if it comes from a database.
    * @param {string} [classes] - (optional) A space is needed between each class.
+   * @param {DisplayModeEnum} [displayMode] - (optional) Specifies if the component will be shared among pages (like a navbar) or should be loaded dynamically. Will produce effect only when using dynamic CSS/scripts imports within the Page API. Use enum DisplayModeEnum. Default is DYNAMIC.
    * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {string} [name] - (optional) Name of the text area (identification for data submitting).
    * @param {string} [value] - (optional) Value of the field.
@@ -65,8 +66,9 @@ export default class Text_Area extends Common {
     width,
     height,
     validationFailMessages,
+    displayMode,
   }: TextAreaConstructor) {
-    super({ id, data_id, classes, exclusionList });
+    super({ id, data_id, classes, exclusionList, displayMode });
     const element = this.build("textarea");
     this.setRender(element);
     if (name) this.setName(name);
@@ -217,7 +219,19 @@ export default class Text_Area extends Common {
    * @param {function} callback - Behaviour after the element had changed.
    */
   onChange(callback: (event?: Event) => void): void {
-    this.render.addEventListener("change", callback);
+    this.render.addEventListener("input", callback);
+  }
+
+  mount(): void {
+    super.mount();
+    this.onChange(() => {
+      if (this.render.value) this.#value = this.render.value;
+    });
+  }
+
+  unmount(): void {
+    super.unmount();
+    this.#value = "";
   }
 
   static produce(settings: ProduceSettingsConfig): TextAreaType[] {

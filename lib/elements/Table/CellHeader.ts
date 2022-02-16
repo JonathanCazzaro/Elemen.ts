@@ -18,6 +18,7 @@ export default class Cell_Header extends Common {
    * @param {string} [id] - (optional)
    * @param {string} [data_id] - (optional) The identifier of the record if it comes from a database.
    * @param {string} [classes] - (optional) A space is needed between each class.
+   * @param {DisplayModeEnum} [displayMode] - (optional) Specifies if the component will be shared among pages (like a navbar) or should be loaded dynamically. Will produce effect only when using dynamic CSS/scripts imports within the Page API. Use enum DisplayModeEnum. Default is DYNAMIC.
    * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {string} [textContent] - (optional) Text to be displayed inside the element.
    * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any.
@@ -25,8 +26,8 @@ export default class Cell_Header extends Common {
    * @param {number} [columnExtension] - (optional) Defines the quantity of columns upon which the cell is extending. Must be strictly superior to 0.
    * @param {ScopeEnum} [scope] - (optional) Specifies to which cells is the header related to.
    */
-  constructor({ id, data_id, classes, exclusionList, children, textContent, rowExtension, columnExtension, scope }: TableCellHeaderConstructor) {
-    super({ id, data_id, classes, children, exclusionList, textContent });
+  constructor({ id, data_id, classes, exclusionList, children, textContent, rowExtension, columnExtension, scope, displayMode }: TableCellHeaderConstructor) {
+    super({ id, data_id, classes, children, exclusionList, textContent, displayMode });
     const element = this.build("th");
     this.setRender(element);
     if (rowExtension) this.setRowExtension(rowExtension);

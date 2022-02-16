@@ -4,6 +4,7 @@ import ArrayExt from "../utils/arrayExt";
 const { remove, toggle } = ArrayExt;
 import Serial from "../utils/serial";
 import { ProduceSettingsConfig, OnClickConfig, OnHoverConfig } from "../types/configObjects";
+import { DisplayModeEnum } from "../types/enum";
 
 export default class Common {
   readonly #serial: string;
@@ -15,17 +16,19 @@ export default class Common {
   #textContent?: string;
   #exclusionList?: string[];
   #isMounted: boolean = false;
+  #displayMode: DisplayModeEnum = DisplayModeEnum.DYNAMIC;
   protected _render: HTMLElementModel;
   static _class = Common;
 
-  constructor({ id, data_id, classes, children, exclusionList, textContent }: CommonConstructor) {
+  constructor({ id, data_id, classes, children, exclusionList, textContent, displayMode }: CommonConstructor) {
     this.#serial = Serial.generate(6);
     if (id) this.#id = id;
     if (data_id) this.#data_id = data_id;
+    if (displayMode) this.#displayMode = displayMode;    
     if (classes) this.#classes = typeof classes === "string" ? classes.split(" ") : classes;
     if (children) this.setChildren(children);
     if (exclusionList) this.setExclusionList(exclusionList);
-    if (textContent) this.#textContent = textContent;
+    if (textContent) this.#textContent = textContent;    
   }
 
   // ***************************
@@ -72,6 +75,10 @@ export default class Common {
     return this._render;
   }
 
+  get displayMode(): DisplayModeEnum {
+    return this.#displayMode;
+  }
+
   // ***************************
   // Setters
   // ***************************
@@ -106,6 +113,10 @@ export default class Common {
       });
     }
     this.#children = children;
+  }
+
+  setChildrenOnEvent(event: string, callback: () => GenericElement[]) {
+    document.addEventListener(event, () => this.setChildren(callback()));
   }
 
   setExclusionList(list: string[]) {
@@ -180,7 +191,7 @@ export default class Common {
    * Mounts the element into the DOM.
    */
   mount(): void {
-    this.render.dispatchEvent(new Event("mount"));
+    // this.render.dispatchEvent(new Event("mount"));
     if (this.#exclusionList) {
       for (const item of this.#exclusionList) {
         if (window.location.pathname === item) {

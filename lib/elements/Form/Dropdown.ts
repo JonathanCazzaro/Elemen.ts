@@ -25,6 +25,7 @@ export default class Dropdown extends Common {
    * @param {string} id Required.
    * @param {string} [data_id] - (optional) The identifier of the record if it comes from a database.
    * @param {string} [classes] - (optional) A space is needed between each class.
+   * @param {DisplayModeEnum} [displayMode] - (optional) Specifies if the component will be shared among pages (like a navbar) or should be loaded dynamically. Will produce effect only when using dynamic CSS/scripts imports within the Page API. Use enum DisplayModeEnum. Default is DYNAMIC.
    * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {Array.(OptionsGroupType|OptionType)} [children] - (optional) An array containing the children elements if any (Options Group or Option elements).
    * @param {FormType} [form] - (optional) The form element instance related to the dropdown, required if placed outside.
@@ -34,8 +35,8 @@ export default class Dropdown extends Common {
    * @param {boolean} [required] - (optional) Boolean to specify whether the dropdown should be set on required or not.
    * @param {boolean} [multiple] - (optional) Boolean to specify whether the dropdown should be set on multiple or not.
    */
-  constructor({ id, data_id, classes, exclusionList, form, children, name, disabled, autofocus, required, multiple }: DropdownConstructor) {
-    super({ id, data_id, classes, exclusionList });
+  constructor({ id, data_id, classes, exclusionList, form, children, name, disabled, autofocus, required, multiple, displayMode }: DropdownConstructor) {
+    super({ id, data_id, classes, exclusionList, displayMode });
     const element = this.build("select");
     this.setRender(element);
     if (children) this.setChildren(children);
@@ -142,7 +143,7 @@ export default class Dropdown extends Common {
    * @param {function} callback - Behaviour after the element has changed.
    */
   onChange(callback: (event?: Event) => void): void {
-    this.render.addEventListener("change", callback);
+    this.render.addEventListener("input", callback);
   }
 
   static produce(settings: ProduceSettingsConfig): DropdownType[] {

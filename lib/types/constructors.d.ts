@@ -1,5 +1,5 @@
-import { FailMessagesConfig, PatternConfig } from "./configObjects";
-import { ButtonTypeEnum, FormMethodEnum, InputTypeEnum, ElementPositionEnum, MediaTypeEnum, ScopeEnum, RoleEnum } from "./enum";
+import { FailMessagesConfig, PatternConfig, RequestDataConfig } from "./configObjects";
+import { ButtonTypeEnum, FormMethodEnum, InputTypeEnum, ElementPositionEnum, MediaTypeEnum, ScopeEnum, RoleEnum, DisplayModeEnum } from "./enum";
 import {
   CaptionType,
   FormType,
@@ -65,6 +65,10 @@ export interface PageConstructor {
    * @param {function} [denyAccess] - (optional) Behaviour of the application when the access to the page is not granted.
    */
   denyAccess?: () => void;
+  /**
+   * @param {function} [loadData] - (optional) Async instructions to load data before the page is initialized.
+   */
+  loadData?: () => void;
 }
 
 export interface UserConstructor {
@@ -77,11 +81,21 @@ export interface UserConstructor {
   /**
    * @param {function} [authenticate] - (optional) Custom method to handle authentication (with tokens for example).
    */
-  authenticate?: (this: UserType) => Promise<boolean> | boolean;
+  authenticate?: (data?: { [key: string]: any }) => void;
   /**
-   * @param {function} [connect] - (optional) Custom method to handle connection.
+   * @param {function} [login] - (optional) Custom method to handle connection.
    */
-  connect?: (this: UserType) => Promise<boolean> | boolean;
+  login?: (data?: { [key: string]: any }) => void;
+  /**
+   * @param {function} [logout] - (optional) Custom method to handle disconnection.
+   */
+  logout?: () => void;
+}
+
+export interface DataManagerConstructor {
+  login?: (credentials: Record<string, string>) => void;
+  verifyToken?: () => void;
+  requestData?: (config: RequestDataConfig) => void;
 }
 
 // --------------------- Element Constructors ---------------------
@@ -111,19 +125,10 @@ export interface CommonConstructor {
    * @param {string} [textContent] - (optional) Text to be displayed inside the element.
    */
   textContent?: string;
-}
-
-export interface FactoryConstructor {
   /**
-   * @param {GenericElement} template - The template element used by the new factory.
+   * @param {DisplayModeEnum} [displayMode] - (optional) Specifies if the component will be shared among pages (like a navbar) or should be loaded dynamically. Will produce effect only when using dynamic CSS/scripts imports within the Page API. Use enum DisplayModeEnum. Default is DYNAMIC.
    */
-  template: GenericElement;
-  // /**
-  //  * @param {object} modifications - Key/value couples where key is the name of the property to target, and value an array of values whose length will determine how many new instances the factory will produce.
-  //  */
-  // modifications: {
-  //   [property: string]: any[];
-  // };
+  displayMode?: DisplayModeEnum;
 }
 
 // ------ Text Elements Constructors ------
@@ -236,6 +241,10 @@ export interface TableColGroupConstructor {
    */
   classes?: string;
   /**
+   * @param {DisplayModeEnum} [displayMode] - (optional) Specifies if the component will be shared among pages (like a navbar) or should be loaded dynamically. Will produce effect only when using dynamic CSS/scripts imports within the Page API. Use enum DisplayModeEnum. Default is DYNAMIC.
+   */
+  displayMode?: DisplayModeEnum;
+  /**
    * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    */
   exclusionList?: string[];
@@ -299,6 +308,10 @@ export interface FormConstructor {
    * @param {string} [classes] - (optional) A space is needed between each class.
    */
   classes?: string;
+  /**
+   * @param {DisplayModeEnum} [displayMode] - (optional) Specifies if the component will be shared among pages (like a navbar) or should be loaded dynamically. Will produce effect only when using dynamic CSS/scripts imports within the Page API. Use enum DisplayModeEnum. Default is DYNAMIC.
+   */
+  displayMode?: DisplayModeEnum;
   /**
    * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    */

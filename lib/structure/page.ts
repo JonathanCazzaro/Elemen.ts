@@ -1,6 +1,6 @@
 import { GenericElement, UserType } from "../types/types";
 import { PageConstructor } from "../types/constructors";
-import { FileEnum, RoleEnum } from "../types/enum";
+import { DisplayModeEnum, FileEnum, RoleEnum } from "../types/enum";
 import File from "../utils/file";
 const { load, unload } = File;
 
@@ -16,7 +16,8 @@ export default class Page {
   readonly jsFiles?: string[];
   isActive: boolean = false;
   accessLevel: RoleEnum = RoleEnum.VISITOR;
-  denyAccess: () => void | null = () => null;
+  denyAccess: () => void = () => null;
+  loadData?: () => void;
 
   /**
    * Initiates a new Page.
@@ -28,7 +29,7 @@ export default class Page {
    * @param {RoleEnum} [accessLevel] - (optional) Define the access level of the page using enum RoleEnum. If not set, default will be VISITOR.
    * @param {function} [denyAccess] - (optional) Behaviour of the application when the access to the page is not granted.
    */
-  constructor({ title, description, path, cssFiles, jsFiles, accessLevel, denyAccess }: PageConstructor) {
+  constructor({ title, description, path, cssFiles, jsFiles, accessLevel, denyAccess, loadData }: PageConstructor) {
     this.path = path.startsWith("/") ? path : `/${path}`;
 
     if (title) {
@@ -51,6 +52,7 @@ export default class Page {
     if (jsFiles) this.jsFiles = jsFiles;
     if (accessLevel) this.accessLevel = accessLevel;
     if (denyAccess) this.denyAccess = denyAccess;
+    if (loadData) this.loadData = loadData;
   }
 
   private setDescriptionTag(): void {
@@ -77,17 +79,26 @@ export default class Page {
    * Sets the page as active in the browser.
    */
   reach(): void {
+    this.isActive = true;
+    let dynamicAssets: (HTMLLinkElement | HTMLScriptElement)[] = [];
+    if (this.cssFiles) dynamicAssets = load(FileEnum.CSS, this.cssFiles);
+    if (this.jsFiles) dynamicAssets = [...dynamicAssets, ...load(FileEnum.JS, this.jsFiles)];
+    if (this.loadData) this.loadData();
     if (this.title) document.title = this.title;
     else if (!document.title)
       throw new Error(`A title for the page must be defined, either in the HTML template or with the Page API in the frontend library.`);
     this.setDescriptionTag();
 
-    if (this.cssFiles) load(FileEnum.CSS, this.cssFiles);
-    if (this.jsFiles) load(FileEnum.JS, this.jsFiles);
+    const staticElements = this.content.filter((element) => element.displayMode === DisplayModeEnum.STATIC);
+    const dynamicElements = this.content.filter((element) => element.displayMode === DisplayModeEnum.DYNAMIC);
 
-    this.isActive = true;
-    if (this.content) this.content.forEach((element) => element.mount());
-    document.dispatchEvent(new Event("reached"));
+    if (staticElements.length) staticElements.forEach((element) => element.mount());
+    if (dynamicElements.length)
+      dynamicAssets[dynamicAssets.length - 1].onload = () => {
+        dynamicElements.forEach((element) => element.mount());
+        document.dispatchEvent(new Event("reached"));
+      };
+    else document.dispatchEvent(new Event("reached"));
   }
 
   /**
@@ -101,7 +112,7 @@ export default class Page {
     if (this.content) this.content.forEach((element) => element.unmount());
   }
 
-  /** Specifies a behaviour when the page has been reached.
+  /** Specifies a behaviour after the page has been loaded.
    * @param {object} callback - Callback to describe actions.
    */
   onReach(callback: () => void): void {

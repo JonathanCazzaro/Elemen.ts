@@ -12,7 +12,7 @@ import { setInputOptions, setValidationMessages } from "./inputConfigurator";
 export default class Input extends Common {
   #id: string;
   #type: InputTypeEnum;
-  #value?: string;
+  #value: string = "";
   #name?: string;
   #form?: FormType;
   #autofocus: boolean = false;
@@ -28,6 +28,7 @@ export default class Input extends Common {
    * @param {string} id Required.
    * @param {string} [data_id] - (optional) The identifier of the record if it comes from a database.
    * @param {string} [classes] - (optional) A space is needed between each class.
+   * @param {DisplayModeEnum} [displayMode] - (optional) Specifies if the component will be shared among pages (like a navbar) or should be loaded dynamically. Will produce effect only when using dynamic CSS/scripts imports within the Page API. Use enum DisplayModeEnum. Default is DYNAMIC.
    * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any.
    * @param {InputTypeEnum} type - Set the type of input using enum InputTypeEnum.
@@ -55,8 +56,9 @@ export default class Input extends Common {
     readonly,
     options,
     validationFailMessages,
+    displayMode,
   }: InputConstructor) {
-    super({ id, data_id, classes, children, exclusionList });
+    super({ id, data_id, classes, children, exclusionList, displayMode });
     const element = this.build("input");
     this.setRender(element);
     this.setType(type);
@@ -215,7 +217,7 @@ export default class Input extends Common {
    * @param {function} callback - Behaviour after the element had changed.
    */
   onChange(callback: (event?: Event) => void): void {
-    this.render.addEventListener("change", callback);
+    this.render.addEventListener("input", callback);
   }
 
   mount(): void {
@@ -226,6 +228,14 @@ export default class Input extends Common {
         this.#form.render.dispatchEvent(new Event(this.form.noValidation ? "submit" : "trysubmit"));
       });
     }
+    this.onChange(() => {
+      if (this.render.value) this.#value = this.render.value;
+    });
+  }
+
+  unmount(): void {
+    super.unmount();
+    this.#value = "";
   }
 
   static produce(settings: ProduceSettingsConfig): InputType[] {

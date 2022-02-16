@@ -21,6 +21,7 @@ export default class Button extends Common {
    * @param {string} [id] - (optional)
    * @param {string} [data_id] - (optional) The identifier of the record if it comes from a database.
    * @param {string} [classes] - (optional) A space is needed between each class.
+   * @param {DisplayModeEnum} [displayMode] - (optional) Specifies if the component will be shared among pages (like a navbar) or should be loaded dynamically. Will produce effect only when using dynamic CSS/scripts imports within the Page API. Use enum DisplayModeEnum. Default is DYNAMIC.
    * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any.
    * @param {ButtonTypeEnum} type - Role of the button, use enum type ButtonTypeEnum to define it.
@@ -30,8 +31,8 @@ export default class Button extends Common {
    * @param {string} [value] - (optional) Additional data sent with the form. Useless if name not defined.
    * @param {boolean} [disabled] - (optional) Boolean to specify whether the button should be disabled or not.
    */
-  constructor({ id, data_id, classes, exclusionList, textContent, type, form, children, name, value, disabled }: ButtonConstructor) {
-    super({ id, data_id, classes, children, exclusionList, textContent });
+  constructor({ id, data_id, classes, exclusionList, textContent, type, form, children, name, value, disabled, displayMode }: ButtonConstructor) {
+    super({ id, data_id, classes, children, exclusionList, textContent, displayMode });
     const element = this.build("button");
     this.setRender(element);
     this.setType(type);

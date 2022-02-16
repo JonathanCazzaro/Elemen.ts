@@ -48,7 +48,7 @@ export default class Application {
   start(): void {
     const events = ["DOMContentLoaded", "popstate", "pathchange"];
     events.forEach((event) =>
-      window.addEventListener(event, (e) => {
+      window.addEventListener(event, async (e) => {
         e.preventDefault();
         const { pages, notFound, user } = this;
         this.currentPath = window.location.pathname;
@@ -63,13 +63,16 @@ export default class Application {
         const { ADMIN, USER } = RoleEnum;
         const { currentPage } = this;
         if (matchValue(currentPage.accessLevel, [ADMIN, USER])) {
-          if ((user && !user.authenticate()) || !user) {
-            currentPage.denyAccess();
-            if (!user)
-              console.warn(
-                `The page with path ${currentPage.path} has access restrictions. Though there is no user set up to deal with permissions.`
-              );
-            return;
+          if ((user && !user.isLoggedIn) || !user) {
+            await this.user.authenticate();            
+            if (!user.isLoggedIn) {
+              currentPage.denyAccess();
+              if (!user)
+                console.warn(
+                  `The page with path ${currentPage.path} has access restrictions. Though there is no user set up to deal with permissions.`
+                );
+              return;
+            }
           }
         }
         currentPage.reach();

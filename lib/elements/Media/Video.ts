@@ -17,6 +17,7 @@ export default class Video extends CommonMedia {
    * @param {string} [id] - (optional)
    * @param {string} [data_id] - (optional) The identifier of the record if it comes from a database.
    * @param {string} [classes] - (optional) A space is needed between each class.
+   * @param {DisplayModeEnum} [displayMode] - (optional) Specifies if the component will be shared among pages (like a navbar) or should be loaded dynamically. Will produce effect only when using dynamic CSS/scripts imports within the Page API. Use enum DisplayModeEnum. Default is DYNAMIC.
    * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {Array.SourceType} [children] - (optional) An array containing the children Source elements is any.
    * @param {string} [source] - (optional) URL/path of the media file. If used, children elements would then not be processed.
@@ -44,6 +45,7 @@ export default class Video extends CommonMedia {
     height,
     width,
     posterFrame,
+    displayMode,
   }: VideoConstructor) {
     super({
       id,
@@ -57,6 +59,7 @@ export default class Video extends CommonMedia {
       showControls,
       loop,
       muted,
+      displayMode,
     });
     const element = this.build("video");
     this.setRender(element);

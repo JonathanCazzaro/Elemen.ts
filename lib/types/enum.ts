@@ -86,3 +86,8 @@ export enum RoleEnum {
   USER = "user",
   ADMIN = "admin",
 }
+
+export enum DisplayModeEnum {
+  STATIC = "static",
+  DYNAMIC = "dynamic",
+}

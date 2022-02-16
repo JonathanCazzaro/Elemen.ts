@@ -8,7 +8,7 @@ import {
   SourceOptionsConfig,
 } from "./configObjects";
 import { InputOptionsConstructor, SourceOptionsConstructor, TableColConfigConstructor } from "./constructors";
-import { ButtonTypeEnum, FormMethodEnum, InputTypeEnum, ElementPositionEnum, MediaTypeEnum, ScopeEnum, RoleEnum } from "./enum";
+import { ButtonTypeEnum, FormMethodEnum, InputTypeEnum, ElementPositionEnum, MediaTypeEnum, ScopeEnum, RoleEnum, DisplayModeEnum } from "./enum";
 
 export interface PageType {
   title?: string;
@@ -26,12 +26,13 @@ export interface PageType {
 }
 
 export interface UserType {
-  isLogged: boolean;
+  isLoggedIn: boolean;
   role: RoleEnum;
   token?: string;
   [key: string]: any;
-  authenticate(this: UserType): Promise<boolean> | boolean | null;
-  connect(this: UserType): Promise<boolean> | boolean | null;
+  authenticate(data?: Record<string, any>): Promise<void> | void;
+  login(data?: Record<string, any>): Promise<void> | void;
+  logout(): void;
 }
 
 export interface CommonElementType {
@@ -50,6 +51,7 @@ export interface CommonElementType {
   setExclusionList(list: string[]): void;
   render: HTMLElement;
   isMounted: boolean;
+  displayMode: DisplayModeEnum;
   addClass(newClass: string): void;
   removeClass(oldClass: string): void;
   toggleClass(className: string): void;

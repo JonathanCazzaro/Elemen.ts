@@ -20,14 +20,15 @@ export default class Form extends Common {
    * @param {string} [id] - (optional)
    * @param {string} [data_id] - (optional) The identifier of the record if it comes from a database.
    * @param {string} [classes] - (optional) A space is needed between each class.
+   * @param {DisplayModeEnum} [displayMode] - (optional) Specifies if the component will be shared among pages (like a navbar) or should be loaded dynamically. Will produce effect only when using dynamic CSS/scripts imports within the Page API. Use enum DisplayModeEnum. Default is DYNAMIC.
    * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {string} [action] - (optional) Target URL where the data should be sent on submit.
    * @param {FormMethodEnum} [method] - (optional) HTTP method used to send the form. Use enum type FormMethodEnum to specify value.
    * @param {string} [name] - (optional) Name of the form (must be unique in the document).
    * @param {boolean} [noValidation] - (optional) If set to true, the data will be not be checked for validation before submitting.
    */
-  constructor({ id, data_id, classes, exclusionList, action, method, name, noValidation }: FormConstructor) {
-    super({ id, data_id, classes, exclusionList });
+  constructor({ id, data_id, classes, exclusionList, action, method, name, noValidation, displayMode }: FormConstructor) {
+    super({ id, data_id, classes, exclusionList, displayMode });
     const element = this.build("form");
     this.setRender(element);  
     if (action) this.setAction(action);

@@ -132,3 +132,18 @@ export type SourceOptionsConfig = {
   mediaQuery?: string;
   sourceSet?: string;
 };
+
+export interface RequestDataConfig {
+  /**
+   * @param {string} route - The route that should be used for your request.
+   */
+  route: string;
+  /**
+   * @param {string} [options] - (optional) Any options to customize the call.
+   */
+  options?: Record<string, any>;
+  /**
+   * @param {string} [saveLocation] - (optional) The property of your dataManager that should store the data.
+   */
+  saveLocation?: string;
+}

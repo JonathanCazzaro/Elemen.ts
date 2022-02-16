@@ -15,11 +15,12 @@ export default class Unordered_List extends Common {
    * @param {string} [id] - (optional)
    * @param {string} [data_id] - (optional) The identifier of the record if it comes from a database.
    * @param {string} [classes] - (optional) A space is needed between each class.
+   * @param {DisplayModeEnum} [displayMode] - (optional) Specifies if the component will be shared among pages (like a navbar) or should be loaded dynamically. Will produce effect only when using dynamic CSS/scripts imports within the Page API. Use enum DisplayModeEnum. Default is DYNAMIC.
    * @param {Array.string} [exclusionList] - (optional) An array of paths of which the component shouldn't be mounted.
    * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any.
    */
-  constructor({ id, data_id, classes, exclusionList, children }: UnorderedListConstructor) {
-    super({ id, data_id, classes, exclusionList });
+  constructor({ id, data_id, classes, exclusionList, children, displayMode }: UnorderedListConstructor) {
+    super({ id, data_id, classes, exclusionList, displayMode });
     const element = this.build("ul");
     this.setRender(element);  
     if (children) this.setChildren(children);
