@@ -14,6 +14,7 @@ export default class Application {
   private currentPage: PageType;
   private pages: PageType[];
   private notFound: PageType;
+  private rootElementId?: string;
   user?: UserType;
 
   /**
@@ -22,7 +23,7 @@ export default class Application {
    * @param {PageType} notFound - A special 404 page that will be displayed if the path has no match. Use again Page API.
    * @param {Array.UserType} [users] - (optional) An array of user instances for handling roles. Recommended if the application has private pages.
    */
-  constructor({ pages, notFound, user }: ApplicationConstructor) {
+  constructor({ pages, notFound, user, rootElementId }: ApplicationConstructor) {
     pages.forEach((page) => {
       const { path } = page;
       if (!isObjectUnique(pages, "path", path)) throw new Error(`The pages of your application must have unique paths.`);
@@ -30,6 +31,7 @@ export default class Application {
     this.pages = pages;
     this.notFound = notFound;
     if (user) this.user = user;
+    if (rootElementId) this.rootElementId = rootElementId;
     this.currentPath = window.location.pathname;
   }
 
@@ -46,6 +48,11 @@ export default class Application {
    * Makes the router listen to path requests and serve the corresponding pages.
    */
   start(): void {
+    if (this.rootElementId) {
+      const rootElement = document.createElement("div");
+      rootElement.id = this.rootElementId;
+      document.body.appendChild(rootElement);
+    }
     const events = ["DOMContentLoaded", "popstate", "pathchange"];
     events.forEach((event) =>
       window.addEventListener(event, async (e) => {
@@ -64,7 +71,7 @@ export default class Application {
         const { currentPage } = this;
         if (matchValue(currentPage.accessLevel, [ADMIN, USER])) {
           if ((user && !user.isLoggedIn) || !user) {
-            await this.user.authenticate();            
+            await this.user.authenticate();
             if (!user.isLoggedIn) {
               currentPage.denyAccess();
               if (!user)
@@ -75,7 +82,7 @@ export default class Application {
             }
           }
         }
-        currentPage.reach();
+        currentPage.reach(this.rootElementId || "");
       })
     );
   }

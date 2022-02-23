@@ -19,8 +19,8 @@ export default class Container extends Common {
    * @param {string} [textContent] - (optional) Text to be displayed inside the element.
    * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any.
    */
-  constructor({ id, data_id, classes, exclusionList, textContent, children, displayMode }: CommonConstructor) {
-    super({ id, data_id, classes, children, exclusionList, textContent, displayMode });
+  constructor({ id, data_id, classes, exclusionList, textContent, children, displayMode, onClick, onClickOutside }: CommonConstructor) {
+    super({ id, data_id, classes, children, exclusionList, textContent, displayMode, onClick, onClickOutside });
     const element = this.build("div");
     this.setRender(element);  
   }

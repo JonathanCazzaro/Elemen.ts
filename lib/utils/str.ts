@@ -28,8 +28,7 @@ export default class Str {
    * @returns {boolean}
    */
   static checkDateTime(dateToBeChecked: string): boolean {
-    const regex =
-      /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T(0[0-9]|1[0-9]|2[0-3]):(0[0-9]|[1-5][0-9])$/;
+    const regex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T(0[0-9]|1[0-9]|2[0-3]):(0[0-9]|[1-5][0-9])$/;
     return regex.test(dateToBeChecked);
   }
 
@@ -70,7 +69,7 @@ export default class Str {
   }
 
   /**
-   * Check if an input is a valid regex or not.
+   * Checks if an input is a valid regex or not.
    * @param {string} input - The input to test.
    * @returns {boolean}
    */
@@ -83,5 +82,47 @@ export default class Str {
       console.trace(error);
     }
     return isValid;
+  }
+
+  /**
+   * Checks if an input contains HTML.
+   * @param {string} input - The input to test.
+   * @returns {boolean}
+   */
+  static containsHTML(input: string): boolean {
+    const regex = /<[a-z]+>.*<\/[a-z]+>/gm;
+    return regex.test(input);
+  }
+
+  /**
+   * Splits a string containing HTML into an array.
+   * @param {string} input - The input to be split.
+   * @returns {Array.string}
+   */
+  static splitHTML(input: string): string[] {
+    const regex = /(<[^<>]*>[^<>]*<\/[^<>]*>)/gm;
+    return input.split(regex).filter((value) => value);
+  }
+
+  /**
+   * Checks if an HTML tag into a given input is allowed.
+   * @param {string} input - The input to test.
+   * @param {string|Array.string} allowedTags - One or more allowed tags (string or string array).
+   * @returns {boolean}
+   */
+  static isHTMLTagAllowed(input: string, allowedTags: string | string[]): boolean {
+    const tags = Array.isArray(allowedTags) ? allowedTags.join("|") : allowedTags;
+    const regex = new RegExp(`(<\\b(${tags})\\b[^<>]*>[^<>]*<\/\\b(${tags})\\b>)`, "gm");
+    return regex.test(input);
+  }
+
+  /**
+   * Checks if a given input is a valid CSS rule.
+   * @param {string} rule - The rule to test.
+   * @returns {boolean}
+   */
+  static isCSSRuleValid(rule: string): boolean {
+    const regex = /^([^]+ {\n?)(([ \t]*\b[a-z-]+\b:)( {0,1}.*;\n?))+[ \t]*}$/gm;
+    return regex.test(rule);
   }
 }

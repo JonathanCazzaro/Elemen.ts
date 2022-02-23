@@ -31,8 +31,23 @@ export default class Button extends Common {
    * @param {string} [value] - (optional) Additional data sent with the form. Useless if name not defined.
    * @param {boolean} [disabled] - (optional) Boolean to specify whether the button should be disabled or not.
    */
-  constructor({ id, data_id, classes, exclusionList, textContent, type, form, children, name, value, disabled, displayMode }: ButtonConstructor) {
-    super({ id, data_id, classes, children, exclusionList, textContent, displayMode });
+  constructor({
+    id,
+    data_id,
+    classes,
+    exclusionList,
+    textContent,
+    type,
+    form,
+    children,
+    name,
+    value,
+    disabled,
+    displayMode,
+    onClick,
+    onClickOutside,
+  }: ButtonConstructor) {
+    super({ id, data_id, classes, children, exclusionList, textContent, displayMode, onClick, onClickOutside });
     const element = this.build("button");
     this.setRender(element);
     this.setType(type);

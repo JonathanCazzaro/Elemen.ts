@@ -25,10 +25,9 @@ export default class Option extends Common {
    * @param {boolean} [selected] - (optional) Boolean to specify whether the element should be selected or not.
    */
   constructor({ id, data_id, classes, exclusionList, textContent, value, disabled, selected, displayMode }: OptionConstructor) {
-    super({ id, data_id, classes, exclusionList, displayMode });
+    super({ id, data_id, classes, exclusionList, displayMode, textContent });
     const element = this.build("option");
     this.setRender(element);
-    if (textContent) this.setTextContent(textContent);
     if (value) this.setValue(value);
     if (disabled) this.setDisabled(true);
     if (selected) this.setSelected(true);

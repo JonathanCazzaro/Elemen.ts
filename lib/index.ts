@@ -10,8 +10,9 @@ import Container from "./elements/Generic/Container";
 import Insert from "./elements/Generic/Insert";
 import Caption from "./elements/Generic/Caption";
 import Figure from "./elements/Generic/Figure";
+import Modal from "./elements/Generic/Modal";
 
-export { Container, Insert, Caption, Figure };
+export { Container, Insert, Caption, Figure, Modal };
 
 // Navigation Elements
 import Link from "./elements/Navigation/Link";

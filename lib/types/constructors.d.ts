@@ -34,6 +34,10 @@ export interface ApplicationConstructor {
    * @param {UserType} [user] - (optional) A user instance for handling roles. Recommended if the application has private pages.
    */
   user?: UserType;
+  /**
+   * @param {string} [rootElementId] - (optional) Specify an ID if you need your app to be mounted in a root element other than body. Required when using the Modal template element.
+   */
+  rootElementId?: string;
 }
 
 export interface PageConstructor {
@@ -65,10 +69,6 @@ export interface PageConstructor {
    * @param {function} [denyAccess] - (optional) Behaviour of the application when the access to the page is not granted.
    */
   denyAccess?: () => void;
-  /**
-   * @param {function} [loadData] - (optional) Async instructions to load data before the page is initialized.
-   */
-  loadData?: () => void;
 }
 
 export interface UserConstructor {
@@ -129,6 +129,14 @@ export interface CommonConstructor {
    * @param {DisplayModeEnum} [displayMode] - (optional) Specifies if the component will be shared among pages (like a navbar) or should be loaded dynamically. Will produce effect only when using dynamic CSS/scripts imports within the Page API. Use enum DisplayModeEnum. Default is DYNAMIC.
    */
   displayMode?: DisplayModeEnum;
+  /**
+   * @param {function} [onClick] - (optional) Sets a function to describe the actions on click.
+   */
+  onClick?: (event?: Event) => any;
+  /**
+   * @param {function} [onClickOutside] - (optional) Sets a function to describe the actions on click outside the element (and its children).
+   */
+  onClickOutside?: (event?: Event) => any;
 }
 
 // ------ Text Elements Constructors ------
@@ -154,6 +162,21 @@ export interface FigureConstructor extends CommonConstructor {
    * @param {CaptionType} [caption] - (optional) Caption for the content of the element.
    */
   caption?: CaptionType;
+}
+
+export interface ModalConstructor {
+  /**
+   * @param {Array.GenericElement} content - An array containing the elements of the modal.
+   */
+  content: GenericElement[];
+  /**
+   * @param {function} [onClickOustide] - (optional) Set the actions that should be performed on click outside the modal.
+   */
+  onClickOustide?: (event: Event) => void;
+  /**
+   * @param {string|Array.string} [additionnalCSSRules] - (optional) Custom CSS rules to be applied while the modal is mounted.
+   */
+  additionnalCSSRules?: string | string[];
 }
 
 // ------ Structure Elements Constructors ------
@@ -256,6 +279,14 @@ export interface TableColGroupConstructor {
    * @param {Array.ColumnsConfig} [columns] - (optional) Details of the columns (columnExtension, classes). If columns are provided, columnExtension should not be set for parent element.
    */
   columns?: TableColConfigConstructor[];
+  /**
+   * @param {function} [onClick] - (optional) Sets a function to describe the actions on click.
+   */
+  onClick?: (event?: Event) => any;
+  /**
+   * @param {function} [onClickOutside] - (optional) Sets a function to describe the actions on click outside the element (and its children).
+   */
+  onClickOutside?: (event?: Event) => any;
 }
 
 export interface TableColConfigConstructor {
@@ -332,6 +363,14 @@ export interface FormConstructor {
    * @param {boolean} [noValidation] - (optional) If set to true, the data will be not be checked for validation before submitting.
    */
   noValidation?: boolean;
+  /**
+   * @param {function} [onClick] - (optional) Sets a function to describe the actions on click.
+   */
+  onClick?: (event?: Event) => any;
+  /**
+   * @param {function} [onClickOutside] - (optional) Sets a function to describe the actions on click outside the element (and its children).
+   */
+  onClickOutside?: (event?: Event) => any;
 }
 
 export interface InputConstructor extends CommonConstructor {
@@ -347,6 +386,10 @@ export interface InputConstructor extends CommonConstructor {
    * @param {FormType} [form] - (optional) The form element instance related to the input. Required if the input is outside the form element.
    */
   form?: FormType;
+  /**
+   * @param {string} [value] - (optional) Value of the input if it needs to be initialized.
+   */
+  value?: string;
   /**
    * @param {boolean} [autofocus] - (optional) Boolean to specify whether the input should be set on autofocus or not.
    */

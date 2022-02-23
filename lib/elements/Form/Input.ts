@@ -34,6 +34,7 @@ export default class Input extends Common {
    * @param {InputTypeEnum} type - Set the type of input using enum InputTypeEnum.
    * @param {string} [name] - (optional) Name of the input (identification for data submitting).
    * @param {FormType} [form] - (optional) The form element instance related to the input. Required if the input is outside the form element.
+   * @param {string} [value] - (optional) Value of the input if it needs to be initialized.
    * @param {boolean} [autofocus] - (optional) Boolean to specify whether the input should be set on autofocus or not.
    * @param {boolean} [disabled] - (optional) Boolean to specify whether the input should be set on disabled or not.
    * @param {boolean} [required] - (optional) Boolean to specify whether the input should be set on required or not.
@@ -50,6 +51,7 @@ export default class Input extends Common {
     type,
     name,
     form,
+    value,
     autofocus,
     disabled,
     required,
@@ -67,6 +69,7 @@ export default class Input extends Common {
     else if (this.type === SUBMIT || this.type === RESET) {
       throw new Error("The form attribute must be filled in when constructing a submit/reset input.");
     }
+    if (value) this.setValue(value);
     if (autofocus) this.setAutofocus(true);
     if (disabled) this.setDisabled(true);
     if (required) this.setRequired(true);

@@ -29,13 +29,13 @@ const setInputOptions = (
     TEXT,
     TIME,
   } = InputTypeEnum;
+  const { min, max, incrementStep, minLength, maxLength, pattern, placeholder, fileType, multiple  } = options;
   switch (element.type) {
     case RADIO:
     case CHECKBOX:
       element.checked = options.checked ? true : false;
       break;
     case DATE:
-      const { min, max, incrementStep } = options;
       if (min) {
         if (checkDate(min.toString())) element.min = min.toString();
         else
@@ -75,7 +75,6 @@ const setInputOptions = (
     case SEARCH:
     case PASSWORD:
     case EMAIL:
-      const { minLength, maxLength, pattern, placeholder } = options;
       if (minLength) element.minLength = minLength;
       if (maxLength) element.maxLength = maxLength;
       if (pattern) {
@@ -115,7 +114,6 @@ const setInputOptions = (
       if (placeholder) element.placeholder = placeholder.toString();
       break;
     case FILE:
-      const { fileType, multiple } = options;
       if (fileType) element.accept = fileType.join(",");
       element.multiple = multiple ? true : false;
       break;

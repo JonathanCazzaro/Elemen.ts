@@ -1,4 +1,4 @@
-import { GenericElement, UserType } from "../types/types";
+import { GenericElement } from "../types/types";
 import { PageConstructor } from "../types/constructors";
 import { DisplayModeEnum, FileEnum, RoleEnum } from "../types/enum";
 import File from "../utils/file";
@@ -17,7 +17,6 @@ export default class Page {
   isActive: boolean = false;
   accessLevel: RoleEnum = RoleEnum.VISITOR;
   denyAccess: () => void = () => null;
-  loadData?: () => void;
 
   /**
    * Initiates a new Page.
@@ -29,7 +28,7 @@ export default class Page {
    * @param {RoleEnum} [accessLevel] - (optional) Define the access level of the page using enum RoleEnum. If not set, default will be VISITOR.
    * @param {function} [denyAccess] - (optional) Behaviour of the application when the access to the page is not granted.
    */
-  constructor({ title, description, path, cssFiles, jsFiles, accessLevel, denyAccess, loadData }: PageConstructor) {
+  constructor({ title, description, path, cssFiles, jsFiles, accessLevel, denyAccess }: PageConstructor) {
     this.path = path.startsWith("/") ? path : `/${path}`;
 
     if (title) {
@@ -52,7 +51,6 @@ export default class Page {
     if (jsFiles) this.jsFiles = jsFiles;
     if (accessLevel) this.accessLevel = accessLevel;
     if (denyAccess) this.denyAccess = denyAccess;
-    if (loadData) this.loadData = loadData;
   }
 
   private setDescriptionTag(): void {
@@ -78,12 +76,11 @@ export default class Page {
   /**
    * Sets the page as active in the browser.
    */
-  reach(): void {
+  reach(rootElementId?: string): void {
     this.isActive = true;
     let dynamicAssets: (HTMLLinkElement | HTMLScriptElement)[] = [];
     if (this.cssFiles) dynamicAssets = load(FileEnum.CSS, this.cssFiles);
     if (this.jsFiles) dynamicAssets = [...dynamicAssets, ...load(FileEnum.JS, this.jsFiles)];
-    if (this.loadData) this.loadData();
     if (this.title) document.title = this.title;
     else if (!document.title)
       throw new Error(`A title for the page must be defined, either in the HTML template or with the Page API in the frontend library.`);
@@ -92,10 +89,10 @@ export default class Page {
     const staticElements = this.content.filter((element) => element.displayMode === DisplayModeEnum.STATIC);
     const dynamicElements = this.content.filter((element) => element.displayMode === DisplayModeEnum.DYNAMIC);
 
-    if (staticElements.length) staticElements.forEach((element) => element.mount());
+    if (staticElements.length) staticElements.forEach((element) => element.mount(rootElementId || ""));
     if (dynamicElements.length)
       dynamicAssets[dynamicAssets.length - 1].onload = () => {
-        dynamicElements.forEach((element) => element.mount());
+        dynamicElements.forEach((element) => element.mount(rootElementId || ""));
         document.dispatchEvent(new Event("reached"));
       };
     else document.dispatchEvent(new Event("reached"));

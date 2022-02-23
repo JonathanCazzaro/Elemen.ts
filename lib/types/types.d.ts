@@ -19,7 +19,7 @@ export interface PageType {
   isActive: boolean;
   accessLevel: RoleEnum;
   setContent(elements: GenericElement[]): void;
-  reach(user?: UserType): void;
+  reach(rootElementId?: string): void;
   leave(): void;
   onReach(callback: () => void): void;
   denyAccess(): void | null;
@@ -56,9 +56,10 @@ export interface CommonElementType {
   removeClass(oldClass: string): void;
   toggleClass(className: string): void;
   getElementBySerial(serial: string): HTMLElement | undefined;
-  mount(): void;
+  mount(rootElementId?: string): void;
   unmount(): void;
   onClick(configuration: OnClickConfig): void;
+  onEvent(event: string, callback: (event?: Event) => void): void;
   onHover(configuration: OnHoverConfig): void;
 }
 
@@ -143,6 +144,16 @@ export interface CaptionType extends CommonElementType {
 
 export interface FigureType extends CommonElementType {
   caption?: CaptionType;
+}
+
+export interface ModalType {
+  serial: string;
+  contentWrapper: ContainerType;
+  additionnalCSSRules: string[];
+  isMounted: boolean;
+  render: HTMLDivElement;
+  insert(): void;
+  remove(): void;
 }
 
 // ---------------- Type definitions for Navigation elements ----------------

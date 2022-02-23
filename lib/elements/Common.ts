@@ -2,6 +2,8 @@ import { CommonElementType, GenericElement, HTMLElementModel } from "../types/ty
 import { CommonConstructor } from "../types/constructors";
 import ArrayExt from "../utils/arrayExt";
 const { remove, toggle } = ArrayExt;
+import Str from "../utils/str";
+const { containsHTML, splitHTML, isHTMLTagAllowed, matchValue } = Str;
 import Serial from "../utils/serial";
 import { ProduceSettingsConfig, OnClickConfig, OnHoverConfig } from "../types/configObjects";
 import { DisplayModeEnum } from "../types/enum";
@@ -17,18 +19,22 @@ export default class Common {
   #exclusionList?: string[];
   #isMounted: boolean = false;
   #displayMode: DisplayModeEnum = DisplayModeEnum.DYNAMIC;
+  #onClick?: (event?: Event) => any;
+  #onClickOutside?: (event?: Event) => any;
   protected _render: HTMLElementModel;
   static _class = Common;
 
-  constructor({ id, data_id, classes, children, exclusionList, textContent, displayMode }: CommonConstructor) {
+  constructor({ id, data_id, classes, children, exclusionList, textContent, displayMode, onClick, onClickOutside }: CommonConstructor) {
     this.#serial = Serial.generate(6);
     if (id) this.#id = id;
     if (data_id) this.#data_id = data_id;
-    if (displayMode) this.#displayMode = displayMode;    
+    if (displayMode) this.#displayMode = displayMode;
     if (classes) this.#classes = typeof classes === "string" ? classes.split(" ") : classes;
     if (children) this.setChildren(children);
     if (exclusionList) this.setExclusionList(exclusionList);
-    if (textContent) this.#textContent = textContent;    
+    if (textContent) this.#textContent = textContent;
+    if (onClick) this.#onClick = onClick;
+    if (onClickOutside) this.#onClickOutside = onClickOutside;
   }
 
   // ***************************
@@ -88,7 +94,19 @@ export default class Common {
   }
 
   setTextContent(textContent: string) {
-    this.#textContent = this._render.textContent = textContent;
+    this.#textContent = textContent;
+    if (containsHTML(this.#textContent)) {
+      const parsedTextArray = splitHTML(this.#textContent);
+      let sanitizedTextContent = "";
+      parsedTextArray.forEach((slice) => {
+        if (containsHTML(slice) && !isHTMLTagAllowed(slice, ["span", "strong", "em"])) {
+          console.error(
+            "HTML elements that can be inserted through textContent should only be of type span, strong, or em. Others tags are ignored."
+          );
+        } else sanitizedTextContent += slice;
+      });
+      this._render.innerHTML = sanitizedTextContent;
+    } else this._render.textContent = this.#textContent;
   }
 
   setParentSerial(serial: string) {
@@ -106,17 +124,13 @@ export default class Common {
 
   setChildren(children: GenericElement[]) {
     if (this.isMounted) {
-      this.removeChildren();
+      if (this.children) this.removeChildren();
       children.forEach((child) => {
         child.setParentSerial(this.serial);
         child.mount();
       });
     }
     this.#children = children;
-  }
-
-  setChildrenOnEvent(event: string, callback: () => GenericElement[]) {
-    document.addEventListener(event, () => this.setChildren(callback()));
   }
 
   setExclusionList(list: string[]) {
@@ -182,16 +196,36 @@ export default class Common {
     const element = document.createElement(tag);
     if (this.#id) element.id = this.#id;
     if (this.#classes) this.#classes.forEach((className) => element.classList.add(className));
-    if (this.#textContent) element.textContent = this.#textContent;
+    if (this.#textContent) {
+      if (containsHTML(this.#textContent)) {
+        const parsedTextArray = splitHTML(this.#textContent);
+        let sanitizedTextContent = "";
+        parsedTextArray.forEach((slice) => {
+          if (containsHTML(slice) && !isHTMLTagAllowed(slice, ["span", "strong", "em"])) {
+            console.error(
+              "HTML elements that can be inserted through textContent should only be of type span, strong, or em. Others tags are ignored."
+            );
+          } else sanitizedTextContent += slice;
+        });
+        element.innerHTML = sanitizedTextContent;
+      } else element.textContent = this.#textContent;
+    }
     element.dataset.serial = this.#serial;
+    if (this.#onClick) element.addEventListener("click", this.#onClick);
+    if (this.#onClickOutside) {
+      document.addEventListener("click", (event) => {
+        const target = event.target as HTMLElement;
+        const childrenSerials = this.children.map((child) => child.serial);
+        if (!matchValue(target.dataset.serial||"", childrenSerials)) this.#onClickOutside(event);
+      });
+    }
     return element;
   }
 
   /**
    * Mounts the element into the DOM.
    */
-  mount(): void {
-    // this.render.dispatchEvent(new Event("mount"));
+  mount(rootElementId?: string): void {
     if (this.#exclusionList) {
       for (const item of this.#exclusionList) {
         if (window.location.pathname === item) {
@@ -201,7 +235,7 @@ export default class Common {
       }
     }
     if (this.children) this.children.forEach((child) => child.setParentSerial(this.serial));
-    if (!this.parentSerial) document.querySelector("body").appendChild(this.render);
+    if (!this.parentSerial) document.querySelector(`#${rootElementId}` || "body").appendChild(this.render);
     else this.getElementBySerial(this.parentSerial).appendChild(this.render);
     if (this.children) {
       this.children.forEach((child) => {
@@ -244,6 +278,14 @@ export default class Common {
     const { onElement, onMouseLeave } = configuration;
     if (onElement) this.render.addEventListener("mouseover", onElement);
     if (onMouseLeave) this.render.addEventListener("mouseout", onMouseLeave);
+  }
+
+  /** Specifies a behaviour when a given event is triggered on document.
+   * @param {string} event - Name of the event.
+   * @param {function} callback - Callback function to define the actions.
+   */
+  onEvent(event: string, callback: (event?: Event) => void): void {
+    document.addEventListener(event, (event) => callback(event));
   }
 
   /**
