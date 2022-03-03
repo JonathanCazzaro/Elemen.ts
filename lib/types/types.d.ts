@@ -37,6 +37,7 @@ export interface UserType {
 
 export interface CommonElementType {
   serial: string;
+  data_id?: string | number;
   parentSerial?: string;
   setParentSerial(serial: string): void;
   children?: GenericElement[];
@@ -55,6 +56,7 @@ export interface CommonElementType {
   addClass(newClass: string): void;
   removeClass(oldClass: string): void;
   toggleClass(className: string): void;
+  hasClass(className: string): boolean;
   getElementBySerial(serial: string): HTMLElement | undefined;
   mount(rootElementId?: string): void;
   unmount(): void;
@@ -147,6 +149,7 @@ export interface FigureType extends CommonElementType {
 }
 
 export interface ModalType {
+  id: string;
   serial: string;
   contentWrapper: ContainerType;
   additionnalCSSRules: string[];

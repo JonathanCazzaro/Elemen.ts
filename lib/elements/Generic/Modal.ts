@@ -5,7 +5,7 @@ import { ModalConstructor } from "../../types/constructors";
 import Str from "../../utils/str";
 const { isCSSRuleValid } = Str;
 
-const cssBaseRules = [
+const cssBaseRules = (id: string) => [
   `
   body {
     position: relative;
@@ -13,7 +13,7 @@ const cssBaseRules = [
   }
   `,
   `
-  #modal {
+  #${id} {
     position: absolute;
     z-index: 20;
     top: 0;
@@ -23,7 +23,7 @@ const cssBaseRules = [
   }
   `,
   `
-  .modal__content {
+  .${id}__content {
     position: fixed;
     z-index: 30;
     top: 50%;
@@ -34,11 +34,16 @@ const cssBaseRules = [
 ];
 
 export default class Modal {
+  #id: string;
   #serial: string;
   #contentWrapper: ContainerType;
   #isMounted: boolean = false;
   #additionnalCSSRules: string[] = [];
   protected _render: HTMLDivElement;
+
+  get id(): string {
+    return this.#id;
+  }
 
   get serial(): string {
     return this.#serial;
@@ -68,7 +73,7 @@ export default class Modal {
     this.#contentWrapper.setChildren(content);
   }
 
-  static create({ content, onClickOustide, additionnalCSSRules }: ModalConstructor): ModalType {
+  static create({ id, content, onClickOustide, additionnalCSSRules }: ModalConstructor): ModalType {
     const instance = new Modal();
     if (additionnalCSSRules) {
       const rulesBuffer = Array.isArray(additionnalCSSRules) ? additionnalCSSRules : [additionnalCSSRules];
@@ -79,9 +84,9 @@ export default class Modal {
     }
     const modalBackground = document.createElement("div");
     instance.#serial = modalBackground.dataset.serial = Serial.generate(6);
-    modalBackground.id = "modal";
+    instance.#id = modalBackground.id = id;
     instance._render = modalBackground;
-    const modalContent = new Container({ classes: "modal__content", children: content });
+    const modalContent = new Container({ classes: `${id}__content`, children: content });
     instance.#contentWrapper = modalContent;
     instance.#contentWrapper.setChildren(content);
     if (onClickOustide)
@@ -96,7 +101,7 @@ export default class Modal {
    * Inserts the modal into the DOM next to the root element.
    */
   insert(): void {
-    const cssRules = [...cssBaseRules, ...this.additionnalCSSRules];
+    const cssRules = [...cssBaseRules(this.#id), ...this.additionnalCSSRules];   
     cssRules.forEach((rule) => {
       const styleSheet = document.styleSheets.item(document.styleSheets.length - 1);
       styleSheet.insertRule(rule, styleSheet.cssRules.length);
@@ -111,7 +116,7 @@ export default class Modal {
    * Removes the modal from the DOM.
    */
   remove(): void {
-    const cssRules = [...cssBaseRules, ...this.additionnalCSSRules];
+    const cssRules = [...cssBaseRules(this.#id), ...this.additionnalCSSRules];
     for (let index = 0; index < cssRules.length; index++) {
       const styleSheet = document.styleSheets.item(document.styleSheets.length - 1);
       styleSheet.deleteRule(styleSheet.cssRules.length - 1);

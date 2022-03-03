@@ -147,3 +147,14 @@ export interface RequestDataConfig {
    */
   saveLocation?: string;
 }
+
+export interface ModifyDataConfig {
+  /**
+   * @param {string} route - The route that should be used for your request.
+   */
+  route: string;
+  /**
+   * @param {object} [body] - (optional) The body of the request.
+   */
+  body?: Record<string, any>;
+}

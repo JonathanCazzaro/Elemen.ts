@@ -19,8 +19,8 @@ export default class List_Item extends Common {
    * @param {string} [textContent] - (optional) Text to be displayed inside the element.
    * @param {Array.GenericElement} [children] - (optional) An array containing the children elements if any.
    */
-  constructor({ id, data_id, classes, textContent, children, exclusionList, displayMode }: CommonConstructor) {
-    super({ id, data_id, classes, children, exclusionList, textContent, displayMode });
+  constructor({ id, data_id, classes, textContent, children, exclusionList, displayMode, onClick }: CommonConstructor) {
+    super({ id, data_id, classes, children, exclusionList, textContent, displayMode, onClick });
     const element = this.build("li");
     this.setRender(element);  
   }

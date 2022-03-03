@@ -1,7 +1,7 @@
 {
   "name": "elements",
   "version": "1.0.0",
-  "description": "Easy to use library to make basic SPA",
+  "description": "Easy to use, zero dependancy library to make Single Page Applications.",
   "main": "lib/index.ts",
   "author": "Jonathan Cazzaro",
   "license": "MIT",

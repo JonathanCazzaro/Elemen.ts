@@ -1,4 +1,4 @@
-import { FailMessagesConfig, PatternConfig, RequestDataConfig } from "./configObjects";
+import { FailMessagesConfig, ModifyDataConfig, PatternConfig, RequestDataConfig } from "./configObjects";
 import { ButtonTypeEnum, FormMethodEnum, InputTypeEnum, ElementPositionEnum, MediaTypeEnum, ScopeEnum, RoleEnum, DisplayModeEnum } from "./enum";
 import {
   CaptionType,
@@ -93,9 +93,38 @@ export interface UserConstructor {
 }
 
 export interface DataManagerConstructor {
+  /**
+   * @param {function} [login] - (optional) Treatment to get the user logged in.
+   */
   login?: (credentials: Record<string, string>) => void;
+  /**
+   * @param {function} [verifyToken] - (optional) Treatment to authenticate the user.
+   */
   verifyToken?: () => void;
+  /**
+   * @param {function} [requestData] - (optional) Treatment to get data from an API.
+   */
   requestData?: (config: RequestDataConfig) => void;
+  /**
+   * @param {function} [createRecord] - (optional) Treatment to create a new record in a distant API.
+   */
+  createRecord?: (config: ModifyDataConfig) => any;
+  /**
+   * @param {function} [updateRecord] - (optional) Treatment to update a record from a distant API.
+   */
+  updateRecord?: (config: ModifyDataConfig) => any;
+  /**
+   * @param {function} [deleteRecord] - (optional) Treatment to delete a record from a distant API.
+   */
+  deleteRecord?: (config: ModifyDataConfig) => any;
+  /**
+   * @param {function} [makeRelation] - (optional) Treatment to associate one record to others.
+   */
+  makeRelation?: (config: ModifyDataConfig) => any;
+  /**
+   * @param {function} [makeRelation] - (optional) Treatment to remove an association between records.
+   */
+  removeRelation?: (config: ModifyDataConfig) => any;
 }
 
 // --------------------- Element Constructors ---------------------
@@ -106,9 +135,9 @@ export interface CommonConstructor {
    */
   id?: string;
   /**
-   * @param {string} [data_id] - (optional) The identifier of the record if it comes from a database.
+   * @param {string|number} [data_id] - (optional) The identifier of the record if it comes from a database.
    */
-  data_id?: string;
+  data_id?: string | number;
   /**
    * @param {string} [classes] - (optional) A space is needed between each class.
    */
@@ -165,6 +194,10 @@ export interface FigureConstructor extends CommonConstructor {
 }
 
 export interface ModalConstructor {
+  /**
+   * @param {string} id
+   */
+  id: string;
   /**
    * @param {Array.GenericElement} content - An array containing the elements of the modal.
    */
@@ -256,9 +289,9 @@ export interface TableColGroupConstructor {
    */
   id?: string;
   /**
-   * @param {string} [data_id] - (optional) The identifier of the record if it comes from a database.
+   * @param {string|number} [data_id] - (optional) The identifier of the record if it comes from a database.
    */
-  data_id?: string;
+  data_id?: string | number;
   /**
    * @param {string} [classes] - (optional) A space is needed between each class.
    */
@@ -332,9 +365,9 @@ export interface FormConstructor {
    */
   id?: string;
   /**
-   * @param {string} [data_id] - (optional) The identifier of the record if it comes from a database.
+   * @param {string|number} [data_id] - (optional) The identifier of the record if it comes from a database.
    */
-  data_id?: string;
+  data_id?: string | number;
   /**
    * @param {string} [classes] - (optional) A space is needed between each class.
    */

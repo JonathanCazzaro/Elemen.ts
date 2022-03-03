@@ -21,9 +21,9 @@ export default class ArrayExt {
    * @returns {Array.any} The outputted array.
    */
   static remove(array: any[], element: any): any[] {
-    const index = array.indexOf(element);
-    if (index < 0) return array;
-    else return array.splice(index, index + 1);
+    const index = array.indexOf(element);    
+    if (index >= 0) array.splice(index, 1);  
+    return array;
   }
 
   /**
@@ -32,8 +32,9 @@ export default class ArrayExt {
    * @param {string} element - The element that should be toggled.
    * @returns {Array.any} The outputted array.
    */
-  static toggle(array: any[], element: any): any[] {
-    const removeElement = ArrayExt.remove(array, element);
+  static toggle(array: any[], element: any): any[] { 
+    const arrayCopy = [...array];    
+    const removeElement = ArrayExt.remove(arrayCopy, element);    
     if (removeElement.length === array.length) return [...array, element];
     else return removeElement;
   }

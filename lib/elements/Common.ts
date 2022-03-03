@@ -8,12 +8,23 @@ import Serial from "../utils/serial";
 import { ProduceSettingsConfig, OnClickConfig, OnHoverConfig } from "../types/configObjects";
 import { DisplayModeEnum } from "../types/enum";
 
+const getAllChildrenSerials = (children?: GenericElement[]): string[] => {
+  const serials: string[] = [];
+  const processChild = (child: GenericElement) => {
+    serials.push(child.serial);
+    if (child.children) child.children.forEach((child) => processChild(child));
+    else return;
+  };
+  if (children) children.forEach((child) => processChild(child));
+  return serials;
+};
+
 export default class Common {
   readonly #serial: string;
   #parentSerial?: string;
   #children?: GenericElement[];
   #id?: string;
-  #data_id?: string;
+  #data_id?: string | number;
   #classes?: string[];
   #textContent?: string;
   #exclusionList?: string[];
@@ -41,7 +52,7 @@ export default class Common {
   // Getters
   // ***************************
 
-  get data_id(): string {
+  get data_id(): string | number {
     return this.#data_id;
   }
 
@@ -184,6 +195,19 @@ export default class Common {
   }
 
   /**
+   * Checks if the current instance has a given classname.
+   * @param {string} className
+   * @returns {boolean}
+   */
+  hasClass(className: string): boolean {
+    if (this.classes) {
+      const foundClass = this.classes.find((existingClass) => existingClass === className);
+      if (foundClass) return true;
+    }
+    return false;
+  }
+
+  /**
    * Returns an Element from the DOM from its serial.
    * @returns {Element | undefined} The HTMLElement or undefined in not found.
    */
@@ -215,8 +239,8 @@ export default class Common {
     if (this.#onClickOutside) {
       document.addEventListener("click", (event) => {
         const target = event.target as HTMLElement;
-        const childrenSerials = this.children.map((child) => child.serial);
-        if (!matchValue(target.dataset.serial||"", childrenSerials)) this.#onClickOutside(event);
+        const childrenSerials = getAllChildrenSerials(this.children);
+        if (!matchValue(target.dataset.serial || "", childrenSerials)) this.#onClickOutside(event);
       });
     }
     return element;
@@ -235,7 +259,10 @@ export default class Common {
       }
     }
     if (this.children) this.children.forEach((child) => child.setParentSerial(this.serial));
-    if (!this.parentSerial) document.querySelector(`#${rootElementId}` || "body").appendChild(this.render);
+    if (!this.parentSerial) {
+      if (rootElementId) document.querySelector(`#${rootElementId}`).appendChild(this.render);
+      else document.body.appendChild(this.render);
+    }
     else this.getElementBySerial(this.parentSerial).appendChild(this.render);
     if (this.children) {
       this.children.forEach((child) => {
